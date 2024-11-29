@@ -136,7 +136,6 @@ git
 
 ---
 
-✅ **Terminé** le 29/11/2024.
 
 
 ## Installation et Configuration
