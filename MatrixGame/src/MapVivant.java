@@ -2,8 +2,12 @@ import java.util.Random;
 
 public class MapVivant {
     private EtreVivant[][] mapVivants;
+    private int rows;
+    private int cols;
 
     public MapVivant(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
         mapVivants = new EtreVivant[rows][cols];
     }
 
@@ -44,20 +48,48 @@ public class MapVivant {
 
     // On fais la mise à jour des déplacements
     public void update(MapEnvironnement grid) {
+
+        // Copier temporairement la carte pour éviter les conflits
+        EtreVivant[][] tempMap = new EtreVivant[grid.getRows()][grid.getCols()];
         for (int row = 0; row < grid.getRows(); row++) {
             for (int col = 0; col < grid.getCols(); col++) {
-                if (mapVivants[row][col] != null) {
-                    mapVivants[row][col].gen_deplacement(this, grid, row, col);
+                tempMap[row][col] = mapVivants[row][col];
+            }
+        }
+
+
+        for (int row = 0; row < grid.getRows(); row++) {
+            for (int col = 0; col < grid.getCols(); col++) {
+                EtreVivant vivant = tempMap[row][col];
+
+                if (vivant == null) {
+                    continue;
                 }
+
+                vivant.gen_deplacement(this, grid, row, col);
+                if (vivant instanceof Zombie zombie) {
+                    zombie.transformNearbyHumans(this);
+                }
+
             }
         }
     }
 
+    // Pour savoir si l'etre vivant à row et bound est bien sur la carte
+    public boolean isWithinBounds(int row, int col) {
+        return row >= 0 && row < this.rows && col >= 0 && col < this.cols;
+    }
     // Getter et setter
     public EtreVivant getEtreVivant(int row, int col) {
         return mapVivants[row][col];
     }
     public void setEtreVivant(int row, int col, EtreVivant etre) {
         mapVivants[row][col] = etre;
+    }
+    public int getRows() {
+        return rows;
+    }
+    public void setRows(int rows) {
+        this.rows = rows;
     }
 }

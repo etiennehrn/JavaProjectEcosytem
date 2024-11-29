@@ -13,7 +13,7 @@ public class Game {
         mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
         player = new Player(10, 10, visionRange, mapEnvironnement);
 
-        mapVivant.populate(10, 5, mapEnvironnement);
+        mapVivant.populate(10, 60, mapEnvironnement);
     }
 
     public void update() {
