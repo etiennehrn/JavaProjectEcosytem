@@ -3,6 +3,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.input.KeyEvent;
+import javafx.util.Duration;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
 
 import java.util.Objects;
 
@@ -37,6 +40,17 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+
+        // Mise à jour des déplacements
+        Timeline gameLoop = new Timeline(new KeyFrame(Duration.millis(500), event -> {
+            game.update();
+            grid.getChildren().clear();
+            game.displayMap(grid, TILE_SIZE);
+        }));
+        gameLoop.setCycleCount(Timeline.INDEFINITE);
+        gameLoop.play();
+
+
         // Evenements clavier
         scene.setOnKeyPressed((KeyEvent event) -> {
             switch (event.getCode()) {
@@ -46,7 +60,8 @@ public class Main extends Application {
                 case RIGHT -> game.movePlayer("right");
                 default -> System.out.println("Invalid key");
             }
-            // On réactulise l'affichage
+
+            // On réactualise l'affichage
             grid.getChildren().clear();
             game.displayMap(grid, TILE_SIZE);
         });

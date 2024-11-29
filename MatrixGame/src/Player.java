@@ -2,17 +2,17 @@ public class Player {
     private int row;
     private int col;
     private final int visionRange;
-    private final Map map;
+    private final MapEnvironnement mapEnvironnement;
 
 
-    public Player(int startRow, int startCol, int visionRange, Map map) {
+    public Player(int startRow, int startCol, int visionRange, MapEnvironnement mapEnvironnement) {
         this.row = startRow;
         this.col = startCol;
         this.visionRange = visionRange;
-        this.map = map;
+        this.mapEnvironnement = mapEnvironnement;
 
         // On vérifie que la position initiale est valide
-        if (map.getCell(startRow, startCol).isObstacle()) {
+        if (mapEnvironnement.getCell(startRow, startCol).isObstacle()) {
             throw new IllegalArgumentException("Position initiale invalide : il y a un obstacle");
         }
     }
@@ -44,9 +44,9 @@ public class Player {
 
     private boolean moveTo(int newRow, int newCol) {
         // Position dans les limites de la carte
-        if (newRow >= 0  && newRow < map.getRows() && newCol >= 0  && newCol < map.getCols()) {
+        if (newRow >= 0  && newRow < mapEnvironnement.getRows() && newCol >= 0  && newCol < mapEnvironnement.getCols()) {
             // Vérifier obstacle
-            if (!map.getCell(newRow, newCol).isObstacle()) {
+            if (!mapEnvironnement.getCell(newRow, newCol).isObstacle()) {
                 this.row = newRow;
                 this.col = newCol;
                 return true;

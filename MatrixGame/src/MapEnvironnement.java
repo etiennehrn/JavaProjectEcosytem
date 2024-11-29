@@ -14,16 +14,18 @@ import javafx.scene.layout.StackPane;
 
 
 
-public class Map {
+public class MapEnvironnement {
+    // Map pour l'environnement (case)
     private Case[][] grid;
+    private int rows;
+    private int cols;
 
     // Instances uniques des types de case
     private final Case herbeCase = new Case(Case.Type.HERBE);
     private final Case murCase = new Case(Case.Type.MUR);
 
-    public Map(String filePath) {
+    public MapEnvironnement(String filePath) {
         loadMapFromFile(filePath);
-
     }
 
 
@@ -33,8 +35,8 @@ public class Map {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             List<String> lines = reader.lines().toList();
 
-            int rows = lines.size();
-            int cols = lines.getFirst().split(" ").length;
+            rows = lines.size();
+            cols = lines.getFirst().split(" ").length;
             grid = new Case[rows][cols];
 
             for (int i = 0; i < rows; i++) {
@@ -62,7 +64,7 @@ public class Map {
     }
 
     // Méthode pour afficher la vision de la map du joueur dans un GridPane
-    public void displayMap(GridPane gridPane, int titleSize, Player player) {
+    public void displayMap(GridPane gridPane, int titleSize, Player player, MapVivant mapVivant) {
         int visionRange = player.getVisionRange();
         int playerRow = player.getRow();
         int playerCol = player.getCol();
@@ -87,6 +89,12 @@ public class Map {
                 // Ajouter la texture de fond au StackPane
                 cellPane.getChildren().add(background);
 
+                // Ajoute êtres vivants si il y en a
+                EtreVivant vivant = mapVivant.getEtreVivant(row, col);
+                if (vivant != null) {
+                    cellPane.getChildren().add(vivant.getSprite(titleSize));
+                }
+
                 // Vérifier si c'est la position du joueur
                 if (row == player.getRow() && col == player.getCol()) {
                     ImageView playerTexture = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/ressources/sprites/player.png"))));
@@ -103,7 +111,6 @@ public class Map {
         }
     }
 
-
     // Getter et Setter
     public Case getCell(int row, int col) {
         return grid[row][col];
@@ -112,10 +119,10 @@ public class Map {
         grid[row][col] = value;
     }
     public int getRows() {
-        return grid.length;
+        return rows;
     }
     public int getCols() {
-        return grid[0].length;
+        return cols;
     }
 }
 
