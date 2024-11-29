@@ -49,6 +49,7 @@ L'objectif du second jalon est d'ajouter de nouveaux personnages, éléments et 
 Le deuxième jalon vise à introduire des interactions entre les humains et les zombies dans l'écosystème. L'objectif est de modéliser un monde vivant dynamique avec des comportements aléatoires et des transformations.
 
 #### **Objectifs :**
+0. **Créer une superClasse 'Mob'** :
 1. **Créer une classe `Humain`** :
   - Représente un humain avec ses propres caractéristiques (position, état, etc.).
   - Ajout d'attributs pour gérer l'état de l'humain (par exemple : "infecté").
