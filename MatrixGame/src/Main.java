@@ -2,64 +2,61 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.input.KeyEvent;
+
+import java.util.Objects;
+
 
 public class Main extends Application {
     // Définition de la taille des cases
-    private static final int TITLE_SIZE = 10;
-
-    // Définition de la taille de la matrice de jeu
-    private static final int MAP_ROW = 80;
-    private static final int MAP_COL = 80;
+    private static final int TILE_SIZE = 30;
 
     // Matrice pour le layout
     private GridPane grid;
 
-    // La map
-    private int[][] map;
+    // Le jeu
+    private Game game;
+
+    // Definition chemin de la carte
+    private final String mapFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map.txt")).getPath();
 
     @Override
     public void start(Stage primaryStage) {
-        initializeMap();
         grid = new GridPane();
-        initializeMap();
-        Scene scene = new Scene(grid, MAP_ROW*TITLE_SIZE, MAP_COL*TITLE_SIZE);
+        game = new Game(mapFilePath);
+
+        game.displayMap(grid, TILE_SIZE);
+
+        // Taille de la scene en fonction de la vision du joueur du jeu
+        int visionRange = game.getPlayer().getVisionRange();
+        int sceneSize = ((2 * visionRange) + 1)*TILE_SIZE;
+
+        Scene scene = new Scene(grid, sceneSize, sceneSize);
 
         primaryStage.setTitle("Ecosystème");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        updateGrid(); // Afficher la partie initiale de la carte
-
-    }
-
-    private void initializeMap() {
-        this.map = new int[MAP_ROW][MAP_COL];
-        for (int row = 0; row < map.length; row++) {
-            for (int col = 0; col < map[0].length; col++) {
-                map[row][col] = 0; // Terrain vide
+        // Evenements clavier
+        scene.setOnKeyPressed((KeyEvent event) -> {
+            switch (event.getCode()) {
+                case UP -> game.movePlayer("up");
+                case DOWN -> game.movePlayer("down");
+                case LEFT -> game.movePlayer("left");
+                case RIGHT -> game.movePlayer("right");
+                default -> System.out.println("Invalid key");
             }
-        }
+            // On réactulise l'affichage
+            grid.getChildren().clear();
+            game.displayMap(grid, TILE_SIZE);
+        });
 
-        // Ajouter des obstacles
-        map[5][5] = 2;
-        map[8][8] = 2;
     }
 
-    private void updateGrid() {
-        grid.getChildren().clear();
-        for (int row = 0; row < map.length; row++) {
-            for (int col = 0; col < map[0].length; col++) {
-                Rectangle rect = new Rectangle(TITLE_SIZE, TITLE_SIZE);
-                if(map[row][col] == 2) {
-                    rect.setFill(Color.RED);
-                }
-                else if(map[row][col] == 0) {
-                    rect.setFill(Color.FLORALWHITE);
-                }
-                grid.add(rect, col, row);
-            }
-        }
+    // Méthode main pour lancer l'application
+    public static void main(String[] args) {
+        launch(args);
     }
+
+
 }
