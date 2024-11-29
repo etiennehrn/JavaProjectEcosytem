@@ -35,6 +35,7 @@ L'objectif du premier jalon est de poser les bases du projet, avec une carte fon
 
 #### **Objectif final :**
 À la fin du premier jalon, le joueur doit pouvoir se déplacer sur la carte entière, avec une caméra qui le suit dynamiquement.
+
 ✅ **Terminé** le 29/11/2024.
 
 ---
@@ -90,7 +91,7 @@ git
   - Vérification de cases adjacentes (haut, bas, gauche, droite).
   - Transformation et mise à jour de l'état dans `map_vivants`.
 
----✅ **Terminé** le 29/11/2024.
+✅ **Terminé** le 29/11/2024.
 ### **Jalon 3 : Améliorations et nouvelles fonctionnalités**
 - **1. Améliorations des déplacements**
   - Correction des bugs de mouvements.
@@ -105,7 +106,38 @@ git
 - **3. Interactions améliorées**
   - Les humains deviennent des zombies si un zombie se trouve à proximité.
 
+✅ **Terminé** le 29/11/2024.
+## **Jalon 4 : Améliorations de l'environnement et nouvelles fonctionnalités**
+
+### **Nouvelles fonctionnalités implémentées :**
+
+#### **1. Amélioration de l'environnement**
+- Ajout de nouveaux composants dans l'environnement :
+  - **Types de cases** supplémentaires (eau, arbres, rochers, etc.).
+  - Diversification des textures pour les rendre plus immersives.
+
+#### **2. Déplacement plus fluide pour le joueur**
+- Optimisation des contrôles pour un déplacement sans latence.
+- Meilleur suivi de la caméra centré sur le joueur.
+
+#### **3. Ajout des animaux**
+- Introduction d'animaux dans la carte (par exemple : cerfs, lapins).
+- Comportements aléatoires ou logiques selon les spécifications.
+
+#### **4. Cycle jour/nuit**
+- Transition progressive entre les phases de jour et de nuit.
+- Effets visuels pour marquer les changements de lumière.
+
+#### **5. Carte refaite et agrandie**
+- Nouvelle carte repensée avec une plus grande diversité de structures :
+  - **Batiments plus élaborés.**
+  - **Zones naturelles** comme forêts et rivières.
+- Taille de la carte augmentée pour offrir plus de possibilités d'exploration.
+
 ---
+
+✅ **Terminé** le 29/11/2024.
+
 
 ## Installation et Configuration
 
@@ -123,21 +155,25 @@ Le projet est organisé selon la structure suivante :
 
 ```plaintext
 src/
-├── Main.java                # Classe principale (lance l'application)
-├── Game.java                # Gestion des éléments du jeu (cartes, vivants, interactions)
-├── Player.java              # Classe pour le joueur et ses déplacements
-├── EtreVivant.java          # Classe abstraite pour les vivants (humains, zombies)
-├── Humain.java              # Classe pour les humains
-├── Zombie.java              # Classe pour les zombies
-├── MapEnvironnement.java    # Classe pour générer et gérer la carte environnementale
-├── MapVivant.java           # Classe pour gérer les vivants (humains, zombies)
-├── Case.java                # Classe pour représenter une case de la carte
-└── ressources/              # Dossier contenant les fichiers nécessaires
-    ├── mapEnvironnement.txt # Fichier texte pour générer la carte environnementale
-    ├── textures/            # Textures pour les éléments graphiques
-    │   ├── herbe.jpg        # Texture pour les cases d'herbe
-    │   └── mur.jpg          # Texture pour les murs
-    └── sprites/             # Sprites pour les vivants
-        ├── player.png       # Sprite pour le joueur
-        ├── human.png        # Sprite pour les humains
-        └── zombie.png       # Sprite pour les zombies
+├── ressources/                 # Dossier contenant tous les fichiers ressources
+│   ├── audio/                  # Dossier pour les fichiers audio
+│   │   └── background_music.mp3 # Musique d'ambiance
+│   ├── icons/                  # Dossier pour les icônes du projet
+│   │   └── icone1.jpg          # Icône principale pour le projet
+│   ├── sprites/                # Dossier pour les sprites des vivants
+│   │   ├── human.png           # Sprite pour les humains
+│   │   ├── player.png          # Sprite pour le joueur
+│   │   └── zombie.png          # Sprite pour les zombies
+│   ├── textures/               # Dossier pour les textures de la carte
+│   │   ├── herbe.jpg           # Texture pour les cases d'herbe
+│   │   └── mur.jpg             # Texture pour les murs
+│   └── map.txt                 # Fichier texte pour générer la carte
+├── Case.java                   # Classe pour représenter une case de la carte
+├── EtreVivant.java             # Classe abstraite pour les vivants (humains, zombies)
+├── Game.java                   # Gestion des éléments du jeu (cartes, vivants, interactions)
+├── Humain.java                 # Classe pour les humains
+├── Main.java                   # Classe principale (lance l'application)
+├── MapEnvironnement.java       # Classe pour générer et gérer la carte environnementale
+├── MapVivant.java              # Classe pour gérer les vivants (humains, zombies)
+├── Player.java                 # Classe pour le joueur et ses déplacements
+└── Zombie.java                 # Classe pour les zombies
