@@ -4,17 +4,23 @@ public class Game {
     // Vision du joueur
     private final int visionRange = 10;
 
-    private Map map
-    private Player player;
+    private final MapEnvironnement mapEnvironnement;
+    private final MapVivant mapVivant;
+    private final Player player;
 
     public Game(String mapFilePath) {
-        map = new Map(mapFilePath);
-        player = new Player(10, 10, visionRange, map);
+        mapEnvironnement = new MapEnvironnement(mapFilePath);
+        mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
+        player = new Player(10, 10, visionRange, mapEnvironnement);
+
+        mapVivant.populate(10, 5, mapEnvironnement);
     }
 
-
+    public void update() {
+        mapVivant.update(mapEnvironnement);
+    }
     public void displayMap(GridPane gridPane, int titleSize) {
-        map.displayMap(gridPane, titleSize, player);
+        mapEnvironnement.displayMap(gridPane, titleSize, player, mapVivant);
     }
 
     public void movePlayer(String direction) {
@@ -28,13 +34,13 @@ public class Game {
     }
     // Getter et Setter
     public int getRows() {
-        return map.getRows();
+        return mapEnvironnement.getRows();
     }
     public int getCols() {
-        return map.getCols();
+        return mapEnvironnement.getCols();
     }
-    public Map getMap() {
-        return map;
+    public MapEnvironnement getMap() {
+        return mapEnvironnement;
     }
     public Player getPlayer() {
         return player;
