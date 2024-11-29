@@ -42,8 +42,57 @@ L'objectif du premier jalon est de poser les bases du projet, avec une carte fon
 ### **2ème Jalon : Écosystème et Interactions**
 L'objectif du second jalon est d'ajouter de nouveaux personnages, éléments et interactions dans l'écosystème.
 
-#### Fonctionnalités prévues :
+## **Deuxième Jalon : Interactions dans l'écosystème**
 
+### **Fonctionnalités prévues**
+
+Le deuxième jalon vise à introduire des interactions entre les humains et les zombies dans l'écosystème. L'objectif est de modéliser un monde vivant dynamique avec des comportements aléatoires et des transformations.
+
+#### **Objectifs :**
+1. **Créer une classe `Humain`** :
+  - Représente un humain avec ses propres caractéristiques (position, état, etc.).
+  - Ajout d'attributs pour gérer l'état de l'humain (par exemple : "infecté").
+2. **Créer une classe `Zombie`** :
+  - Représente un zombie avec des comportements spécifiques.
+  - Ajout de mouvements aléatoires sur la carte.
+3. **Créer une `map_vivants`** :
+  - Une structure de données pour recenser tous les êtres vivants (humains et zombies) sur la carte.
+  - Permet de suivre leurs positions en temps réel.
+4. **Ajouter des sprites pour les humains et les zombies** :
+  - Associer une texture (sprite) distincte à chaque type d’être vivant.
+  - Les sprites seront affichés sur la carte à leur position respective.
+5. **Ajouter des mouvements aléatoires et gérer les collisions** :
+  - Les humains et zombies se déplacent de manière aléatoire à chaque tour.
+  - Gestion des collisions entre êtres vivants et obstacles.
+6. **Interactions : Transformation humain -> zombie** :
+  - Si un humain est sur une case adjacente à un zombie, il devient un zombie.
+
+---
+
+### **Fonctionnalités implémentées**
+
+#### **1. Classe `Humain`**
+- Définit les attributs de l'humain (position, état).
+- Comportement de déplacement aléatoire.
+
+#### **2. Classe `Zombie`**
+- Définit les attributs du zombie (position).
+- Déplacement aléatoire simulant un comportement erratique.
+
+#### **3. Carte des vivants (`map_vivants`)**
+- Structure de données permettant de suivre tous les vivants (humains et zombies) sur la carte.
+
+#### **4. Sprites**
+- Ajout d'une texture distincte pour chaque type :
+  - **Humain** : Sprite représentant un personnage.
+  - **Zombie** : Sprite représentant une figure zombie.
+
+#### **5. Interactions humaines/zombies**
+- Les humains à proximité immédiate d’un zombie sont transformés en zombies :
+  - Vérification de cases adjacentes (haut, bas, gauche, droite).
+  - Transformation et mise à jour de l'état dans `map_vivants`.
+
+---
 ---
 
 ## Installation et Configuration
