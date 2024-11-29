@@ -96,7 +96,6 @@ git
   - Correction des bugs de mouvements.
   - Les zombies cherchent activement les humains à proximité.
   - Les humains fuient les zombies lorsqu'ils sont détectés.
-  - Gestion de vitesses différentes pour les humains (si possible).
 
 - **2. Ajouts esthétiques**
   - Ajout d'une icône pour représenter l'application.
