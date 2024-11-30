@@ -122,19 +122,19 @@ git
 
 #### **3. Ajout des animaux**
 - Introduction d'animaux dans la carte (par exemple : cerfs, lapins).
-- Comportements aléatoires ou logiques selon les spécifications.
-
+- Pas de comportement pour l'instant
 #### **4. Cycle jour/nuit**
 - Transition progressive entre les phases de jour et de nuit.
 - Effets visuels pour marquer les changements de lumière.
 
 #### **5. Carte refaite et agrandie**
 - Nouvelle carte repensée avec une plus grande diversité de structures :
-  - **Batiments plus élaborés.**
   - **Zones naturelles** comme forêts et rivières.
 - Taille de la carte augmentée pour offrir plus de possibilités d'exploration.
 
 ---
+✅ **Terminé** le 29/11/2024.
+
 
 
 

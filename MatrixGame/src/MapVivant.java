@@ -12,7 +12,7 @@ public class MapVivant {
     }
 
     // On mets des humains et des zombies sur la carte
-    public void populate(int nbHumains, int nbZombies, MapEnvironnement map) {
+    public void populate(int nbHumains, int nbZombies, int nbAnimaux, MapEnvironnement map) {
         Random random = new Random();
 
         for (int i = 0; i < nbHumains; i++) {
@@ -44,6 +44,22 @@ public class MapVivant {
                 compt++;
             }
         }
+
+        // Animaux
+        for (int i = 0; i < nbAnimaux; i++) {
+            boolean placed = false;
+            int compt = 0;
+            while (!placed && compt <= 10) {
+                int row = random.nextInt(map.getRows());
+                int col = random.nextInt(map.getCols());
+
+                if (!map.getCell(row, col).isObstacle() && mapVivants[row][col] == null) {
+                    ajouterAnimalAleatoire(row, col);
+                    placed = true;
+                }
+                compt++;
+            }
+        }
     }
 
     // On fais la mise à jour des déplacements
@@ -70,11 +86,28 @@ public class MapVivant {
                 if (vivant instanceof Zombie zombie) {
                     zombie.transformNearbyHumans(this);
                 }
-
             }
         }
     }
 
+
+    // Pour ajouter un animal aléatoire
+
+    public void ajouterAnimalAleatoire(int row, int col) {
+        Animaux.Type[] types = Animaux.Type.values();
+        Random random = new Random();
+        Animaux.Type randomType = types[random.nextInt(types.length)];
+
+        // Placer un animal correspondant dans la mapVivants
+        switch (randomType) {
+            case DEER -> mapVivants[row][col] = new Deer(row, col);
+            case BEAR -> mapVivants[row][col] = new Bear(row, col);
+            case BOAR -> mapVivants[row][col] = new Boar(row, col);
+            case FOX -> mapVivants[row][col] = new Fox(row, col);
+            case WOLF -> mapVivants[row][col] = new Wolf(row, col);
+            case BUNNY -> mapVivants[row][col] = new Bunny(row, col);
+        }
+    }
     // Pour savoir si l'etre vivant à row et bound est bien sur la carte
     public boolean isWithinBounds(int row, int col) {
         return row >= 0 && row < this.rows && col >= 0 && col < this.cols;

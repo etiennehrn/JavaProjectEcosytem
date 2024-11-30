@@ -11,7 +11,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 
 
 public class MapEnvironnement {
@@ -20,14 +21,23 @@ public class MapEnvironnement {
     private int rows;
     private int cols;
 
-    // Instances uniques des types de case
-    private final Case herbeCase = new Case(Case.Type.HERBE);
-    private final Case murCase = new Case(Case.Type.MUR);
+    // Instances uniques des types de case pour opti
+    private final Case herbeArbreCase = new Case(Case.Type.HERBE, Case.Element.ARBRE);
+    private final Case herbeBuissonCase = new Case(Case.Type.HERBE, Case.Element.BUISSON);
+    private final Case herbeCaillouxCase = new Case(Case.Type.HERBE, Case.Element.CAILLOUX);
+    private final Case herbeTroncCase = new Case(Case.Type.HERBE, Case.Element.TRONC);
+    private final Case herbeCase = new Case(Case.Type.HERBE, Case.Element.NONE);
+    private final Case murCase = new Case(Case.Type.MUR, Case.Element.NONE);
+    private final Case dalleCase = new Case(Case.Type.DALLE, Case.Element.NONE);
+    private final Case herbeChampigonCase = new Case(Case.Type.HERBE, Case.Element.CHAMPIGNON);
+    private final Case eauCase = new Case(Case.Type.EAU, Case.Element.NONE);
+
+
+
 
     public MapEnvironnement(String filePath) {
         loadMapFromFile(filePath);
     }
-
 
     // Méthode qui charge la map du fichier à filePath
     private void loadMapFromFile(String filePath) {
@@ -59,12 +69,19 @@ public class MapEnvironnement {
         return switch (value) {
             case "0" -> herbeCase;
             case "1" -> murCase;
+            case "2" -> herbeArbreCase;
+            case "3" -> herbeBuissonCase;
+            case "4" -> herbeCaillouxCase;
+            case "5" -> herbeTroncCase;
+            case "6" -> dalleCase;
+            case "7" -> herbeChampigonCase;
+            case "8" -> eauCase;
             default -> throw new IllegalArgumentException("Le valeur de case n'existe pas");
         };
     }
 
     // Méthode pour afficher la vision de la map du joueur dans un GridPane
-    public void displayMap(GridPane gridPane, int titleSize, Player player, MapVivant mapVivant) {
+    public void displayMap(GridPane gridPane, int titleSize, Player player, MapVivant mapVivant, Paint lightingColor) {
         int visionRange = player.getVisionRange();
         int playerRow = player.getRow();
         int playerCol = player.getCol();
@@ -82,12 +99,14 @@ public class MapEnvironnement {
                 StackPane cellPane = new StackPane();
 
                 // Fond (case de la grille) avec texture
-                ImageView background = new ImageView(grid[row][col].getTexture());
+                ImageView background = new ImageView(grid[row][col].getBaseTexture());
                 background.setFitWidth(titleSize);
                 background.setFitHeight(titleSize);
 
                 // Ajouter la texture de fond au StackPane
                 cellPane.getChildren().add(background);
+
+
 
                 // Ajoute êtres vivants si il y en a
                 EtreVivant vivant = mapVivant.getEtreVivant(row, col);
@@ -97,16 +116,31 @@ public class MapEnvironnement {
 
                 // Vérifier si c'est la position du joueur
                 if (row == player.getRow() && col == player.getCol()) {
-                    ImageView playerTexture = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/ressources/sprites/player.png"))));
+                    ImageView playerTexture = new ImageView(player.getCurrentSprite());
                     playerTexture.setFitWidth(titleSize);
                     playerTexture.setFitHeight(titleSize);
 
                     // Ajouter la texture du joueur par-dessus le fond
                     cellPane.getChildren().add(playerTexture);
                 }
+                // Ajoute Les élements si il y en a
+                if (grid[row][col].getElement() != Case.Element.NONE) {
+                    ImageView elementView = new ImageView(grid[row][col].getElementTexture());
+                    elementView.setFitWidth(titleSize);
+                    elementView.setFitHeight(titleSize);
+                    cellPane.getChildren().add(elementView);
+                }
+                // Modification luminosité : Ajoutez le rectangle dans `cellPane` et configurez-le correctement
+                Rectangle lighting = new Rectangle(titleSize, titleSize);
+                lighting.setFill(lightingColor);
+                lighting.setOpacity(0.5); // Ajustez l'opacité pour l'effet souhaité
+                cellPane.getChildren().add(lighting); // Ajoutez le rectangle au fond de chaque cellule
+
 
                 // Ajouter le conteneur (fond + joueur) au GridPane
                 gridPane.add(cellPane, col - startCol, row - startRow);
+
+
             }
         }
     }

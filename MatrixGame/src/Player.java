@@ -1,9 +1,35 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.util.Objects;
+
 public class Player {
     private int row;
     private int col;
     private final int visionRange;
     private final MapEnvironnement mapEnvironnement;
 
+    private static final Image[] PLAYER_SPRITES_UP = new Image[3];
+    private static final Image[] PLAYER_SPRITES_DOWN = new Image[3];
+    private static final Image[] PLAYER_SPRITES_LEFT = new Image[3];
+    private static final Image[] PLAYER_SPRITES_RIGHT = new Image[3];
+
+    private int animationFrame = 0; // Pour savoir quel sprite
+    private String lastDirection = "down"; // La direction du pelo
+
+    static {
+        try {
+            for (int i = 0; i < 3; i++) {
+                PLAYER_SPRITES_UP[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player_up_" + i + ".png")));
+                PLAYER_SPRITES_DOWN[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player_down_" + i + ".png")));
+                PLAYER_SPRITES_LEFT[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player_left_" + i + ".png")));
+                PLAYER_SPRITES_RIGHT[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player_right_" + i + ".png")));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur chargement sprites", e);
+        }
+
+    }
 
     public Player(int startRow, int startCol, int visionRange, MapEnvironnement mapEnvironnement) {
         this.row = startRow;
@@ -30,15 +56,19 @@ public class Player {
 
     // Déplacement du joueur
     public boolean moveUp() {
+        lastDirection = "up";
         return moveTo(row - 1, col);
     }
     public boolean moveDown() {
+        lastDirection = "down";
         return moveTo(row + 1, col);
     }
     public boolean moveLeft() {
+        lastDirection = "left";
         return moveTo(row, col - 1);
     }
     public boolean moveRight() {
+        lastDirection = "right";
         return moveTo(row, col + 1);
     }
 
@@ -49,10 +79,26 @@ public class Player {
             if (!mapEnvironnement.getCell(newRow, newCol).isObstacle()) {
                 this.row = newRow;
                 this.col = newCol;
+                animationFrame = (animationFrame + 1) % 3; // Sprite d'après
                 return true;
             }
         }
         return false;
+    }
+
+    public Image getCurrentSprite() {
+        switch (lastDirection) {
+            case "up":
+                return PLAYER_SPRITES_UP[animationFrame];
+            case "down":
+                return PLAYER_SPRITES_DOWN[animationFrame];
+            case "left":
+                return PLAYER_SPRITES_LEFT[animationFrame];
+            case "right":
+                return PLAYER_SPRITES_RIGHT[animationFrame];
+            default:
+                return PLAYER_SPRITES_DOWN[0];
+        }
     }
 
 }

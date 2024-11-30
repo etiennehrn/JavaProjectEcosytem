@@ -25,7 +25,7 @@ public class Main extends Application {
     private Game game;
 
     // Definition chemin de la carte
-    private final String mapFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map.txt")).getPath();
+    private final String mapFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/map1.txt")).getPath();
     private final String musicFilePath = Objects.requireNonNull(getClass().getResource("/ressources/audio/background_music.mp3")).toExternalForm();
     private final String iconFilePath = Objects.requireNonNull(getClass().getResource("/ressources/icons/icone1.jpg")).toExternalForm();
 
@@ -60,7 +60,7 @@ public class Main extends Application {
         playBackgroundMusic();
 
         // Mise à jour des déplacements
-        Timeline gameLoop = new Timeline(new KeyFrame(Duration.millis(500), event -> {
+        Timeline gameLoop = new Timeline(new KeyFrame(Duration.millis(800), event -> {
             game.update();
             grid.getChildren().clear();
             game.displayMap(grid, TILE_SIZE);
@@ -93,7 +93,7 @@ public class Main extends Application {
         Media media = new Media(musicFilePath);
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setVolume(0);
+        mediaPlayer.setVolume(0.05);
         mediaPlayer.play();
     }
 

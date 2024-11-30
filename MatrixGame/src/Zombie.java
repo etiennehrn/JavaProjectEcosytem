@@ -12,7 +12,7 @@ public class Zombie extends EtreVivant {
 
     public Zombie(int row, int col) {
         super(row, col);
-        searchRadius = 10;
+        searchRadius = 50;
     }
 
     @Override
