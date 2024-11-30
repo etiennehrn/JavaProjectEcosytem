@@ -136,6 +136,52 @@ git
 ✅ **Terminé** le 29/11/2024.
 
 
+# Jalon 5 : Gestion des animaux et interactions avancées
+
+## Description
+Ce jalon introduit une gestion approfondie des animaux et leurs interactions dans l'environnement. Il enrichit la simulation avec des comportements spécifiques, une répartition réaliste des animaux, et des améliorations visuelles et dynamiques.
+
+---
+
+## Nouvelles Fonctionnalités Implémentées
+
+### 1. Déplacement des Animaux
+Chaque espèce animale possède des comportements uniques qui influencent leurs déplacements :
+- **Cerfs** : Se déplacent en groupe (troupeaux) et fuient à l'approche d'un prédateur (loups ou ours).
+- **Lapins** : Errent de manière aléatoire et peuvent être chassés et mangés par les loups.
+- **Ours** : Se déplacent seuls et effraient les autres animaux dans leur périmètre.
+- **Loups** : Chassent activement les lapins et provoquent la fuite des cerfs.
+
+Les déplacements prennent en compte :
+- Les obstacles naturels (arbres, rochers, buissons).
+- Les interactions dynamiques entre les animaux.
+
+### 2. Amélioration de la Fonction `populate`
+Les animaux sont répartis de façon cohérente dans l'environnement :
+- **Cerfs** : Regroupés en troupeaux dans des zones dégagées.
+- **Lapins** : Dispersés dans les zones forestières.
+- **Loups et ours** : Rares, répartis de manière stratégique sur la carte.
+
+### 3. Ajout d'une Horloge
+Introduction d'un cycle horaire avec un affichage dynamique à l'écran :
+- **Cycle visuel** : Ombres allongées le matin et le soir, transitions fluides entre les différentes heures.
+- **Horloge en temps réel** : Synchronisation avec les événements simulés.
+
+### 4. Interactions entre les Animaux
+Les comportements des animaux influencent leur environnement :
+- Les cerfs fuient les loups et les ours.
+- Les lapins sont chassés par les loups.
+- Les ours effraient tous les autres animaux sauf les loups.
+- Simulation d'un écosystème dynamique où les relations prédateurs-proies et les comportements de fuite créent une immersion réaliste.
+
+### 5. Carte encore Plus Réaliste
+Ajout d'éléments naturels pour améliorer l'immersion :
+- Groupes d'arbres et de buissons plus denses.
+- Zones rocheuses et troncs d'arbres tombés.
+- Élargissement des chemins reliant les zones clés.
+- Harmonisation visuelle et meilleure diversité des éléments naturels.
+
+---
 
 
 ## Installation et Configuration
