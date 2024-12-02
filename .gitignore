@@ -4,20 +4,21 @@
 out/
 *.ipr
 *.iws
-.gradle/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### Build ###
-target/
+### Build and Output ###
+/out/
 build/
+target/
+*.class
+*.jar
+*.war
+*.ear
 
 ### Logs ###
 *.log
 *.log.*
 
 ### Maven ###
-target/
 dependency-reduced-pom.xml
 build.log
 .mvn/
@@ -30,13 +31,6 @@ pom.xml.next
 .gradle/
 build/
 
-### Java ###
-*.class
-*.jar
-*.war
-*.ear
-*.javadoc
-
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -46,8 +40,6 @@ build/
 .springBeans
 .sts4-cache
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
 
 ### NetBeans ###
 /nbproject/private/
@@ -70,16 +62,17 @@ bin/
 *.tmp
 *.bak
 
-# Node-like lock files
+# Lock files
 *.lock
 
 # Environment variable files
 .env
 .env.*
 
-# Python/Virtual Environment (if accidentally used)
+### Python/Virtual Environment ###
 *.pyc
 __pycache__/
 
-# Other editor backups
+### Editor backups ###
 *.idea.old/
+
