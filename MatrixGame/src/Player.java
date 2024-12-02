@@ -20,10 +20,10 @@ public class Player {
     static {
         try {
             for (int i = 0; i < 3; i++) {
-                PLAYER_SPRITES_UP[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player_up_" + i + ".png")));
-                PLAYER_SPRITES_DOWN[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player_down_" + i + ".png")));
-                PLAYER_SPRITES_LEFT[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player_left_" + i + ".png")));
-                PLAYER_SPRITES_RIGHT[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player_right_" + i + ".png")));
+                PLAYER_SPRITES_UP[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player/player1/player_up_" + i + ".png")));
+                PLAYER_SPRITES_DOWN[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player/player1/player_down_" + i + ".png")));
+                PLAYER_SPRITES_LEFT[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player/player1/player_left_" + i + ".png")));
+                PLAYER_SPRITES_RIGHT[i] = new Image(Objects.requireNonNull(Player.class.getResourceAsStream("/ressources/sprites/player/player1/player_right_" + i + ".png")));
             }
         } catch (Exception e) {
             throw new RuntimeException("Erreur chargement sprites", e);

@@ -31,6 +31,7 @@ public class MapEnvironnement {
     private final Case dalleCase = new Case(Case.Type.DALLE, Case.Element.NONE);
     private final Case herbeChampigonCase = new Case(Case.Type.HERBE, Case.Element.CHAMPIGNON);
     private final Case eauCase = new Case(Case.Type.EAU, Case.Element.NONE);
+    private final Case nenupharEauCase = new Case(Case.Type.NENUPHAR_EAU, Case.Element.NONE);
 
 
 
@@ -76,6 +77,7 @@ public class MapEnvironnement {
             case "6" -> dalleCase;
             case "7" -> herbeChampigonCase;
             case "8" -> eauCase;
+            case "9" -> nenupharEauCase;
             default -> throw new IllegalArgumentException("Le valeur de case n'existe pas");
         };
     }

@@ -5,6 +5,7 @@ public class MapVivant {
     private int rows;
     private int cols;
 
+    // Constructeur
     public MapVivant(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
@@ -13,7 +14,25 @@ public class MapVivant {
 
     // On mets des humains et des zombies sur la carte
     public void populate(int nbHumains, int nbZombies, int nbAnimaux, MapEnvironnement map) {
+        // Groupe de bitches pour étudier en haut à droite
+        mapVivants[6][95] = new Bear(6, 95);
+
+
+        mapVivants[32][75] = new Deer(32, 75);
+        mapVivants[31][75] = new Deer(31, 75);
+        mapVivants[33][75] = new Deer(33, 75);
+        mapVivants[32][74] = new Deer(32, 74);
+        mapVivants[32][76] = new Deer(32, 76);
+        mapVivants[31][74] = new Deer(31, 74);
+        mapVivants[31][76] = new Deer(31, 76);
+        mapVivants[33][74] = new Deer(33, 74);
+        mapVivants[33][76] = new Deer(33, 76);
+        mapVivants[30][75] = new Deer(30, 75);
+        mapVivants[34][75] = new Deer(34, 75);
+
+
         Random random = new Random();
+
 
         for (int i = 0; i < nbHumains; i++) {
             boolean placed = false;
@@ -60,12 +79,13 @@ public class MapVivant {
                 compt++;
             }
         }
+
     }
 
     // On fais la mise à jour des déplacements
     public void update(MapEnvironnement grid) {
 
-        // Copier temporairement la carte pour éviter les conflits
+        // Copier temporairement la carte pour éviter les conflits lors d'un cycle
         EtreVivant[][] tempMap = new EtreVivant[grid.getRows()][grid.getCols()];
         for (int row = 0; row < grid.getRows(); row++) {
             for (int col = 0; col < grid.getCols(); col++) {
@@ -73,16 +93,19 @@ public class MapVivant {
             }
         }
 
-
         for (int row = 0; row < grid.getRows(); row++) {
             for (int col = 0; col < grid.getCols(); col++) {
                 EtreVivant vivant = tempMap[row][col];
 
+                // Case vide
                 if (vivant == null) {
                     continue;
                 }
 
-                vivant.gen_deplacement(this, grid, row, col);
+                // Déplacement de chaque être vivants (la prise en compte réelle est dans le cylce)
+                vivant.updateDeplacement(this, grid, row, col);
+
+                // Actions spécifiques
                 if (vivant instanceof Zombie zombie) {
                     zombie.transformNearbyHumans(this);
                 }
@@ -90,9 +113,7 @@ public class MapVivant {
         }
     }
 
-
     // Pour ajouter un animal aléatoire
-
     public void ajouterAnimalAleatoire(int row, int col) {
         Animaux.Type[] types = Animaux.Type.values();
         Random random = new Random();
@@ -102,16 +123,22 @@ public class MapVivant {
         switch (randomType) {
             case DEER -> mapVivants[row][col] = new Deer(row, col);
             case BEAR -> mapVivants[row][col] = new Bear(row, col);
-            case BOAR -> mapVivants[row][col] = new Boar(row, col);
-            case FOX -> mapVivants[row][col] = new Fox(row, col);
-            case WOLF -> mapVivants[row][col] = new Wolf(row, col);
+            //case BOAR -> mapVivants[row][col] = new Boar(row, col);
+            //case FOX -> mapVivants[row][col] = new Fox(row, col);
+            //case WOLF -> mapVivants[row][col] = new Wolf(row, col);
             case BUNNY -> mapVivants[row][col] = new Bunny(row, col);
         }
+
+
     }
+
+
+
     // Pour savoir si l'etre vivant à row et bound est bien sur la carte
     public boolean isWithinBounds(int row, int col) {
         return row >= 0 && row < this.rows && col >= 0 && col < this.cols;
     }
+
     // Getter et setter
     public EtreVivant getEtreVivant(int row, int col) {
         return mapVivants[row][col];
@@ -125,4 +152,11 @@ public class MapVivant {
     public void setRows(int rows) {
         this.rows = rows;
     }
+    public int getCols() {
+        return cols;
+    }
+    public void setCols(int cols) {
+        this.cols = cols;
+    }
+
 }

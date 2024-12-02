@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class Main extends Application {
     // Définition de la taille des cases
-    private static final int TILE_SIZE = 30;
+    private static final int TILE_SIZE = 25;
 
     // Matrice pour le layout
     private GridPane grid;
@@ -25,7 +25,7 @@ public class Main extends Application {
     private Game game;
 
     // Definition chemin de la carte
-    private final String mapFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/map1.txt")).getPath();
+    private final String mapFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/map1_test.txt")).getPath();
     private final String musicFilePath = Objects.requireNonNull(getClass().getResource("/ressources/audio/background_music.mp3")).toExternalForm();
     private final String iconFilePath = Objects.requireNonNull(getClass().getResource("/ressources/icons/icone1.jpg")).toExternalForm();
 
@@ -59,8 +59,8 @@ public class Main extends Application {
         // MuSique
         playBackgroundMusic();
 
-        // Mise à jour des déplacements
-        Timeline gameLoop = new Timeline(new KeyFrame(Duration.millis(800), event -> {
+        // Mise à jour des déplacements 200 ms
+        Timeline gameLoop = new Timeline(new KeyFrame(Duration.millis(200), event -> {
             game.update();
             grid.getChildren().clear();
             game.displayMap(grid, TILE_SIZE);
@@ -101,7 +101,5 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-
 
 }

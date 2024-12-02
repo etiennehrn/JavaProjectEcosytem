@@ -6,7 +6,7 @@ import javafx.util.Duration;
 
 public class Game {
     // Vision du joueur
-    private final int visionRange = 12;
+    private final int visionRange = 15;
 
     private final MapEnvironnement mapEnvironnement;
     private final MapVivant mapVivant;
@@ -25,9 +25,9 @@ public class Game {
     public Game(String mapFilePath) {
         mapEnvironnement = new MapEnvironnement(mapFilePath);
         mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
-        player = new Player(1, 1, visionRange, mapEnvironnement);
+        player = new Player(50, 50, visionRange, mapEnvironnement);
 
-        mapVivant.populate(60, 50, 30, mapEnvironnement);
+        mapVivant.populate(20, 20, 10, mapEnvironnement);
 
         // Début du cycle
         startDayNightCycle();

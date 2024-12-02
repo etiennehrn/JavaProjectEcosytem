@@ -4,10 +4,10 @@ import javafx.scene.image.ImageView;
 import java.util.Objects;
 
 public class Fox extends Animaux {
-    private static final Image FOX_IMAGE = new Image(Objects.requireNonNull(Fox.class.getResourceAsStream("/ressources/sprites/fox.png")));
+    private static final Image FOX_IMAGE = new Image(Objects.requireNonNull(Fox.class.getResourceAsStream("/ressources/sprites/animals/fox.png")));
 
     public Fox(int row, int col) {
-        super(row, col, 1, 1);
+        super(row, col, 10, 1, 5);
     }
 
     @Override

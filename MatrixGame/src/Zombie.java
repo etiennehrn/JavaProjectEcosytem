@@ -4,66 +4,109 @@ import javafx.scene.image.ImageView;
 import java.util.*;
 
 public class Zombie extends EtreVivant {
-    // Attribut d'un zombie
-    private int searchRadius;
+    // Nombre total de styles dezombies
+    private static final int NUM_ZOMBIE_STYLES = 1;
 
+    // sprites humain pour chaque direction
+    private static final Image[][] ZOMBIE_SPRITES_UP = new Image[3][NUM_ZOMBIE_STYLES];
+    private static final Image[][] ZOMBIE_SPRITES_DOWN = new Image[3][NUM_ZOMBIE_STYLES];
+    private static final Image[][] ZOMBIE_SPRITES_LEFT = new Image[3][NUM_ZOMBIE_STYLES];
+    private static final Image[][] ZOMBIE_SPRITES_RIGHT = new Image[3][NUM_ZOMBIE_STYLES];
 
-    private static final Image ZOMBIE_IMAGE = new Image(Objects.requireNonNull(Zombie.class.getResourceAsStream("/ressources/sprites/zombie.png")));
+    // Pour l'animation
+    private final int styleIndex;
+    private int animationFrame = 0;
+    private String lastDirection = "down";
 
+    // On charge les sprites qu'une seule fois avec static donc bien perfo
+    static {
+        try {
+            for (int style = 0; style < NUM_ZOMBIE_STYLES; style++) {
+                for (int i = 0; i < 3; i++) {
+                    ZOMBIE_SPRITES_UP[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/zombies/zombie" + style +"/zombie" + style +"_up_" + i + ".png")));
+                    ZOMBIE_SPRITES_DOWN[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/zombies/zombie" + style +"/zombie" + style +"_down_" + i + ".png")));
+                    ZOMBIE_SPRITES_LEFT[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/zombies/zombie" + style +"/zombie" + style +"_left_" + i + ".png")));
+                    ZOMBIE_SPRITES_RIGHT[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/zombies/zombie" + style +"/zombie" + style +"_right_" + i + ".png")));
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors du chargement des sprites des humains", e);
+        }
+    }
+    // Constructeur
     public Zombie(int row, int col) {
-        super(row, col);
-        searchRadius = 50;
+        super(row, col, 6, 1, 10); // Vitesse 6
+        // Choisir un style aléatoire pour ce zombie
+        Random random = new Random();
+        this.styleIndex = random.nextInt(NUM_ZOMBIE_STYLES);
     }
 
+    // Récupérer le sprite actuel
     @Override
-    public ImageView getSprite(int titleSize) {
-        ImageView imageView = new ImageView(ZOMBIE_IMAGE);
-        imageView.setFitWidth(titleSize);
-        imageView.setFitHeight(titleSize);
+    public ImageView getSprite(int tileSize) {
+        Image sprite = getCurrentSprite();
+        ImageView imageView = new ImageView(sprite);
+        imageView.setFitWidth(tileSize);
+        imageView.setFitHeight(tileSize);
         return imageView;
+    }
+
+    // Obtenir le scripte actuelle
+    public Image getCurrentSprite() {
+        switch (lastDirection) {
+            case "up":
+                return ZOMBIE_SPRITES_UP[animationFrame][styleIndex];
+            case "down":
+                return ZOMBIE_SPRITES_DOWN[animationFrame][styleIndex];
+            case "left":
+                return ZOMBIE_SPRITES_LEFT[animationFrame][styleIndex];
+            case "right":
+                return ZOMBIE_SPRITES_RIGHT[animationFrame][styleIndex];
+            default:
+                return ZOMBIE_SPRITES_DOWN[0][styleIndex];
+        }
     }
 
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
-        // On pourra implémenter les fuites ou déplacements spéciaux ici
-        int[][] directions = {
-                {-1, 0}, // Haut
-                {1, 0},  // Bas
-                {0, 1},  // Gauche
-                {0, -1}  // Droite
-        };
+        // Pour l'instant les zombies traque l'humain le plus proche s'il en voie un, sinon mouvement erratique
+        // Zombie est cheaté car il peut se déplacer en diag (monde favorable aux zombies, c'est les humaisn qui dovent fuir)
 
-        // Cheche humain proche
-        int[] targetPosition = findNearestHuman(mapVivants, grid, row, col, searchRadius);
-        if (targetPosition != null) {
-            // On va vers l'humain
-            int newRow = row + Integer.signum(targetPosition[0]-row);
-            int newCol = col + Integer.signum(targetPosition[1]-col);
+        // On commence par lister les humains proches
+        List<EtreVivant> etreVivants = getEtreVivantsDansRayon(mapVivants, getVisionRange());
+        List<EtreVivant> humainsProches = new ArrayList<>();
 
-            if (deplacerVers(newRow, newCol, mapVivants, grid)) {
-                return;
+        for (EtreVivant vivant : etreVivants) {
+            if (vivant instanceof Humain) {
+                humainsProches.add(vivant);
             }
         }
 
+        // On choisit le plus proche et on se déplace vers lui
+        if (!humainsProches.isEmpty()) {
+            EtreVivant humainCible = trouverHumainLePlusProche(humainsProches);
+
+            if (humainCible != null) {
+                int[] direction = {Integer.signum(humainCible.getRow() - getRow()), Integer.signum(humainCible.getCol() - getCol())};
+                int newRow = row + direction[0];
+                int newCol = col + direction[1];
+
+                if (deplacerVers(newRow, newCol, mapVivants, grid)) {
+                    lastDirection = getDirectionName(direction);
+                    animationFrame = (animationFrame + 1) % 3; // Passer au sprite suivant
+                    return; // Déplacement réussi
+                }
+            }
+
+        }
         // Sinon mouvement erratique
-        List<int[]> shuffledDirections = Arrays.asList(directions);
-        Collections.shuffle(shuffledDirections);
-
-        for (int[] direction : shuffledDirections) {
-            int newRow = row + direction[0];
-            int newCol = col + direction[1];
-
-            if (deplacerVers(newRow, newCol, mapVivants, grid)) {
-                return;
-            }
-        }
-
-
+        int[] direction = mouvementErratique(mapVivants, grid, row, col);
+        lastDirection = getDirectionName(direction);
+        animationFrame = (animationFrame + 1) % 3; // Passer au sprite suivant
 
     }
 
-
-    // Fonction pour que les zombies mangent l'humain pas loin
+    // Fonction pour que les zombies mangent l'humain pas loin (1 carré de lui)
     public void transformNearbyHumans(MapVivant mapVivants) {
         int[][] directions = {
                 {-1, 0},
@@ -86,27 +129,19 @@ public class Zombie extends EtreVivant {
         }
     }
 
-    // Fonction qui cherche les humains pas trop loin, renvoie seulement la position
-    private int[] findNearestHuman(MapVivant mapVivants, MapEnvironnement grid, int row, int col, int radius) {
-        int closestDistance = Integer.MAX_VALUE;
-        int[] closestHumans = null;
+    // Méthode pour trouve l'humain le plus proche dans la liste
+    private EtreVivant trouverHumainLePlusProche(List<EtreVivant> humainsProches) {
+        EtreVivant humainPlusProche = null;
+        int distanceMin = Integer.MAX_VALUE;
 
-        for (int i = Math.max(0, row-radius); i <= Math.min(grid.getRows()-1, row+radius); i++) {
-            for (int j = Math.max(0, row-radius); j <= Math.min(grid.getCols() -1, col + radius); j++) {
-                EtreVivant target = mapVivants.getEtreVivant(i, j);
-                if (target instanceof Humain) {
-                    // La fameuse distance de manhattan qui sert dans autre chose que des exos
-                    int distance = Math.abs(i - row) + Math.abs(j - col);
-                    if (distance < closestDistance) {
-                        closestDistance = distance;
-                        closestHumans = new int[]{i, j};
-                    }
-
-                }
+        for (EtreVivant humain : humainsProches) {
+            int distance = Math.abs(humain.getRow() - getRow()) + Math.abs(humain.getCol() - getCol());
+            if (distance < distanceMin) {
+                distanceMin = distance;
+                humainPlusProche = humain;
             }
         }
-        return closestHumans;
+        return humainPlusProche;
     }
-
 
 }

@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Case {
     // Type de la case
     public enum Type {
-        HERBE, MUR, DALLE, EAU
+        HERBE, MUR, DALLE, EAU, NENUPHAR_EAU
     }
 
     // Element sur le type de la case
@@ -19,6 +19,7 @@ public class Case {
     private static final Image MUR_TEXTURE;
     private static final Image DALLE_TEXTURE;
     private static final Image EAU_TEXTURE;
+    private static final Image NENUPHAR_EAU_TEXTURE;
 
     private static final Image ARBRE_TEXTURE;
     private static final Image BUISSON_TEXTURE;
@@ -35,6 +36,7 @@ public class Case {
             MUR_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/mur.jpg"), "Texture mur.jpg introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
             DALLE_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/dalle.png"), "Texture dalle.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
             EAU_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/eau.png"), "Texture eau.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
+            NENUPHAR_EAU_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/nenuphar_eau.png"), "Texture eau.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
 
             ARBRE_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/arbre1.png"), "Texture abre1.jpg introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
             BUISSON_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/buisson.png"), "Texture buisson.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
@@ -62,6 +64,7 @@ public class Case {
             case MUR -> MUR_TEXTURE;
             case DALLE -> DALLE_TEXTURE;
             case EAU -> EAU_TEXTURE;
+            case NENUPHAR_EAU -> NENUPHAR_EAU_TEXTURE;
         };
         this.element = element;
 
