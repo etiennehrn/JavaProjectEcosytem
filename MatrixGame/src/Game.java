@@ -1,7 +1,10 @@
 import javafx.scene.layout.GridPane;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class Game {
@@ -12,16 +15,10 @@ public class Game {
     private final MapVivant mapVivant;
     private final Player player;
 
-    // Gestion Cylcle jour/nuit
-    public enum Cycle {
-        JOUR, CREPUSCULE, NUIT, AURORE
-    }
+    // Cycle Jour/Nuit
+    private final DayNightCycle dayNightCycle;
 
-    private Cycle cycle = Cycle.JOUR;
-    private int cycleDuration = 50;
-    private int timeCounter;
-    private Timeline cycleTimeline;
-
+    // Constructeur
     public Game(String mapFilePath) {
         mapEnvironnement = new MapEnvironnement(mapFilePath);
         mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
@@ -29,17 +26,22 @@ public class Game {
 
         mapVivant.populate(20, 20, 10, mapEnvironnement);
 
-        // Début du cycle
-        startDayNightCycle();
+        // Initialisation cycle jour.nuit de durée total 240
+        dayNightCycle = new DayNightCycle(240);
     }
 
+    // Update position des etres vivants
     public void update() {
         mapVivant.update(mapEnvironnement);
     }
+
+    // Affiche la carte et le temps
     public void displayMap(GridPane gridPane, int titleSize) {
-        mapEnvironnement.displayMap(gridPane, titleSize, player, mapVivant, getLightingColor());
+        mapEnvironnement.displayMap(gridPane, titleSize, player, mapVivant, dayNightCycle.getLightingColor());
+        displayTime(gridPane);
     }
 
+    // déplacement Joueur
     public void movePlayer(String direction) {
         switch (direction.toLowerCase()) {
             case "up" -> player.moveUp();
@@ -48,6 +50,35 @@ public class Game {
             case "right" -> player.moveRight();
             default -> System.out.println("Invalid direction");
         }
+    }
+
+    // Affiche l'horloge
+    public void displayTime(GridPane gridPane) {
+        Text timeDisplay = new Text(dayNightCycle.getFormattedTime());
+        timeDisplay.setFill(Color.WHITESMOKE);
+        timeDisplay.setStyle(
+                "-fx-font-size: 8px;" +          // Taille de la police légèrement augmentée
+                        "-fx-font-family: 'Monospaced';" + // Police intégrée qui rappelle le pixel art
+                        "-fx-fill: #FFD700;"               // Couleur or pour un effet rétro
+        );
+
+        // Créer le rectangle de fond
+        Rectangle background = new Rectangle();
+        background.setWidth(25);
+        background.setHeight(20);
+        background.setArcWidth(10); // Coins arrondis
+        background.setArcHeight(10);
+        background.setFill(Color.BLACK);
+        background.setOpacity(0.6);
+
+        // On empile rectange et texte
+        StackPane timePane = new StackPane();
+        timePane.getChildren().addAll(background, timeDisplay);
+
+        // Positionner le StackPane dans le coin supérieur droit
+        gridPane.add(timePane, gridPane.getColumnCount() - 1, 0);
+        GridPane.setColumnSpan(timePane, 1);
+        GridPane.setRowSpan(timePane, 1);
     }
     // Getter et Setter
     public int getRows() {
@@ -61,47 +92,6 @@ public class Game {
     }
     public Player getPlayer() {
         return player;
-    }
-
-    // Gestion Cycle JOUR./NUIT
-
-
-    public Cycle getCycle() {
-        return cycle;
-    }
-
-    private void startDayNightCycle() {
-        cycleTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            timeCounter++;
-            if (timeCounter >= cycleDuration) {
-                timeCounter = 0;
-                advanceCycle();
-            }
-        }));
-        cycleTimeline.setCycleCount(Timeline.INDEFINITE);
-        cycleTimeline.play();
-    }
-
-    private void advanceCycle() {
-
-        switch (cycle) {
-            case JOUR -> cycle = Cycle.CREPUSCULE;
-            case CREPUSCULE -> cycle = Cycle.NUIT;
-            case NUIT -> cycle = Cycle.AURORE;
-            case AURORE -> cycle = Cycle.JOUR;
-        }
-
-    }
-
-    // Méthode pour gérer la couleur en fct du cycle
-    public Color getLightingColor() {
-
-        return switch (cycle) {
-            case JOUR -> Color.TRANSPARENT;
-            case CREPUSCULE -> Color.rgb(255, 140, 0, 0.3);
-            case NUIT -> Color.rgb(0, 0, 50, 0.5);
-            case AURORE -> Color.rgb(255, 223, 186, 0.3);
-        };
     }
 }
 

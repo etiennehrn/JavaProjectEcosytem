@@ -33,9 +33,7 @@ public class MapEnvironnement {
     private final Case eauCase = new Case(Case.Type.EAU, Case.Element.NONE);
     private final Case nenupharEauCase = new Case(Case.Type.NENUPHAR_EAU, Case.Element.NONE);
 
-
-
-
+    // Constructeur
     public MapEnvironnement(String filePath) {
         loadMapFromFile(filePath);
     }
@@ -132,16 +130,14 @@ public class MapEnvironnement {
                     elementView.setFitHeight(titleSize);
                     cellPane.getChildren().add(elementView);
                 }
-                // Modification luminosité : Ajoutez le rectangle dans `cellPane` et configurez-le correctement
+                // Modification luminosité
                 Rectangle lighting = new Rectangle(titleSize, titleSize);
                 lighting.setFill(lightingColor);
-                lighting.setOpacity(0.5); // Ajustez l'opacité pour l'effet souhaité
-                cellPane.getChildren().add(lighting); // Ajoutez le rectangle au fond de chaque cellule
+                cellPane.getChildren().add(lighting);
 
 
                 // Ajouter le conteneur (fond + joueur) au GridPane
                 gridPane.add(cellPane, col - startCol, row - startRow);
-
 
             }
         }
