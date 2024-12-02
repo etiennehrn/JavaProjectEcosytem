@@ -200,25 +200,33 @@ Le projet est organisé selon la structure suivante :
 
 ```plaintext
 src/
-├── ressources/                 # Dossier contenant tous les fichiers ressources
-│   ├── audio/                  # Dossier pour les fichiers audio
-│   │   └── background_music.mp3 # Musique d'ambiance
-│   ├── icons/                  # Dossier pour les icônes du projet
-│   │   └── icone1.jpg          # Icône principale pour le projet
-│   ├── sprites/                # Dossier pour les sprites des vivants
-│   │   ├── human.png           # Sprite pour les humains
-│   │   ├── player.png          # Sprite pour le joueur
-│   │   └── zombie.png          # Sprite pour les zombies
-│   ├── textures/               # Dossier pour les textures de la carte
-│   │   ├── herbe.jpg           # Texture pour les cases d'herbe
-│   │   └── mur.jpg             # Texture pour les murs
-│   └── map.txt                 # Fichier texte pour générer la carte
-├── Case.java                   # Classe pour représenter une case de la carte
-├── EtreVivant.java             # Classe abstraite pour les vivants (humains, zombies)
-├── Game.java                   # Gestion des éléments du jeu (cartes, vivants, interactions)
-├── Humain.java                 # Classe pour les humains
-├── Main.java                   # Classe principale (lance l'application)
-├── MapEnvironnement.java       # Classe pour générer et gérer la carte environnementale
-├── MapVivant.java              # Classe pour gérer les vivants (humains, zombies)
-├── Player.java                 # Classe pour le joueur et ses déplacements
-└── Zombie.java                 # Classe pour les zombies
+├── com/
+│   ├── etienne/
+│   │   ├── ecosysteme/
+│   │   │   ├── core/
+│   │   │   │   ├── DayNightCycle
+│   │   │   │   ├── Game
+│   │   │   │   └── Main
+│   │   │   ├── entities/
+│   │   │   │   ├── Animaux
+│   │   │   │   ├── Bear
+│   │   │   │   ├── Boar
+│   │   │   │   ├── Bunny
+│   │   │   │   ├── Deer
+│   │   │   │   ├── EtreVivant
+│   │   │   │   ├── Fox
+│   │   │   │   ├── Humain
+│   │   │   │   ├── Player
+│   │   │   │   ├── Wolf
+│   │   │   │   └── Zombie
+│   │   │   ├── environment/
+│   │   │   │   ├── Case
+│   │   │   │   ├── MapEnvironnement
+│   │   │   │   └── MapVivant
+├── ressources/
+│   ├── audio/
+│   ├── icons/
+│   ├── map/
+│   ├── sprites/
+│   └── textures/
+└── test/
