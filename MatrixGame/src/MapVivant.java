@@ -30,6 +30,8 @@ public class MapVivant {
         mapVivants[30][75] = new Deer(30, 75);
         mapVivants[34][75] = new Deer(34, 75);
 
+        mapVivants[54][54] = new Wolf(54, 54);
+
 
         Random random = new Random();
 
