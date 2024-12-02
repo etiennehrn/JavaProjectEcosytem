@@ -1,0 +1,85 @@
+### IntelliJ IDEA ###
+.idea/
+*.iml
+out/
+*.ipr
+*.iws
+.gradle/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### Build ###
+target/
+build/
+
+### Logs ###
+*.log
+*.log.*
+
+### Maven ###
+target/
+dependency-reduced-pom.xml
+build.log
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+
+### Gradle ###
+.gradle/
+build/
+
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+*.javadoc
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+### General ###
+*.swp
+*.swo
+*.~lock.*
+*~
+*.tmp
+*.bak
+
+# Node-like lock files
+*.lock
+
+# Environment variable files
+.env
+.env.*
+
+# Python/Virtual Environment (if accidentally used)
+*.pyc
+__pycache__/
+
+# Other editor backups
+*.idea.old/
