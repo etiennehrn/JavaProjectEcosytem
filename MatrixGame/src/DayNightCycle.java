@@ -25,7 +25,7 @@ public class DayNightCycle {
 
     // Le démarrage
     private void startCycle() {
-        cycleTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {timeCounter = (timeCounter + 1) % totalCycleDuration;}));
+        cycleTimeline = new Timeline(new KeyFrame(Duration.seconds(1), _ -> timeCounter = (timeCounter + 1) % totalCycleDuration));
         cycleTimeline.setCycleCount(Timeline.INDEFINITE);
         cycleTimeline.play();
     }
