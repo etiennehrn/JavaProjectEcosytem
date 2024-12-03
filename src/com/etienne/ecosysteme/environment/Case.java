@@ -1,7 +1,78 @@
-package com.etienne.ecosysteme.environment;/* Classe qui représente une case de la map, ça peut-etre plein de choses herbes, mur, eau, etc... */
-import javafx.scene.image.Image;
-import java.util.Objects;
+package com.etienne.ecosysteme.environment;
 
+// Chaque case est composée d'un type de base (herbe, eau, sol) et d'un élément (arbre, cailloux, etc.) (ou rien comme élément)
+public class Case {
+    // Type de base
+    private final BaseType baseType;
+
+    // Element de la case, non final peut etre on modifiera
+    private Element element;
+
+    // Constructeur
+    public Case(BaseType baseType, Element element) {
+        this.baseType = baseType;
+        this.element = element;
+    }
+
+    // Getter
+    public BaseType getBaseType() {
+        return baseType;
+    }
+    public Element getElement() {
+        return element;
+    }
+
+    // Setter
+    public void setElement(Element element) {
+        this.element = element;
+    }
+
+    // Méthode pour savoir si une case est un obstacle
+    public boolean isObstacle() {
+        if (element != null) {
+            if (element.canPassObstacle()) {
+                return false;
+            }
+        }
+        return baseType.isObstacle() || (element != null && element.isObstacle());
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 public class Case {
     // Type de la case
     public enum Type {
@@ -12,7 +83,6 @@ public class Case {
     public enum Element {
         NONE, ARBRE, BUISSON, CAILLOUX, TRONC, CHAMPIGNON, SALADE
     }
-
 
 
     private static final Image HERBE_TEXTURE;
@@ -32,16 +102,16 @@ public class Case {
 
     static {
         try {
-            HERBE_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/herbe.png"), "Texture herbe.jpg introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
-            MUR_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/mur.jpg"), "Texture mur.jpg introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
-            DALLE_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/dalle.png"), "Texture dalle.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
-            EAU_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/eau.png"), "Texture eau.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
-            NENUPHAR_EAU_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/nenuphar_eau.png"), "Texture eau.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
+            HERBE_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/herbe_clair.png"), "Texture herbe.jpg introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
+            MUR_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/cailloux_petit.jpg"), "Texture cailloux_petit.jpg introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
+            DALLE_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/herbe_dalle.png"), "Texture herbe_dalle.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
+            EAU_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/eau_centre.png"), "Texture eau_centre.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
+            NENUPHAR_EAU_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/nenuphar_eau.png"), "Texture eau_centre.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
 
-            ARBRE_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/arbre1.png"), "Texture abre1.jpg introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
-            BUISSON_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/buisson.png"), "Texture buisson.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
-            CAILLOUX_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/cailloux.png"), "Texture cailloux.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
-            TRONC_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/tronc.png"), "Texture tronc.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
+            ARBRE_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/arbre_clair.png"), "Texture abre1.jpg introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
+            BUISSON_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/arbre_buisson.png"), "Texture arbre_buisson.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
+            CAILLOUX_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/cailloux_moyen.png"), "Texture cailloux_moyen.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
+            TRONC_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/arbre_mort.png"), "Texture arbre_mort.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
             CHAMPIGNON_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/champignon.png"), "Texture champignon.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
             SALADE_TEXTURE = new Image(Objects.requireNonNull(Case.class.getResourceAsStream("/ressources/textures/salade.png"), "Texture salade.png introuvable ! Assurez-vous que le fichier est dans le dossier ressources/textures."));
 
@@ -100,3 +170,4 @@ public class Case {
         return elementTexture;
     }
 }
+*/

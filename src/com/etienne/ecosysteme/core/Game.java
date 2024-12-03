@@ -34,7 +34,7 @@ public class Game {
     public Game(String mapFilePath) {
         mapEnvironnement = new MapEnvironnement(mapFilePath);
         mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
-        player = new Player(50, 50, visionRange, mapEnvironnement);
+        player = new Player(1, 1, visionRange, mapEnvironnement);
 
         mapVivant.populate(20, 20, 10, mapEnvironnement);
 

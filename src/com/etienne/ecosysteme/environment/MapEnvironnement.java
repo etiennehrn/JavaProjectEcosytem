@@ -23,18 +23,6 @@ public class MapEnvironnement {
     private int rows;
     private int cols;
 
-    // Instances uniques des types de case pour opti
-    private final Case herbeArbreCase = new Case(Case.Type.HERBE, Case.Element.ARBRE);
-    private final Case herbeBuissonCase = new Case(Case.Type.HERBE, Case.Element.BUISSON);
-    private final Case herbeCaillouxCase = new Case(Case.Type.HERBE, Case.Element.CAILLOUX);
-    private final Case herbeTroncCase = new Case(Case.Type.HERBE, Case.Element.TRONC);
-    private final Case herbeCase = new Case(Case.Type.HERBE, Case.Element.NONE);
-    private final Case murCase = new Case(Case.Type.MUR, Case.Element.NONE);
-    private final Case dalleCase = new Case(Case.Type.DALLE, Case.Element.NONE);
-    private final Case herbeChampigonCase = new Case(Case.Type.HERBE, Case.Element.CHAMPIGNON);
-    private final Case eauCase = new Case(Case.Type.EAU, Case.Element.NONE);
-    private final Case nenupharEauCase = new Case(Case.Type.NENUPHAR_EAU, Case.Element.NONE);
-
     // Constructeur
     public MapEnvironnement(String filePath) {
         loadMapFromFile(filePath);
@@ -52,10 +40,9 @@ public class MapEnvironnement {
 
             for (int i = 0; i < rows; i++) {
                 String[] values = lines.get(i).split(" ");
-
                 for (int j = 0; j < cols; j++) {
-                    grid[i][j] = parseCase(values[j]);
-
+                    // Utilise CaseFactory pour chaque code
+                    grid[i][j] = CaseFactory.createCase(values[j]);
                 }
             }
         }
@@ -64,6 +51,7 @@ public class MapEnvironnement {
         }
     }
 
+    /*
     // Méthode pour convertir Value en Case
     private Case parseCase(String value) {
         return switch (value) {
@@ -80,6 +68,8 @@ public class MapEnvironnement {
             default -> throw new IllegalArgumentException("Le valeur de case n'existe pas");
         };
     }
+    */
+
 
     // Méthode pour afficher la vision de la map du joueur dans un GridPane
     public void displayMap(GridPane gridPane, int titleSize, Player player, MapVivant mapVivant, Paint lightingColor) {
@@ -100,14 +90,18 @@ public class MapEnvironnement {
                 StackPane cellPane = new StackPane();
 
                 // Fond (case de la grille) avec texture
-                ImageView background = new ImageView(grid[row][col].getBaseTexture());
-                background.setFitWidth(titleSize);
-                background.setFitHeight(titleSize);
+                ImageView baseImage = new ImageView(grid[row][col].getBaseType().getTexture());
+                baseImage.setFitWidth(titleSize);
+                baseImage.setFitHeight(titleSize);
+                cellPane.getChildren().add(baseImage);
 
-                // Ajouter la texture de fond au StackPane
-                cellPane.getChildren().add(background);
-
-
+                // Texture de l'élément (si présent)
+                if (grid[row][col].getElement() != null) {
+                    ImageView elementImage = new ImageView(grid[row][col].getElement().getTexture());
+                    elementImage.setFitWidth(titleSize);
+                    elementImage.setFitHeight(titleSize);
+                    cellPane.getChildren().add(elementImage);
+                }
 
                 // Ajoute êtres vivants si il y en a
                 EtreVivant vivant = mapVivant.getEtreVivant(row, col);
@@ -124,18 +118,11 @@ public class MapEnvironnement {
                     // Ajouter la texture du joueur par-dessus le fond
                     cellPane.getChildren().add(playerTexture);
                 }
-                // Ajoute Les élements si il y en a
-                if (grid[row][col].getElement() != Case.Element.NONE) {
-                    ImageView elementView = new ImageView(grid[row][col].getElementTexture());
-                    elementView.setFitWidth(titleSize);
-                    elementView.setFitHeight(titleSize);
-                    cellPane.getChildren().add(elementView);
-                }
+
                 // Modification luminosité
                 Rectangle lighting = new Rectangle(titleSize, titleSize);
                 lighting.setFill(lightingColor);
                 cellPane.getChildren().add(lighting);
-
 
                 // Ajouter le conteneur (fond + joueur) au GridPane
                 gridPane.add(cellPane, col - startCol, row - startRow);
