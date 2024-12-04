@@ -29,6 +29,15 @@ public class CaseFactory {
             case "0" -> new HerbeType(HerbeType.Variant.CLAIR);
             case "1" -> new HerbeType(HerbeType.Variant.DALLE);
             case "2" -> new EauType(EauType.Variant.CENTRE);
+            case "3" -> new EauType(EauType.Variant.GAUCHE);
+            case "4" -> new EauType(EauType.Variant.DROIT);
+            case "5" -> new EauType(EauType.Variant.HAUT);
+            case "6" -> new EauType(EauType.Variant.BAS);
+            case "7" -> new EauType(EauType.Variant.HAUT_GAUCHE);
+            case "8" -> new EauType(EauType.Variant.HAUT_DROITE);
+            case "9" -> new EauType(EauType.Variant.BAS_GAUCHE);
+            case "10" -> new EauType(EauType.Variant.BAS_DROITE);
+
             default -> throw new IllegalArgumentException("Type de base inconnu : " + baseCode);
         };
 

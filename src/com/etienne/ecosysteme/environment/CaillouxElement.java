@@ -18,7 +18,7 @@ public class CaillouxElement extends Element {
     // Chargement des textures
     static {
         textureMap.put(Variant.MOYEN, new Image(Objects.requireNonNull(CaillouxElement.class.getResourceAsStream("/ressources/textures/element/cailloux/cailloux_moyen.png"))));
-        textureMap.put(Variant.PETIT, new Image(Objects.requireNonNull(CaillouxElement.class.getResourceAsStream("/ressources/textures/element/cailloux/cailloux_petit.jpg"))));
+        textureMap.put(Variant.PETIT, new Image(Objects.requireNonNull(CaillouxElement.class.getResourceAsStream("/ressources/textures/element/cailloux/cailloux_petit.png"))));
     }
 
     private final Variant variant;
