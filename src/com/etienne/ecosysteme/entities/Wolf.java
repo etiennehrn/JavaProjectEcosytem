@@ -1,7 +1,6 @@
 package com.etienne.ecosysteme.entities;
 
 import com.etienne.ecosysteme.environment.MapEnvironnement;
-import com.etienne.ecosysteme.environment.MapVivant;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 

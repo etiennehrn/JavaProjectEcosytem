@@ -13,6 +13,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 
+import java.io.IOException;
 import java.util.Objects;
 
 
@@ -27,18 +28,18 @@ public class Main extends Application {
     private Game game;
 
     // Definition chemin de la carte
-    private final String mapFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/nnew_map1_test.txt")).getPath();
+    private final String mapFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/map_case/nnew_map1_test.txt")).getPath();
     private final String musicFilePath = Objects.requireNonNull(getClass().getResource("/ressources/audio/background_music.mp3")).toExternalForm();
     private final String iconFilePath = Objects.requireNonNull(getClass().getResource("/ressources/icons/icone1.jpg")).toExternalForm();
-
+    private final String mapVivantFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/map_vivant/map_vivant.txt")).getPath();
     // Pour le son
     private MediaPlayer mediaPlayer;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
 
         grid = new GridPane();
-        game = new Game(mapFilePath);
+        game = new Game(mapFilePath, mapVivantFilePath);
 
         game.displayMap(grid, TILE_SIZE);
 

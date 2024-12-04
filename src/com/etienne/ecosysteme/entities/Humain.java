@@ -1,7 +1,6 @@
 package com.etienne.ecosysteme.entities;
 
 import com.etienne.ecosysteme.environment.MapEnvironnement;
-import com.etienne.ecosysteme.environment.MapVivant;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -12,7 +11,7 @@ import java.util.Random;
 
 public class Humain extends EtreVivant {
     // Vitesse minimale et maximale des humains
-    private static final int MIN_VITESSE = 3;
+    private static final int MIN_VITESSE = 1;
     private static final int MAX_VITESSE = 5;
 
     // Nombre total de styles d'humains
@@ -46,7 +45,7 @@ public class Humain extends EtreVivant {
 
     // Constructeur
     public Humain(int row, int col) {
-        super(row, col, getRandomVitesse(), 1, 6); // Vitesse 5, visionRange 5
+        super(row, col, getRandomVitesse(), 1, 12); // Vitesse 5, visionRange 5
         // Choisir un style aléatoire pour cet humain
         Random random = new Random();
         this.styleIndex = random.nextInt(NUM_HUMAN_STYLES);

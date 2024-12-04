@@ -1,18 +1,16 @@
 package com.etienne.ecosysteme.core;
 
-import com.etienne.ecosysteme.core.DayNightCycle;
 import com.etienne.ecosysteme.entities.Player;
 import com.etienne.ecosysteme.environment.MapEnvironnement;
-import com.etienne.ecosysteme.environment.MapVivant;
+import com.etienne.ecosysteme.entities.MapVivant;
 
 import javafx.scene.layout.GridPane;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
+
+import java.io.IOException;
 
 public class Game {
     // Vision du joueur
@@ -31,12 +29,12 @@ public class Game {
     private final DayNightCycle dayNightCycle;
 
     // Constructeur
-    public Game(String mapFilePath) {
+    public Game(String mapFilePath, String mapVivantFilePath) throws IOException {
         mapEnvironnement = new MapEnvironnement(mapFilePath);
         mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
         player = new Player(1, 1, visionRange, mapEnvironnement);
 
-        mapVivant.populate(20, 20, 10, mapEnvironnement);
+        mapVivant.populate(mapVivantFilePath, 300, 20, 10, mapEnvironnement);
 
         // Initialisation cycle jour.nuit de durée total 240
         dayNightCycle = new DayNightCycle(240);
@@ -101,6 +99,7 @@ public class Game {
         GridPane.setColumnSpan(timePane, 1);
         GridPane.setRowSpan(timePane, 1);
     }
+
     // Getter et Setter
     public int getRows() {
         return mapEnvironnement.getRows();

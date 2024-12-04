@@ -9,7 +9,7 @@ import java.util.Objects;
 public class HerbeType extends BaseType {
     // Liste des Variants
     public enum Variant {
-        CLAIR, DALLE
+        CLAIR, DALLE, FONCE
     }
 
     // Dico pour avoir toutes les textures, et les charger que une seule fois
@@ -19,6 +19,7 @@ public class HerbeType extends BaseType {
     static {
         textureMap.put(Variant.CLAIR, new Image(Objects.requireNonNull(HerbeType.class.getResourceAsStream("/ressources/textures/baseType/herbe/herbe_clair.png"))));
         textureMap.put(Variant.DALLE, new Image(Objects.requireNonNull(HerbeType.class.getResourceAsStream("/ressources/textures/baseType/herbe/herbe_dalle.png"))));
+        textureMap.put(Variant.FONCE, new Image(Objects.requireNonNull(HerbeType.class.getResourceAsStream("/ressources/textures/baseType/herbe/herbe_fonce.png"))));
 
     }
 

@@ -1,14 +1,13 @@
 package com.etienne.ecosysteme.entities;
 
 import com.etienne.ecosysteme.environment.MapEnvironnement;
-import com.etienne.ecosysteme.environment.MapVivant;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.*;
 
 public class Zombie extends EtreVivant {
-    // Nombre total de styles dezombies
+    // Nombre total de styles de zombies
     private static final int NUM_ZOMBIE_STYLES = 1;
 
     // sprites humain pour chaque direction
@@ -39,7 +38,7 @@ public class Zombie extends EtreVivant {
     }
     // Constructeur
     public Zombie(int row, int col) {
-        super(row, col, 6, 1, 10); // Vitesse 6
+        super(row, col, 6, 1, 30); // Vitesse 6
         // Choisir un style aléatoire pour ce zombie
         Random random = new Random();
         this.styleIndex = random.nextInt(NUM_ZOMBIE_STYLES);

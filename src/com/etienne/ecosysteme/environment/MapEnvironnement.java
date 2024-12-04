@@ -5,11 +5,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 import com.etienne.ecosysteme.entities.EtreVivant;
+import com.etienne.ecosysteme.entities.MapVivant;
 import com.etienne.ecosysteme.entities.Player;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -50,26 +49,6 @@ public class MapEnvironnement {
             System.err.println("Erreur lors de la lecture de la map");
         }
     }
-
-    /*
-    // Méthode pour convertir Value en Case
-    private Case parseCase(String value) {
-        return switch (value) {
-            case "0" -> herbeCase;
-            case "1" -> murCase;
-            case "2" -> herbeArbreCase;
-            case "3" -> herbeBuissonCase;
-            case "4" -> herbeCaillouxCase;
-            case "5" -> herbeTroncCase;
-            case "6" -> dalleCase;
-            case "7" -> herbeChampigonCase;
-            case "8" -> eauCase;
-            case "9" -> nenupharEauCase;
-            default -> throw new IllegalArgumentException("Le valeur de case n'existe pas");
-        };
-    }
-    */
-
 
     // Méthode pour afficher la vision de la map du joueur dans un GridPane
     public void displayMap(GridPane gridPane, int titleSize, Player player, MapVivant mapVivant, Paint lightingColor) {

@@ -41,6 +41,9 @@ public class CaseFactory {
             case "07" -> new EauType(EauType.Variant.HAUT_GAUCHE);
             case "08" -> new EauType(EauType.Variant.HAUT_DROITE);
             case "09" -> new EauType(EauType.Variant.BAS_GAUCHE);
+            case "10" -> new EauType(EauType.Variant.BAS_DROITE);
+            case "11" -> new HerbeType(HerbeType.Variant.FONCE);
+
 
             default -> throw new IllegalArgumentException("Type de base inconnu : " + baseCode);
         };
@@ -57,6 +60,7 @@ public class CaseFactory {
                 case "F" -> new CaillouxElement(CaillouxElement.Variant.MOYEN);
                 case "G" -> new CaillouxElement(CaillouxElement.Variant.PETIT);
                 case "H" -> new ArbreElement(ArbreElement.Variant.DENSE_CLAIR);
+                case "I" -> new CaillouxElement(CaillouxElement.Variant.PONT);
 
                 default -> throw new IllegalArgumentException("Type d'élément inconnu : " + elementCode);
             };

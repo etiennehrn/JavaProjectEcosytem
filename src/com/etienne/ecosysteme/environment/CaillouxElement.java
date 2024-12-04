@@ -9,7 +9,7 @@ import java.util.Objects;
 public class CaillouxElement extends Element {
     // Variant pour les cailloux
     public enum Variant {
-        MOYEN, PETIT
+        MOYEN, PETIT, PONT
     }
 
     // Map des textures
@@ -19,6 +19,8 @@ public class CaillouxElement extends Element {
     static {
         textureMap.put(Variant.MOYEN, new Image(Objects.requireNonNull(CaillouxElement.class.getResourceAsStream("/ressources/textures/element/cailloux/cailloux_moyen.png"))));
         textureMap.put(Variant.PETIT, new Image(Objects.requireNonNull(CaillouxElement.class.getResourceAsStream("/ressources/textures/element/cailloux/cailloux_petit.png"))));
+        textureMap.put(Variant.PONT, new Image(Objects.requireNonNull(CaillouxElement.class.getResourceAsStream("/ressources/textures/element/cailloux/cailloux_pont.png"))));
+
     }
 
     private final Variant variant;
