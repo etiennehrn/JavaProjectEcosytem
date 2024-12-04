@@ -19,24 +19,28 @@ public class CaseFactory {
         return caseCache.get(code);
     }
 
-    // Donne la case en fonction du code de la forme LettreNuméro (Lettre(en maj) -> TypeBase et Numéro -> Element)
+    // Donne la case en fonction du code de la forme Numéro_Lettre (Numéro (2 chiffres) -> typeBase, Lettre(en maj) -> Element)
     private static Case generateCaseFromCode(String code) {
-        String baseCode = code.substring(0, 1);
-        String elementCode = code.length() > 1 ? code.substring(1) : null;
+        // On sépare le code selon le caractère _
+        String[] parts = code.split("_");
+        if (parts.length == 0 || parts.length > 2) {
+            throw new IllegalArgumentException("Invalid code format");
+        }
+        String baseCode = parts[0];
+        String elementCode = parts.length == 2 ? parts[1]  : null;
 
         BaseType baseType = switch (baseCode) {
             // ICI LE CODE DES TYPES DE BASES
-            case "0" -> new HerbeType(HerbeType.Variant.CLAIR);
-            case "1" -> new HerbeType(HerbeType.Variant.DALLE);
-            case "2" -> new EauType(EauType.Variant.CENTRE);
-            case "3" -> new EauType(EauType.Variant.GAUCHE);
-            case "4" -> new EauType(EauType.Variant.DROIT);
-            case "5" -> new EauType(EauType.Variant.HAUT);
-            case "6" -> new EauType(EauType.Variant.BAS);
-            case "7" -> new EauType(EauType.Variant.HAUT_GAUCHE);
-            case "8" -> new EauType(EauType.Variant.HAUT_DROITE);
-            case "9" -> new EauType(EauType.Variant.BAS_GAUCHE);
-            case "10" -> new EauType(EauType.Variant.BAS_DROITE);
+            case "00" -> new HerbeType(HerbeType.Variant.CLAIR);
+            case "01" -> new HerbeType(HerbeType.Variant.DALLE);
+            case "02" -> new EauType(EauType.Variant.CENTRE);
+            case "03" -> new EauType(EauType.Variant.GAUCHE);
+            case "04" -> new EauType(EauType.Variant.DROIT);
+            case "05" -> new EauType(EauType.Variant.HAUT);
+            case "06" -> new EauType(EauType.Variant.BAS);
+            case "07" -> new EauType(EauType.Variant.HAUT_GAUCHE);
+            case "08" -> new EauType(EauType.Variant.HAUT_DROITE);
+            case "09" -> new EauType(EauType.Variant.BAS_GAUCHE);
 
             default -> throw new IllegalArgumentException("Type de base inconnu : " + baseCode);
         };
@@ -53,27 +57,10 @@ public class CaseFactory {
                 case "F" -> new CaillouxElement(CaillouxElement.Variant.MOYEN);
                 case "G" -> new CaillouxElement(CaillouxElement.Variant.PETIT);
                 case "H" -> new ArbreElement(ArbreElement.Variant.DENSE_CLAIR);
+
                 default -> throw new IllegalArgumentException("Type d'élément inconnu : " + elementCode);
             };
         }
         return new Case(baseType, element);
     }
 }
-/*
-    // Méthode pour convertir Value en Case
-    private Case parseCase(String value) {
-        return switch (value) {
-            case "0" -> herbeCase;
-            case "1" -> caillouxPetitCase;
-            case "2" -> herbeArbreCase;
-            case "3" -> herbeBuissonCase;
-            case "4" -> herbeCaillouxMoyenCase;
-            case "5" -> herbeTroncCase;
-            case "6" -> dalleCase;
-            case "7" -> herbeChampigonCase;
-            case "8" -> eauCase;
-            case "9" -> nenupharEauCase;
-            default -> throw new IllegalArgumentException("Le valeur de case n'existe pas");
-        };
-    }
-    */

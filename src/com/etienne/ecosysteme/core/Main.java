@@ -27,7 +27,7 @@ public class Main extends Application {
     private Game game;
 
     // Definition chemin de la carte
-    private final String mapFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/new_map1_test.txt")).getPath();
+    private final String mapFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/nnew_map1_test.txt")).getPath();
     private final String musicFilePath = Objects.requireNonNull(getClass().getResource("/ressources/audio/background_music.mp3")).toExternalForm();
     private final String iconFilePath = Objects.requireNonNull(getClass().getResource("/ressources/icons/icone1.jpg")).toExternalForm();
 
