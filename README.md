@@ -150,16 +150,10 @@ Chaque espèce animale possède des comportements uniques qui influencent leurs 
 - **Cerfs** : Se déplacent en groupe (troupeaux) et fuient à l'approche d'un prédateur (loups ou ours).
 - **Lapins** : Errent de manière aléatoire et peuvent être chassés et mangés par les loups.
 - **Ours** : Se déplacent seuls et effraient les autres animaux dans leur périmètre.
-- **Loups** : Chassent activement les lapins et provoquent la fuite des cerfs.
-
-Les déplacements prennent en compte :
-- Les obstacles naturels (arbres, rochers, buissons).
-- Les interactions dynamiques entre les animaux.
 
 ### 2. Amélioration de la Fonction `populate`
 Les animaux sont répartis de façon cohérente dans l'environnement :
 - **Cerfs** : Regroupés en troupeaux dans des zones dégagées.
-- **Lapins** : Dispersés dans les zones forestières.
 - **Loups et ours** : Rares, répartis de manière stratégique sur la carte.
 
 ### 3. Ajout d'une Horloge
@@ -183,7 +177,45 @@ Ajout d'éléments naturels pour améliorer l'immersion :
 
 ---
 
+✅ **Terminé** le 06/12/2024.
 
+# Jalon 6 : Amélioration des déplacements et corrections mineurs
+
+## Description
+Ce jalon a pour but de faire des déplacements plus génériques (dans la super classe EtreVivant) et de les adapter pourl'ensemble des êtres vivants
+---
+
+## Nouvelles Fonctionnalités Implémentées
+
+### 1. Déplacement des Animaux
+Chaque espèce animale possède des comportements uniques qui influencent leurs déplacements :
+- **Cerfs** : Se déplacent en groupe (troupeaux) et fuient à l'approche d'un prédateur (loups ou ours).
+- **Lapins** : Errent de manière aléatoire et peuvent être chassés et mangés par les loups.
+- **Ours** : Se déplacent seuls et effraient les autres animaux dans leur périmètre.
+- **Loups** : Chassent activement les lapins et provoquent la fuite des cerfs.
+
+Les déplacements prennent en compte :
+- Les obstacles naturels (arbres, rochers, buissons).
+- Les interactions dynamiques entre les animaux.
+
+### 2. Prise en compte possible des obstacles dans la vision Range
+Les obstacles modifient la vision des être vivants
+- Faire une méthode isVisionBloquante générique pour les cases
+- Corriger la fonction qui recherche les êtres vivants dans visionRange
+
+### 3. Ajout Sprites pour animaux
+Faire en sorte que les mouvements paraissent plus fluide
+- Pour les ours
+- Pour les cerfs
+- Pours les lapins
+
+### 4. Amélioration de l'horloge
+- Faire des transitions encore plus fluides pour la luminosité
+
+### 5. Amélioration des commentaires
+- Faire des commentaires formatés avec ChatGPT pour les fonctions (dans l'optique de faire une JavaDoc plus tard)
+
+---
 ## Installation et Configuration
 
 ### Prérequis :
