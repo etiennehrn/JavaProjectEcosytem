@@ -204,7 +204,7 @@ Les obstacles modifient la vision des être vivants
 - Corriger la fonction qui recherche les êtres vivants dans visionRange
 
 ### 3. Ajout Sprites pour animaux
-Faire en sorte que les mouvements paraissent plus fluide
+Faire en sorte que les mouvements paraissent plus fluide (donc ajout de sprites)
 - Pour les ours
 - Pour les cerfs
 - Pours les lapins
