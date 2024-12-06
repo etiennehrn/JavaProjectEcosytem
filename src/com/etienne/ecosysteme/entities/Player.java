@@ -128,7 +128,7 @@ public class Player {
 
     // Pour jouer le bruit du déplacement
     private void playMoveSound() {
-        /* Moins couteux mais ne joue pas quand c'est rapide
+        /* Moins couteux, mais ne joue pas quand c'est rapide
         MOVE_PLAYER.stop();
         MOVE_PLAYER.play();
         */

@@ -10,7 +10,8 @@ public class Bunny extends Animaux {
     private static final Image BUNNY_IMAGE = new Image(Objects.requireNonNull(Bunny.class.getResourceAsStream("/ressources/sprites/animals/bunny.png")));
 
     public Bunny(int row, int col) {
-        super(row, col, 1, 1, 4); // Vitesse 2 pour les lapins, ils sont rapide les fous
+        super(row, col, 1, 1, 5); // Vitesse 2 pour les lapins, ils sont rapide les fous
+        System.out.println(row + " " + col);
     }
 
     @Override
@@ -23,16 +24,17 @@ public class Bunny extends Animaux {
 
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
-        // Lapin qui font les tapettes en gros, et ils sont très rapide pour fuir
+        // Lapins qui font les tapettes en gros, et ils sont très rapide pour fuir
         Random random = new Random();
 
         // Récupérer tous les êtres vivants dans le rayon de vision
-        List<EtreVivant> vivantsProches = getEtreVivantsDansRayon(mapVivants, getVisionRange());
+        List<EtreVivant> vivantsProches = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1);
+        System.out.println(vivantsProches);
         boolean menacePresente = !vivantsProches.isEmpty();
 
         // Mouvement erratique si pas de menace, très faible proba de bouger
         if (!menacePresente) {
-            if (random.nextDouble() >= 0.1) {
+            if (random.nextDouble() >= 0) {
                 return; // Pas de déplacement
             }
             int[] direction = mouvementErratique(mapVivants, grid, row, col);
@@ -52,15 +54,13 @@ public class Bunny extends Animaux {
                 for (EtreVivant vivant : vivantsProches) {
                     distanceTotale += Math.abs(vivant.getRow() - newRow) + Math.abs(vivant.getCol() - newCol);
                 }
-
                 if (distanceTotale > maxDistance) {
                     maxDistance = distanceTotale;
                     bestDirection = direction;
                 }
             }
         }
-
-        // On se déplace selon la meilleur direction
+        // On se déplace selon la meilleure direction
         if (bestDirection != null) {
             deplacerVers(row + bestDirection[0], col + bestDirection[1], mapVivants, grid);
         }

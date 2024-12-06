@@ -110,6 +110,71 @@ public class MapEnvironnement {
         }
     }
 
+    /**
+     * Vérifie si un être vivant est visible ou détectable entre deux points selon la distance et les obstacles.
+     * On utilise l'algorithme de Bresenham (celui qui permet de tracer une ligne dans un espace discret (matriciel)), en O(dist_max).
+     *
+     * <p>La méthode prend en compte une distance maximale à laquelle l'être vivant est perceptible,
+     * même en présence d'obstacles. Si la distance entre le point de départ et le point d'arrivée
+     * est inférieure ou égale à cette distance, l'être vivant peut être détecté, même si des obstacles
+     * se trouvent sur le chemin.</p>
+     *
+     * @param grid       la map
+     * @param startRow   la ligne de départ
+     * @param startCol   la colonne de départ
+     * @param endRow     la ligne d'arrivée
+     * @param endCol     la colonne d'arrivée
+     * @param maxDistance la distance maximale à laquelle l'être vivant peut être détecté
+     * @return {@code true} si l'être vivant est détectable, {@code false} sinon
+     */
+    public static boolean isPathClear(MapEnvironnement grid, int startRow, int startCol, int endRow, int endCol, double maxDistance) {
+        // Au cas ou
+        if (startCol == endCol && startRow == endRow) {
+            return true;
+        }
+        // On calcule la distance euclidienne
+        double distance = Math.pow(startRow - endRow, 2) + Math.pow(startCol - endCol, 2);
+
+        // Dans le cas où la distance est inférieur à maxDistance la détection est possible même avec obstacle
+        if (distance <= maxDistance*maxDistance) {
+            return true;
+        }
+
+        // On cherche si il y a un obstacle sur le chemin
+        int dx = Math.abs(endRow - startRow);
+        int dy = Math.abs(endCol - startCol);
+
+        int sx = (startRow < endRow) ? 1 : -1;
+        int sy = (startCol < endCol) ? 1 : -1;
+
+        int err = dx - dy;
+
+        int x = startRow;
+        int y = startCol;
+
+        while (true) {
+            if (grid.getCell(x, y).isObstacle()) {
+                return false;
+            }
+
+            if (x == endRow && y == endCol) {
+                break;
+            }
+            int e2 = 2*err;
+            if (e2 > -dy) {
+                // Avance en ligne
+                err -= dy;
+                x+=sx;
+            }
+
+            if (e2 < dx) {
+                // Avance en colonne
+                err += dx;
+                y+=sy;
+            }
+        }
+        return true;
+    }
     // Getter et Setter
     public Case getCell(int row, int col) {
         return grid[row][col];

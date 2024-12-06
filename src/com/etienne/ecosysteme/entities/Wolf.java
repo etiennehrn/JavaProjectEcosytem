@@ -60,9 +60,9 @@ public class Wolf extends Animaux {
 
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
-        // Pour l'instant que erratique
+        // Pour l'instant qu'erratique
         Random random = new Random();
-        if (random.nextDouble() >= 0.3) {
+        if (random.nextDouble() >= 0.9) {
             return; // Pas de déplacement
         }
         int[] direction = mouvementErratique(mapVivants, grid, row, col);

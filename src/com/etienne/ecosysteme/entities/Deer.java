@@ -27,7 +27,7 @@ public class Deer extends Animaux {
         Random random = new Random();
 
         // Récupérer tous les êtres vivants dans le rayon de vision
-        List<EtreVivant> vivantsProches = getEtreVivantsDansRayon(mapVivants, getVisionRange());
+        List<EtreVivant> vivantsProches = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1);
 
         // Filtrer pour ne garder que les menaces (pas de cerfs ni de lapins)
         List<EtreVivant> menaces = new ArrayList<>();

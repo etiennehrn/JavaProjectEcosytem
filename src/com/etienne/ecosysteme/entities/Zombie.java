@@ -36,6 +36,7 @@ public class Zombie extends EtreVivant {
             throw new RuntimeException("Erreur lors du chargement des sprites des humains", e);
         }
     }
+
     // Constructeur
     public Zombie(int row, int col) {
         super(row, col, 1, 1, 30); // Vitesse 6
@@ -71,7 +72,7 @@ public class Zombie extends EtreVivant {
         // Zombie est cheaté car il peut se déplacer en diag (monde favorable aux zombies, c'est les humaisn qui dovent fuir)
 
         // On commence par lister les humains proches
-        List<EtreVivant> etreVivants = getEtreVivantsDansRayon(mapVivants, getVisionRange());
+        List<EtreVivant> etreVivants = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1);
         List<EtreVivant> humainsProches = new ArrayList<>();
 
         for (EtreVivant vivant : etreVivants) {
@@ -127,7 +128,7 @@ public class Zombie extends EtreVivant {
         }
     }
 
-    // Méthode pour trouve l'humain le plus proche dans la liste
+    // Méthode pour trouver l'humain le plus proche dans la liste
     private EtreVivant trouverHumainLePlusProche(List<EtreVivant> humainsProches) {
         EtreVivant humainPlusProche = null;
         int distanceMin = Integer.MAX_VALUE;

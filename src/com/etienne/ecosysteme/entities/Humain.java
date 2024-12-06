@@ -57,7 +57,6 @@ public class Humain extends EtreVivant {
         return random.nextInt((MAX_VITESSE - MIN_VITESSE) + 1) + MIN_VITESSE;
     }
 
-
     // Récupérer le sprite actuel
     @Override
     public ImageView getSprite(int tileSize) {
@@ -79,13 +78,12 @@ public class Humain extends EtreVivant {
         };
     }
 
-
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
         // Actuellement les humains ont peur des zombies et bougent dans la direction opposé
 
         // On récupère les êtres vivants autours puis on filtre pour garder les zombies
-        List<EtreVivant> etreVivants = getEtreVivantsDansRayon(mapVivants, getVisionRange());
+        List<EtreVivant> etreVivants = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1);
         List<EtreVivant> zombiesProches = new ArrayList<>();
 
         for (EtreVivant vivant : etreVivants) {
@@ -115,7 +113,7 @@ public class Humain extends EtreVivant {
             }
         }
 
-        // On se déplace selon la meilleur direction
+        // On se déplace selon la meilleure direction
         if (bestDirection != null) {
             if (deplacerVers(row + bestDirection[0], col + bestDirection[1], mapVivants, grid))
             {

@@ -16,14 +16,14 @@ public class MapVivant {
         mapVivants = new EtreVivant[rows][cols];
     }
 
-    // On mets des humains et des zombies et des animaux sur la carte et on charge la map_vivant de base
+    // On met des humains et des zombies et des animaux sur la carte et on charge la map_vivant de base
     public void populate(String filePath, int nbHumains, int nbZombies, int nbAnimaux, MapEnvironnement map) throws IOException {
         // Groupe de bitches pour étudier en haut à droite
         PopulateUtil.loadFromFile(filePath, map, this);
         PopulateUtil.populateRandomly(this, map, nbHumains, nbZombies, nbAnimaux);
     }
 
-    // On fais la mise à jour des déplacements
+    // On fait la mise à jour des déplacements
     public void update(MapEnvironnement grid) {
 
         // Copier temporairement la carte pour éviter les conflits lors d'un cycle
@@ -41,7 +41,7 @@ public class MapVivant {
                     continue;
                 }
 
-                // Déplacement de chaque être vivants (la prise en compte réelle est dans le cylce)
+                // Déplacement de chaque être vivant (la prise en compte réelle est dans le cylce)
                 vivant.updateDeplacement(this, grid, row, col);
 
                 // Actions spécifiques

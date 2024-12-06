@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Bear extends Animaux {
-    // Les ours ont un comportement solitaire,ils font peur aux autres et garde leur terrain
+    // Les ours ont un comportement solitaire, ils font peur aux autres et garde leur terrain
 
     // Sprites pour chaque direction (3 images par direction)
     private static final Image[] BEAR_SPRITES_UP = new Image[3];
@@ -71,7 +71,7 @@ public class Bear extends Animaux {
 
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
-        List<EtreVivant> vivantsProches = getEtreVivantsDansRayon(mapVivants, getVisionRange());
+        List<EtreVivant> vivantsProches = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1);
         List<EtreVivant> autresOurs = new ArrayList<>();
 
         // Filtrer pour garder uniquement les autres ours
