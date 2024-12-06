@@ -70,18 +70,13 @@ public class Humain extends EtreVivant {
 
     // Obtenir le scripte actuelle
     public Image getCurrentSprite() {
-        switch (lastDirection) {
-            case "up":
-                return HUMAN_SPRITES_UP[animationFrame][styleIndex];
-            case "down":
-                return HUMAN_SPRITES_DOWN[animationFrame][styleIndex];
-            case "left":
-                return HUMAN_SPRITES_LEFT[animationFrame][styleIndex];
-            case "right":
-                return HUMAN_SPRITES_RIGHT[animationFrame][styleIndex];
-            default:
-                return HUMAN_SPRITES_DOWN[0][styleIndex];
-        }
+        return switch (lastDirection) {
+            case "up" -> HUMAN_SPRITES_UP[animationFrame][styleIndex];
+            case "down" -> HUMAN_SPRITES_DOWN[animationFrame][styleIndex];
+            case "left" -> HUMAN_SPRITES_LEFT[animationFrame][styleIndex];
+            case "right" -> HUMAN_SPRITES_RIGHT[animationFrame][styleIndex];
+            default -> HUMAN_SPRITES_DOWN[0][styleIndex];
+        };
     }
 
 

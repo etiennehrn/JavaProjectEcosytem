@@ -16,7 +16,6 @@ import javafx.scene.media.MediaPlayer;
 import java.io.IOException;
 import java.util.Objects;
 
-
 public class Main extends Application {
     // Définition de la taille des cases
     private static final int TILE_SIZE = 25;

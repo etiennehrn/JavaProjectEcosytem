@@ -38,7 +38,7 @@ public class Zombie extends EtreVivant {
     }
     // Constructeur
     public Zombie(int row, int col) {
-        super(row, col, 6, 1, 30); // Vitesse 6
+        super(row, col, 1, 1, 30); // Vitesse 6
         // Choisir un style aléatoire pour ce zombie
         Random random = new Random();
         this.styleIndex = random.nextInt(NUM_ZOMBIE_STYLES);
@@ -56,18 +56,13 @@ public class Zombie extends EtreVivant {
 
     // Obtenir le scripte actuelle
     public Image getCurrentSprite() {
-        switch (lastDirection) {
-            case "up":
-                return ZOMBIE_SPRITES_UP[animationFrame][styleIndex];
-            case "down":
-                return ZOMBIE_SPRITES_DOWN[animationFrame][styleIndex];
-            case "left":
-                return ZOMBIE_SPRITES_LEFT[animationFrame][styleIndex];
-            case "right":
-                return ZOMBIE_SPRITES_RIGHT[animationFrame][styleIndex];
-            default:
-                return ZOMBIE_SPRITES_DOWN[0][styleIndex];
-        }
+        return switch (lastDirection) {
+            case "up" -> ZOMBIE_SPRITES_UP[animationFrame][styleIndex];
+            case "down" -> ZOMBIE_SPRITES_DOWN[animationFrame][styleIndex];
+            case "left" -> ZOMBIE_SPRITES_LEFT[animationFrame][styleIndex];
+            case "right" -> ZOMBIE_SPRITES_RIGHT[animationFrame][styleIndex];
+            default -> ZOMBIE_SPRITES_DOWN[0][styleIndex];
+        };
     }
 
     @Override

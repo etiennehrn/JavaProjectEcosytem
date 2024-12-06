@@ -56,23 +56,24 @@ public class DayNightCycle {
         double normalizedTime = getNormalizedTime();
         // JOUR
         if (normalizedTime < 0.25) {
-            return Color.TRANSPARENT;
+            double progress = 4*normalizedTime;
+            return interpolateColor(Color.rgb(255, 223, 186, 0.5), Color.TRANSPARENT, progress);
         }
         // CREPUSCULE
         if (normalizedTime < 0.50) {
             // -> [0;1]
             double progress = (normalizedTime - 0.25) / 0.25;
-            return interpolateColor(Color.TRANSPARENT, Color.rgb(255, 100, 10, 0.4), progress);
+            return interpolateColor(Color.TRANSPARENT, Color.rgb(255, 100, 10, 0.2), progress);
         }
         // NUIT
         if (normalizedTime < 0.75) {
             double progress = (normalizedTime - 0.5) / 0.25;
-            return interpolateColor(Color.rgb(255, 100, 10, 0.4), Color.rgb(0, 0, 50, 0.7), progress);
+            return interpolateColor(Color.rgb(255, 100, 10, 0.2), Color.rgb(0, 0, 50, 0.6), progress);
         }
         // AURORE
         else {
             double progress = (normalizedTime - 0.75) / 0.25;
-            return interpolateColor(Color.rgb(0, 0, 50, 0.7), Color.rgb(255, 223, 186, 0.5), progress);
+            return interpolateColor(Color.rgb(0, 0, 50, 0.6), Color.rgb(255, 223, 186, 0.5), progress);
         }
     }
 

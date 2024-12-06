@@ -10,7 +10,7 @@ public class Deer extends Animaux {
     private static final Image DEER_IMAGE = new Image(Objects.requireNonNull(Deer.class.getResourceAsStream("/ressources/sprites/animals/deer.png")));
 
     public Deer(int row, int col) {
-        super(row, col, 3, 1, 10);
+        super(row, col, 3, 1, 15);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class Deer extends Animaux {
         // On fuit les menaces
         for (EtreVivant menace : menaces) {
             double distance = Math.pow(newRow - menace.getRow(), 2) + Math.pow(newCol - menace.getCol(), 2);
-            score -= 50/(distance + 1); // Plus la menace est proche, plus c'est négatif ajuster les coefs
+            score -= 40/(distance + 1); // Plus la menace est proche, plus c'est négatif ajuster les coefs
         }
 
         // Rester en groupe avec les autres

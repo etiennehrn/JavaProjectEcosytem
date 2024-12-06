@@ -131,6 +131,7 @@ public abstract class EtreVivant {
         return null;
     }
 
+
     // Méthode pour obtenir le nom d'une direction, utile dans l'affichage
     protected String getDirectionName(int[] direction) {
         if (direction == null) {

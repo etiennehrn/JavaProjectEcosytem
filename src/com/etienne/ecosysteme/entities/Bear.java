@@ -11,7 +11,30 @@ import java.util.Random;
 
 public class Bear extends Animaux {
     // Les ours ont un comportement solitaire,ils font peur aux autres et garde leur terrain
-    private static final Image BEAR_IMAGE = new Image(Objects.requireNonNull(Bear.class.getResourceAsStream("/ressources/sprites/animals/bear.png")));
+
+    // Sprites pour chaque direction (3 images par direction)
+    private static final Image[] BEAR_SPRITES_UP = new Image[3];
+    private static final Image[] BEAR_SPRITES_DOWN = new Image[3];
+    private static final Image[] BEAR_SPRITES_LEFT = new Image[3];
+    private static final Image[] BEAR_SPRITES_RIGHT = new Image[3];
+
+    // Pour animation
+    private int animationFrame = 0;
+    private String lastDirection = "down";
+
+    // Chargement des sprites
+    static {
+        try {
+            for (int i = 0; i < 3; i++) {
+                BEAR_SPRITES_UP[i] = new Image(Objects.requireNonNull(Bear.class.getResourceAsStream("/ressources/sprites/animals/bear/bear_up_" + i + ".png")));
+                BEAR_SPRITES_DOWN[i] = new Image(Objects.requireNonNull(Bear.class.getResourceAsStream("/ressources/sprites/animals/bear/bear_down_" + i + ".png")));
+                BEAR_SPRITES_LEFT[i] = new Image(Objects.requireNonNull(Bear.class.getResourceAsStream("/ressources/sprites/animals/bear/bear_left_" + i + ".png")));
+                BEAR_SPRITES_RIGHT[i] = new Image(Objects.requireNonNull(Bear.class.getResourceAsStream("/ressources/sprites/animals/bear/bear_right_" + i + ".png")));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors du chargement des sprites de l'ours", e);
+        }
+    }
 
     // Position centrale Ours
     private final int centralRow;
@@ -25,12 +48,25 @@ public class Bear extends Animaux {
         this.centralCol = col;
     }
 
+    // Récupérer le sprite actuel
     @Override
     public ImageView getSprite(int tileSize) {
-        ImageView imageView = new ImageView(BEAR_IMAGE);
+        Image sprite = getCurrentSprite();
+        ImageView imageView = new ImageView(sprite);
         imageView.setFitWidth(tileSize);
         imageView.setFitHeight(tileSize);
         return imageView;
+    }
+
+    // Obtenir le sprite actuel basé sur la direction et l'animation
+    private Image getCurrentSprite() {
+        return switch (lastDirection) {
+            case "up" -> BEAR_SPRITES_UP[animationFrame];
+            case "down" -> BEAR_SPRITES_DOWN[animationFrame];
+            case "left" -> BEAR_SPRITES_LEFT[animationFrame];
+            case "right" -> BEAR_SPRITES_RIGHT[animationFrame];
+            default -> BEAR_SPRITES_DOWN[0];
+        };
     }
 
     @Override
@@ -96,6 +132,7 @@ public class Bear extends Animaux {
             // Si échoue, mouvement aléatoire
             int[] randomDirection = DIRECTIONS[random.nextInt(DIRECTIONS.length)];
             deplacerVers(row + randomDirection[0], col + randomDirection[1], mapVivants, grid);
+
         }
     }
 

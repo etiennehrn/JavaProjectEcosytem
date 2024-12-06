@@ -32,9 +32,9 @@ public class Game {
     public Game(String mapFilePath, String mapVivantFilePath) throws IOException {
         mapEnvironnement = new MapEnvironnement(mapFilePath);
         mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
-        player = new Player(1, 1, visionRange, mapEnvironnement);
+        player = new Player(50, 50, visionRange, mapEnvironnement);
 
-        mapVivant.populate(mapVivantFilePath, 300, 20, 10, mapEnvironnement);
+        mapVivant.populate(mapVivantFilePath, 100, 2, 20, mapEnvironnement);
 
         // Initialisation cycle jour.nuit de durée total 240
         dayNightCycle = new DayNightCycle(240);

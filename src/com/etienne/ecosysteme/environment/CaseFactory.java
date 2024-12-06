@@ -44,7 +44,6 @@ public class CaseFactory {
             case "10" -> new EauType(EauType.Variant.BAS_DROITE);
             case "11" -> new HerbeType(HerbeType.Variant.FONCE);
 
-
             default -> throw new IllegalArgumentException("Type de base inconnu : " + baseCode);
         };
 

@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Wolf extends Animaux {
-    private static final Image WOLF_IMAGE = new Image(Objects.requireNonNull(Wolf.class.getResourceAsStream("/ressources/sprites/animals/wolf.png")));
     // Sprites pour chaque direction (3 images par direction)
     private static final Image[] WOLF_SPRITES_UP = new Image[3];
     private static final Image[] WOLF_SPRITES_DOWN = new Image[3];
