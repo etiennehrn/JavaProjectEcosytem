@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
+
 /**
  * Classe abstraite représentant un être vivant dans la simulation d'écosystème.
  *
@@ -192,6 +194,39 @@ public abstract class EtreVivant {
         return etresVivants;
     }
 
+    /**
+     * Calcule et effectue un déplacement basé sur un score attribué à chaque direction possible.
+     * ATTENTION ON MAXIMISE LE SCORE
+     *
+     * @param mapVivants    la carte des êtres vivants
+     * @param grid          l'environnement de la simulation
+     * @param vivantsAConsidérer la liste des êtres vivants à prendre en compte pour le calcul du score
+     * @param calculerScore une fonction qui calcule un score pour une position donnée
+     */
+    protected void seDeplacerSelonScore(MapVivant mapVivants, MapEnvironnement grid, List<EtreVivant> vivantsAConsidérer, BiFunction<Integer, Integer, Double> calculerScore) {
+        int[] bestDirection = null;
+        double bestScore = Double.NEGATIVE_INFINITY;
+
+        for (int[] direction : DIRECTIONS) {
+            int newRow = getRow() + direction[0];
+            int newCol = getCol() + direction[1];
+
+            if (mapVivants.isWithinBounds(newRow, newCol) && !grid.getCell(newRow, newCol).isObstacle() && mapVivants.getEtreVivant(newRow, newCol) == null) {
+                // On calcule le score pour cette position
+                double score = calculerScore.apply(newRow, newCol);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestDirection = direction;
+                }
+            }
+        }
+
+        // Se déplacer dans la meilleure direction trouvée
+        if (bestDirection != null) {
+            deplacerVers(row + bestDirection[0], col + bestDirection[1], mapVivants, grid);
+        }
+    }
+
     // Méthode qui génére un mouvement érratique
     protected int[] mouvementErratique(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
         // Mélanger les directions pour plus d'aléatoire
@@ -209,7 +244,6 @@ public abstract class EtreVivant {
         }
         return null;
     }
-
 
     // Méthode pour obtenir le nom d'une direction, utile dans l'affichage
     protected String getDirectionName(int[] direction) {
@@ -241,6 +275,17 @@ public abstract class EtreVivant {
             return true; // Déplacement réussi
         }
         return false; // Déplacement impossible
+    }
+
+    /**
+     * Vérifie si cet être vivant est une menace pour un autre être vivant.
+     *
+     * @param autre l'autre être vivant à considérer
+     * @return {@code true} si cet être vivant est une menace, {@code false} sinon
+     */
+    public boolean isMenace(EtreVivant autre) {
+        // Par défaut, un être vivant n'est pas une menace
+        return false;
     }
 
 }

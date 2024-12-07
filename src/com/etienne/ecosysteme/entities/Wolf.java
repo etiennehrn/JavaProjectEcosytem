@@ -73,4 +73,10 @@ public class Wolf extends Animaux {
             animationFrame = (animationFrame + 1) % 3;
         }
     }
+
+    @Override
+    public boolean isMenace(EtreVivant autre) {
+        // Les loups sont des menaces pour les cerfs, les lapins et les ours.
+        return (autre instanceof Bunny) || (autre instanceof Deer) || (autre instanceof Bear);
+    }
 }

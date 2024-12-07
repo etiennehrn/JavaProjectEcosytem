@@ -182,7 +182,7 @@ Ajout d'éléments naturels pour améliorer l'immersion :
 # Jalon 6 : Amélioration des déplacements et corrections mineurs
 
 ## Description
-Ce jalon a pour but de faire des déplacements plus génériques (dans la super classe EtreVivant) et de les adapter pourl'ensemble des êtres vivants
+Ce jalon a pour but de faire des déplacements plus génériques (dans la super classe EtreVivant) et de les adapter pour l'ensemble des êtres vivants
 ---
 
 ## Nouvelles Fonctionnalités Implémentées
@@ -191,7 +191,6 @@ Ce jalon a pour but de faire des déplacements plus génériques (dans la super 
 Chaque espèce animale possède des comportements uniques qui influencent leurs déplacements :
 - **Cerfs** : Se déplacent en groupe (troupeaux) et fuient à l'approche d'un prédateur (loups ou ours).
 - **Lapins** : Errent de manière aléatoire et peuvent être chassés et mangés par les loups.
-- **Ours** : Se déplacent seuls et effraient les autres animaux dans leur périmètre.
 - **Loups** : Chassent activement les lapins et provoquent la fuite des cerfs.
 
 Les déplacements prennent en compte :
@@ -213,7 +212,7 @@ Faire en sorte que les mouvements paraissent plus fluide (donc ajout de sprites)
 - Faire des transitions encore plus fluides pour la luminosité
 
 ### 5. Amélioration des commentaires
-- Faire des commentaires formatés avec ChatGPT pour les fonctions (dans l'optique de faire une JavaDoc plus tard)
+- Commencer à faire quelques (pas trop, car les fonctions vont encore évoluer) commentaires formatés avec ChatGPT pour les fonctions (dans l'optique de faire une JavaDoc plus tard)
 
 ---
 ## Installation et Configuration

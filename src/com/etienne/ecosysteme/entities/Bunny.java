@@ -5,13 +5,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.*;
+import java.util.function.BiFunction;
 
 public class Bunny extends Animaux {
     private static final Image BUNNY_IMAGE = new Image(Objects.requireNonNull(Bunny.class.getResourceAsStream("/ressources/sprites/animals/bunny.png")));
 
     public Bunny(int row, int col) {
         super(row, col, 1, 1, 5); // Vitesse 2 pour les lapins, ils sont rapide les fous
-        System.out.println(row + " " + col);
     }
 
     @Override
@@ -24,46 +24,39 @@ public class Bunny extends Animaux {
 
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
-        // Lapins qui font les tapettes en gros, et ils sont très rapide pour fuir
+        // Lapins qui font les tapettes en gros (sauf pour les zombies et les autres lapins), et ils sont très rapide pour fuir
         Random random = new Random();
 
         // Récupérer tous les êtres vivants dans le rayon de vision
         List<EtreVivant> vivantsProches = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1);
-        System.out.println(vivantsProches);
-        boolean menacePresente = !vivantsProches.isEmpty();
 
+        // On filtre pour ne garder que les menaces
+        List<EtreVivant> menaces = vivantsProches.stream().filter(vivant -> vivant.isMenace(this)).toList();
         // Mouvement erratique si pas de menace, très faible proba de bouger
-        if (!menacePresente) {
-            if (random.nextDouble() >= 0) {
+        if (menaces.isEmpty()) {
+            if (random.nextDouble() >= 0.1) {
                 return; // Pas de déplacement
             }
             int[] direction = mouvementErratique(mapVivants, grid, row, col);
             return;
         }
 
-        int maxDistance = 0;
-        int[] bestDirection = null;
+        // On calcule le déplacement en fonction des menaces
+        seDeplacerSelonScore(mapVivants, grid, vivantsProches, calculerScoreLapin(menaces));
+    }
 
-        for (int[] direction : EtreVivant.DIRECTIONS) {
-            int newRow = row + direction[0];
-            int newCol = col + direction[1];
+    // On définit une biFunction pour calculer le score pour les déplacements, c'est ici qu'on pourra mettre des comportements spécifiques.
+    private BiFunction<Integer, Integer, Double> calculerScoreLapin(List<EtreVivant> menaces) {
+        return (newRow, newCol) -> {
+            double score = 0;
 
-            if (mapVivants.isWithinBounds(newRow, newCol) && !grid.getCell(newRow, newCol).isObstacle() && mapVivants.getEtreVivant(newRow, newCol) == null) {
-                // On calcule la distance totale par rapport à tous les zombies
-                int distanceTotale = 0;
-                for (EtreVivant vivant : vivantsProches) {
-                    distanceTotale += Math.abs(vivant.getRow() - newRow) + Math.abs(vivant.getCol() - newCol);
-                }
-                if (distanceTotale > maxDistance) {
-                    maxDistance = distanceTotale;
-                    bestDirection = direction;
-                }
+            // On maximise la distance par rapport aux menaces
+            for (EtreVivant menace : menaces) {
+                double distance = Math.pow(newCol - menace.getCol(), 2) + Math.pow(newRow-menace.getRow(), 2);
+                score += distance;
             }
-        }
-        // On se déplace selon la meilleure direction
-        if (bestDirection != null) {
-            deplacerVers(row + bestDirection[0], col + bestDirection[1], mapVivants, grid);
-        }
+            return score;
+        };
     }
 
 }

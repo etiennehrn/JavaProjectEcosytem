@@ -29,17 +29,12 @@ public class Deer extends Animaux {
         // Récupérer tous les êtres vivants dans le rayon de vision
         List<EtreVivant> vivantsProches = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1);
 
-        // Filtrer pour ne garder que les menaces (pas de cerfs ni de lapins)
-        List<EtreVivant> menaces = new ArrayList<>();
-        for (EtreVivant vivant : vivantsProches) {
-            if (!(vivant instanceof Deer || vivant instanceof Bunny)) {
-                menaces.add(vivant);
-            }
-        }
-        boolean menacePresente = !menaces.isEmpty();
+        // Filtrer pour ne garder que les menaces
+        List<EtreVivant> menaces = vivantsProches.stream().filter(vivant -> vivant.isMenace(this)).toList();
 
-        // Mouvement erratique si pas de menace, mais avec une proba failbe de bouger
-        if (!menacePresente) {
+
+        // Mouvement erratique si pas de menace, mais avec une probabilité faible de bouger
+        if (menaces.isEmpty()) {
             if (random.nextDouble() >= 0.02) { // 20 % de bouger
                 return; // Pas de déplacement
             }
@@ -47,45 +42,42 @@ public class Deer extends Animaux {
             return;
         }
 
-        // On calcule le meilleur déplacement en fct des menaces et du groupes
-        int[] bestDirection = null;
-        double bestScore = Double.NEGATIVE_INFINITY;
-
-        for (int[] direction : EtreVivant.DIRECTIONS) {
-            int newRow = row + direction[0];
-            int newCol = col + direction[1];
-
-            if (mapVivants.isWithinBounds(newRow, newCol) && !grid.getCell(newRow, newCol).isObstacle() && mapVivants.getEtreVivant(newRow, newCol) == null) {
-                double score = calculerScoreDeplacement(newRow, newCol, menaces, vivantsProches);
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestDirection = direction;
-                }
-            }
-        }
-
-        if (bestDirection != null) {
-            deplacerVers(row + bestDirection[0], col + bestDirection[1], mapVivants, grid);
-        }
+        seDeplacerSelonScore(mapVivants, grid, vivantsProches, (newRow, newCol) -> calculerScoreDeplacement(newRow, newCol, menaces, vivantsProches));
     }
 
+    // Calcule le score total pour le déplacement
     private double calculerScoreDeplacement(int newRow, int newCol, List<EtreVivant> menaces, List<EtreVivant> vivantsProches) {
         double score = 0;
+        score += scorePourFuirMenaces(newRow, newCol, menaces);
+        score += scorePourSeRegrouper(newRow, newCol, vivantsProches);
 
-        // On fuit les menaces
+        return score;
+    }
+
+    // Calcule le score basé sur l'éloignement des menaces
+    private double scorePourFuirMenaces(int newRow, int newCol, List<EtreVivant> menaces) {
+        double score = 0;
         for (EtreVivant menace : menaces) {
             double distance = Math.pow(newRow - menace.getRow(), 2) + Math.pow(newCol - menace.getCol(), 2);
-            score -= 40/(distance + 1); // Plus la menace est proche, plus c'est négatif ajuster les coefs
+            score -= 40 / (distance + 1); // Ajuster le coefficient selon le comportement souhaité
         }
+        return score;
+    }
 
-        // Rester en groupe avec les autres
+    // Ici pour se regrouper
+    private double scorePourSeRegrouper(int newRow, int newCol, List<EtreVivant> vivantsProches) {
+        double score = 0;
         for (EtreVivant vivant : vivantsProches) {
             if (vivant instanceof Deer) {
                 double distance = Math.pow(newRow - vivant.getRow(), 2) + Math.pow(newCol - vivant.getCol(), 2);
-                score += 1/(distance + 1); // Plus le cerf est proche, plus c'est positif
+                score += 1 / (distance + 1); // Ajuster le coefficient selon le comportement souhaité
             }
         }
-
         return score;
+    }
+
+    @Override
+    public boolean isMenace(EtreVivant autre) {
+        return false;
     }
 }
