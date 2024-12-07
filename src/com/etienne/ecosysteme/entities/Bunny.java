@@ -37,7 +37,7 @@ public class Bunny extends Animaux {
         }
 
         // On calcule le déplacement en fonction des menaces
-        int[] direction = seDeplacerSelonScore(mapVivants, grid, vivantsProches, calculerScoreLapin(menaces));
+        int[] direction = seDeplacerSelonScore(mapVivants, grid, calculerScoreLapin(menaces));
         if (direction != null) {
             updateAnimation(parseDirection(direction));
         }

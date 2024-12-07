@@ -137,7 +137,6 @@ public abstract class EtreVivant {
         return compteurDeplacement >= vitesse;
     }
 
-
     /**
      * Met à jour le déplacement de l'être vivant en fonction du cycle actuel.
      *
@@ -172,7 +171,6 @@ public abstract class EtreVivant {
      * @param maxDistance la distance maximale à laquelle un être vivant peut être détecté
      * @return une liste des êtres vivants visibles ou détectables dans le rayon
      */
-
     public List<EtreVivant> getEtreVivantsDansRayon(MapVivant mapVivant, MapEnvironnement grid, int visionRange, double maxDistance) {
         List<EtreVivant> etresVivants = new ArrayList<>();
 
@@ -202,10 +200,9 @@ public abstract class EtreVivant {
      *
      * @param mapVivants    la carte des êtres vivants
      * @param grid          l'environnement de la simulation
-     * @param vivantsAConsidérer la liste des êtres vivants à prendre en compte pour le calcul du score
      * @param calculerScore une fonction qui calcule un score pour une position donnée
      */
-    protected int[] seDeplacerSelonScore(MapVivant mapVivants, MapEnvironnement grid, List<EtreVivant> vivantsAConsidérer, BiFunction<Integer, Integer, Double> calculerScore) {
+    protected int[] seDeplacerSelonScore(MapVivant mapVivants, MapEnvironnement grid, BiFunction<Integer, Integer, Double> calculerScore) {
         int[] bestDirection = null;
         double bestScore = Double.NEGATIVE_INFINITY;
 

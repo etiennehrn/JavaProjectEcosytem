@@ -36,7 +36,7 @@ public class Deer extends Animaux {
             return;
         }
 
-        int[] direction = seDeplacerSelonScore(mapVivants, grid, vivantsProches, (newRow, newCol) -> calculerScoreDeplacement(newRow, newCol, menaces, vivantsProches));
+        int[] direction = seDeplacerSelonScore(mapVivants, grid, (newRow, newCol) -> calculerScoreDeplacement(newRow, newCol, menaces, vivantsProches));
         if (direction != null) {
             updateAnimation(parseDirection(direction));
         }

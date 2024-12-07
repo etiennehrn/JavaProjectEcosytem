@@ -45,9 +45,16 @@ public class MapVivant {
                 vivant.updateDeplacement(this, grid, row, col);
 
                 // Actions spécifiques
+
+                // Zombie mange humain
                 if (vivant instanceof Zombie zombie) {
                     zombie.transformNearbyHumans(this);
                 }
+                // Loup mange lapin
+                if (vivant instanceof Wolf wolf) {
+                    wolf.transformNearByBunny(this);
+                }
+
             }
         }
     }
