@@ -7,18 +7,9 @@ import javafx.scene.image.ImageView;
 import java.util.*;
 
 public class Deer extends Animaux {
-    private static final Image DEER_IMAGE = new Image(Objects.requireNonNull(Deer.class.getResourceAsStream("/ressources/sprites/animals/deer.png")));
 
     public Deer(int row, int col) {
-        super(row, col, 3, 1, 15);
-    }
-
-    @Override
-    public ImageView getSprite(int tileSize) {
-        ImageView imageView = new ImageView(DEER_IMAGE);
-        imageView.setFitWidth(tileSize);
-        imageView.setFitHeight(tileSize);
-        return imageView;
+        super(row, col, 3, 1, 15, Type.DEER);
     }
 
     @Override
@@ -35,14 +26,20 @@ public class Deer extends Animaux {
 
         // Mouvement erratique si pas de menace, mais avec une probabilité faible de bouger
         if (menaces.isEmpty()) {
-            if (random.nextDouble() >= 0.02) { // 20 % de bouger
+            if (random.nextDouble() >= 0.01) { // 20 % de bouger
                 return; // Pas de déplacement
             }
             int[] direction = mouvementErratique(mapVivants, grid, row, col);
+            if (direction != null) {
+                updateAnimation(parseDirection(direction));
+            }
             return;
         }
 
-        seDeplacerSelonScore(mapVivants, grid, vivantsProches, (newRow, newCol) -> calculerScoreDeplacement(newRow, newCol, menaces, vivantsProches));
+        int[] direction = seDeplacerSelonScore(mapVivants, grid, vivantsProches, (newRow, newCol) -> calculerScoreDeplacement(newRow, newCol, menaces, vivantsProches));
+        if (direction != null) {
+            updateAnimation(parseDirection(direction));
+        }
     }
 
     // Calcule le score total pour le déplacement
@@ -59,7 +56,7 @@ public class Deer extends Animaux {
         double score = 0;
         for (EtreVivant menace : menaces) {
             double distance = Math.pow(newRow - menace.getRow(), 2) + Math.pow(newCol - menace.getCol(), 2);
-            score -= 40 / (distance + 1); // Ajuster le coefficient selon le comportement souhaité
+            score -= 70 / (distance + 1); // Ajuster le coefficient selon le comportement souhaité
         }
         return score;
     }

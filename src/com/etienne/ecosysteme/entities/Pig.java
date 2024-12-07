@@ -6,16 +6,16 @@ import javafx.scene.image.ImageView;
 
 import java.util.Objects;
 
-public class Boar extends Animaux {
-    private static final Image BOAR_IMAGE = new Image(Objects.requireNonNull(Boar.class.getResourceAsStream("/ressources/sprites/animals/boar.png")));
+public class Pig extends Animaux {
+    private static final Image PIG_IMAGE = new Image(Objects.requireNonNull(Pig.class.getResourceAsStream("/ressources/sprites/animals/boar.png")));
 
-    public Boar(int row, int col) {
-        super(row, col, 10, 1, 5);
+    public Pig(int row, int col) {
+        super(row, col, 10, 1, 5, Type.PIG);
     }
 
     @Override
     public ImageView getSprite(int tileSize) {
-        ImageView imageView = new ImageView(BOAR_IMAGE);
+        ImageView imageView = new ImageView(PIG_IMAGE);
         imageView.setFitWidth(tileSize);
         imageView.setFitHeight(tileSize);
         return imageView;

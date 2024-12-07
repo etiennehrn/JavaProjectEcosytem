@@ -10,7 +10,7 @@ public class Fox extends Animaux {
     private static final Image FOX_IMAGE = new Image(Objects.requireNonNull(Fox.class.getResourceAsStream("/ressources/sprites/animals/fox.png")));
 
     public Fox(int row, int col) {
-        super(row, col, 10, 1, 5);
+        super(row, col, 10, 1, 5, Type.FOX);
     }
 
     @Override

@@ -8,19 +8,11 @@ import java.util.*;
 import java.util.function.BiFunction;
 
 public class Bunny extends Animaux {
-    private static final Image BUNNY_IMAGE = new Image(Objects.requireNonNull(Bunny.class.getResourceAsStream("/ressources/sprites/animals/bunny.png")));
 
     public Bunny(int row, int col) {
-        super(row, col, 1, 1, 5); // Vitesse 2 pour les lapins, ils sont rapide les fous
+        super(row, col, 1, 1, 5, Type.BUNNY); // Vitesse 2 pour les lapins, ils sont rapide les fous
     }
 
-    @Override
-    public ImageView getSprite(int tileSize) {
-        ImageView imageView = new ImageView(BUNNY_IMAGE);
-        imageView.setFitWidth(tileSize);
-        imageView.setFitHeight(tileSize);
-        return imageView;
-    }
 
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
@@ -38,11 +30,17 @@ public class Bunny extends Animaux {
                 return; // Pas de déplacement
             }
             int[] direction = mouvementErratique(mapVivants, grid, row, col);
+            if (direction != null) {
+                updateAnimation(parseDirection(direction));
+            }
             return;
         }
 
         // On calcule le déplacement en fonction des menaces
-        seDeplacerSelonScore(mapVivants, grid, vivantsProches, calculerScoreLapin(menaces));
+        int[] direction = seDeplacerSelonScore(mapVivants, grid, vivantsProches, calculerScoreLapin(menaces));
+        if (direction != null) {
+            updateAnimation(parseDirection(direction));
+        }
     }
 
     // On définit une biFunction pour calculer le score pour les déplacements, c'est ici qu'on pourra mettre des comportements spécifiques.

@@ -203,7 +203,7 @@ public abstract class EtreVivant {
      * @param vivantsAConsidérer la liste des êtres vivants à prendre en compte pour le calcul du score
      * @param calculerScore une fonction qui calcule un score pour une position donnée
      */
-    protected void seDeplacerSelonScore(MapVivant mapVivants, MapEnvironnement grid, List<EtreVivant> vivantsAConsidérer, BiFunction<Integer, Integer, Double> calculerScore) {
+    protected int[] seDeplacerSelonScore(MapVivant mapVivants, MapEnvironnement grid, List<EtreVivant> vivantsAConsidérer, BiFunction<Integer, Integer, Double> calculerScore) {
         int[] bestDirection = null;
         double bestScore = Double.NEGATIVE_INFINITY;
 
@@ -223,8 +223,12 @@ public abstract class EtreVivant {
 
         // Se déplacer dans la meilleure direction trouvée
         if (bestDirection != null) {
-            deplacerVers(row + bestDirection[0], col + bestDirection[1], mapVivants, grid);
+            if(deplacerVers(row + bestDirection[0], col + bestDirection[1], mapVivants, grid))
+            {
+                return bestDirection;
+            }
         }
+        return null;
     }
 
     // Méthode qui génére un mouvement érratique
