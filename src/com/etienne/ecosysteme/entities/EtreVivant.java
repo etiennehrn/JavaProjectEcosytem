@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
 
+
+
 /**
  * Classe abstraite représentant un être vivant dans la simulation d'écosystème.
  *

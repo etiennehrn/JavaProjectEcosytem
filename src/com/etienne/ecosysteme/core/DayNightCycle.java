@@ -25,6 +25,7 @@ public class DayNightCycle {
 
     // Le démarrage
     private void startCycle() {
+        this.timeCounter = (int) (0.7 * totalCycleDuration);
         cycleTimeline = new Timeline(new KeyFrame(Duration.seconds(1), _ -> timeCounter = (timeCounter + 1) % totalCycleDuration));
         cycleTimeline.setCycleCount(Timeline.INDEFINITE);
         cycleTimeline.play();
@@ -39,53 +40,73 @@ public class DayNightCycle {
     public Cycle getCurrentCycle() {
         double normalizedTime = getNormalizedTime();
 
-        if (normalizedTime < 0.25) {
+        if (normalizedTime < 0.25) { // 6h à 11h
+            return Cycle.AURORE;
+        }
+        if (normalizedTime < 0.5) { // 11h à 18h
             return Cycle.JOUR;
         }
-        if (normalizedTime < 0.50) {
+        if (normalizedTime < 0.75) { // 18h à 00h
             return Cycle.CREPUSCULE;
         }
-        if (normalizedTime < 0.75) {
-            return Cycle.NUIT;
-        }
-        return Cycle.AURORE;
+        return Cycle.NUIT; // 00h à 6h
     }
 
     // Obtenir la couleur du filtre en fonction de l'heure ATTENTION PEUT PRENDRE DU TEMPS A OPTI
     public Color getLightingColor() {
         double normalizedTime = getNormalizedTime();
-        // JOUR
-        if (normalizedTime < 0.25) {
-            double progress = 4*normalizedTime;
-            return interpolateColor(Color.rgb(255, 223, 186, 0.5), Color.TRANSPARENT, progress);
+
+        // Transition de 6h à 11h (aube)
+        if (0.25 <= normalizedTime && normalizedTime <= 0.45) {
+            double progress = (normalizedTime - 0.25) / (0.45 - 0.25);
+            return interpolateColor(Color.rgb(0, 0, 50, 0.6), Color.TRANSPARENT, progress);
         }
-        // CREPUSCULE
-        if (normalizedTime < 0.50) {
-            // -> [0;1]
-            double progress = (normalizedTime - 0.25) / 0.25;
-            return interpolateColor(Color.TRANSPARENT, Color.rgb(255, 100, 10, 0.2), progress);
+
+        // Plein jour de 11h à 18h
+        if (0.4 <= normalizedTime && normalizedTime <= 0.75) {
+            return Color.TRANSPARENT;
         }
-        // NUIT
-        if (normalizedTime < 0.75) {
-            double progress = (normalizedTime - 0.5) / 0.25;
-            return interpolateColor(Color.rgb(255, 100, 10, 0.2), Color.rgb(0, 0, 50, 0.6), progress);
+
+        // Transition fluide de 18h à 00h (crépuscule)
+        if (0.75 <= normalizedTime && normalizedTime <= 0.9) {
+            if (0.75 <= normalizedTime && normalizedTime <= 0.85) {
+                double progress = (normalizedTime - 0.75) / (0.85 - 0.75);
+                return interpolateColor(Color.TRANSPARENT, Color.rgb(220, 130, 50, 0.2), progress);
+            }
+            if (0.85 <= normalizedTime && normalizedTime <= 0.9) {
+                double progress = (normalizedTime - 0.85) / (0.9 - 0.85);
+                return interpolateColor(Color.rgb(220, 130, 50, 0.2), Color.rgb(72, 41, 50, 0.4), progress);
+            }
         }
-        // AURORE
-        else {
-            double progress = (normalizedTime - 0.75) / 0.25;
-            return interpolateColor(Color.rgb(0, 0, 50, 0.6), Color.rgb(255, 223, 186, 0.5), progress);
+        // Juste avant la nuit
+        if (0.9 <= normalizedTime && normalizedTime <= 1.0) {
+
+            double progress = (normalizedTime - 0.9) / (1 - 0.9);
+            return interpolateColor(Color.rgb(72, 41, 50, 0.4), Color.rgb(0, 0, 50, 0.6), progress);
         }
+        // Pleine nuit
+        if(0 <= normalizedTime && normalizedTime <= 0.25) {
+            return Color.rgb(0, 0, 50, 0.6);
+        }
+        return Color.TRANSPARENT;
     }
 
-    // Méthode pour interpolation de couleur, celle qui peut prendre du temps, faudrait faire des tests
+
+    // Méthode pour interpolation de couleur, celle qui peut prendre du temps, il faudrait faire des tests
     private Color interpolateColor(Color start, Color end, double progress) {
-        return new Color(start.getRed() + (end.getRed() - start.getRed())*progress,start.getGreen() + (end.getGreen() - start.getGreen()) * progress, start.getBlue() + (end.getBlue() - start.getBlue()) * progress,start.getOpacity() + (end.getOpacity() - start.getOpacity()) * progress);
+        progress = Math.max(0, Math.min(1, progress)); // Limite le progress entre 0 et 1
+        return new Color(
+                start.getRed() + (end.getRed() - start.getRed()) * progress,
+                start.getGreen() + (end.getGreen() - start.getGreen()) * progress,
+                start.getBlue() + (end.getBlue() - start.getBlue()) * progress,
+                start.getOpacity() + (end.getOpacity() - start.getOpacity()) * progress
+        );
     }
 
     // Obtenir l'heure sous la forme 00:OO
     public String getFormattedTime() {
         int totalMin = (int) (getNormalizedTime()*24*60);
-        int adjustedMinutes = (totalMin + 10 * 60) % (24 * 60); // Ajout de 12h en minutes et modulo pour éviter dépassement de 24h
+        int adjustedMinutes = (totalMin) % (24 * 60); // Ajout de 12h en minutes et modulo pour éviter dépassement de 24h
         int hours = adjustedMinutes / 60;
         int minutes = adjustedMinutes % 60;
 
