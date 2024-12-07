@@ -215,6 +215,36 @@ Faire en sorte que les mouvements paraissent plus fluide (donc ajout de sprites)
 - Commencer à faire quelques (pas trop, car les fonctions vont encore évoluer) commentaires formatés avec ChatGPT pour les fonctions (dans l'optique de faire une JavaDoc plus tard)
 
 ---
+
+✅ **Terminé** le 07/12/2024.
+
+# Jalon 7 : Amélioration des déplacements et corrections mineurs
+
+## Description
+Ce jalon a pour but d'étendre les fonctions de déplacement du jalon-6 aux déplacements des humains et des zombies, et l'ajout d'un comportement de recherche active sans vision. Il y a aussi quelques autres améliorations mineures
+---
+
+## Nouvelles Fonctionnalités Implémentées
+
+### 1. Déplacement des humains et zombies
+Faire en sorte de factoriser le code et de corriger les petits bugs.
+- **Humain** : Fuient les zombies.
+- **Zombies** : Chassent les humains.
+
+### 2. Déplacement ours
+Les ours se déplacent dans leur zone et font peur aux restes des êtres vivants (même les zombies), et s'évitent entre eux.
+- Créer un nouveau type de déplacements en cercle
+
+### 3. Ajout d'un déplacement de recherche active sans vision
+Faire en sorte de modéliser un mouvement de recherche, par exemple pour les loups qui cherchent un lapin.
+
+### 4. Créer un SpriteManager pour les humains et zombies
+- Pour rendre le code plus lisible
+
+### 5. Recherche d'interpolation pour l'image du joueur
+- Pour l'instant recherche puis si possible implémentation en faisant en sorte d'avoir un programme fluide.
+
+---
 ## Installation et Configuration
 
 ### Prérequis :
