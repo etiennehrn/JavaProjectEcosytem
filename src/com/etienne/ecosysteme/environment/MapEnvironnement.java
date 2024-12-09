@@ -82,7 +82,7 @@ public class MapEnvironnement {
                     cellPane.getChildren().add(elementImage);
                 }
 
-                // Ajoute êtres vivants si il y en a
+                // Ajoute êtres vivants s'il y en a
                 EtreVivant vivant = mapVivant.getEtreVivant(row, col);
                 if (vivant != null) {
                     cellPane.getChildren().add(vivant.getSprite(titleSize));
@@ -90,7 +90,7 @@ public class MapEnvironnement {
 
                 // Vérifier si c'est la position du joueur
                 if (row == player.getRow() && col == player.getCol()) {
-                    ImageView playerTexture = new ImageView(player.getCurrentSprite());
+                    ImageView playerTexture = new ImageView(player.getSprite());
                     playerTexture.setFitWidth(titleSize);
                     playerTexture.setFitHeight(titleSize);
 

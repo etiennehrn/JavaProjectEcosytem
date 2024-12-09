@@ -53,7 +53,6 @@ public class Wolf extends Animaux {
         return score;
     }
 
-
     // Mange les lapins à proximités
     public void transformNearByBunny(MapVivant mapVivants) {
         for (int[] direction : DIRECTIONS) {
@@ -69,6 +68,7 @@ public class Wolf extends Animaux {
             }
         }
     }
+
     @Override
     public boolean isMenace(EtreVivant autre) {
         // Les loups sont des menaces pour les cerfs, les lapins et les ours.

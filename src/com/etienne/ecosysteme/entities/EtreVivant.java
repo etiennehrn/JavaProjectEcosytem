@@ -1,6 +1,7 @@
 package com.etienne.ecosysteme.entities;
 
 import com.etienne.ecosysteme.environment.MapEnvironnement;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
-
 
 
 /**
@@ -54,6 +54,30 @@ public abstract class EtreVivant {
             {0, -1}  // Gauche
     };
 
+    // Nom des directions possibles
+    public enum Direction {
+        UP, DOWN, LEFT, RIGHT
+    }
+
+    // Pour l'animation
+    private int animationFrame = 0;
+    private Direction lastDirection = Direction.DOWN;
+
+    // Mise à jour de l'animation et de la direction
+    protected void updateAnimation(Direction direction) {
+        this.lastDirection = direction;
+        this.animationFrame = (animationFrame + 1) % 3; // Boucle sur 3 images
+    }
+
+    // Méthode pour convertir une direction en chaîne
+    protected static Direction parseDirection(int[] movement) {
+        if (movement[0] == -1) return Direction.UP;
+        if (movement[0] == 1) return Direction.DOWN;
+        if (movement[1] == -1) return Direction.LEFT;
+        if (movement[1] == 1) return Direction.RIGHT;
+        return Direction.DOWN; // Par défaut
+    }
+
     /**
      * Constructeur de la classe {@code EtreVivant}.
      *
@@ -90,6 +114,12 @@ public abstract class EtreVivant {
     public int getVisionRange() {
         return visionRange;
     }
+    public int getAnimationFrame() {
+        return animationFrame;
+    }
+    public Direction getLastDirection() {
+        return lastDirection;
+    }
 
     // Setter
     public void setPosition(int row, int col) {
@@ -104,6 +134,12 @@ public abstract class EtreVivant {
     }
     public void setVisionRange(int visionRange) {
         this.visionRange = visionRange;
+    }
+    public void setAnimationFrame(int animationFrame) {
+        this.animationFrame = animationFrame;
+    }
+    public void setLastDirection(Direction lastDirection) {
+        this.lastDirection = lastDirection;
     }
 
     /**

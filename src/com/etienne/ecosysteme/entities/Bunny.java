@@ -13,7 +13,6 @@ public class Bunny extends Animaux {
         super(row, col, 1, 1, 5, Type.BUNNY); // Vitesse 2 pour les lapins, ils sont rapide les fous
     }
 
-
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
         // Lapins qui font les tapettes en gros (sauf pour les zombies et les autres lapins), et ils sont très rapide pour fuir

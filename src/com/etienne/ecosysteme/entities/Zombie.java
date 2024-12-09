@@ -7,35 +7,11 @@ import javafx.scene.image.ImageView;
 import java.util.*;
 
 public class Zombie extends EtreVivant {
-    // Nombre total de styles de zombies
+    // Nombre total de styles de zombies, attention, il faut que ça corresponde avec SpriteManager
     private static final int NUM_ZOMBIE_STYLES = 1;
 
-    // sprites humain pour chaque direction
-    private static final Image[][] ZOMBIE_SPRITES_UP = new Image[3][NUM_ZOMBIE_STYLES];
-    private static final Image[][] ZOMBIE_SPRITES_DOWN = new Image[3][NUM_ZOMBIE_STYLES];
-    private static final Image[][] ZOMBIE_SPRITES_LEFT = new Image[3][NUM_ZOMBIE_STYLES];
-    private static final Image[][] ZOMBIE_SPRITES_RIGHT = new Image[3][NUM_ZOMBIE_STYLES];
-
-    // Pour l'animation
+    // Pour le sprite
     private final int styleIndex;
-    private int animationFrame = 0;
-    private String lastDirection = "down";
-
-    // On charge les sprites qu'une seule fois avec static donc bien perfo
-    static {
-        try {
-            for (int style = 0; style < NUM_ZOMBIE_STYLES; style++) {
-                for (int i = 0; i < 3; i++) {
-                    ZOMBIE_SPRITES_UP[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/zombies/zombie" + style +"/zombie" + style +"_up_" + i + ".png")));
-                    ZOMBIE_SPRITES_DOWN[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/zombies/zombie" + style +"/zombie" + style +"_down_" + i + ".png")));
-                    ZOMBIE_SPRITES_LEFT[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/zombies/zombie" + style +"/zombie" + style +"_left_" + i + ".png")));
-                    ZOMBIE_SPRITES_RIGHT[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/zombies/zombie" + style +"/zombie" + style +"_right_" + i + ".png")));
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors du chargement des sprites des humains", e);
-        }
-    }
 
     // Constructeur
     public Zombie(int row, int col) {
@@ -45,7 +21,7 @@ public class Zombie extends EtreVivant {
         this.styleIndex = random.nextInt(NUM_ZOMBIE_STYLES);
     }
 
-    // Récupérer le sprite actuel
+    // Récupérer le sprite actuel, dépends de taille d'un carré élémentaire
     @Override
     public ImageView getSprite(int tileSize) {
         Image sprite = getCurrentSprite();
@@ -55,54 +31,51 @@ public class Zombie extends EtreVivant {
         return imageView;
     }
 
-    // Obtenir le scripte actuelle
-    public Image getCurrentSprite() {
-        return switch (lastDirection) {
-            case "up" -> ZOMBIE_SPRITES_UP[animationFrame][styleIndex];
-            case "down" -> ZOMBIE_SPRITES_DOWN[animationFrame][styleIndex];
-            case "left" -> ZOMBIE_SPRITES_LEFT[animationFrame][styleIndex];
-            case "right" -> ZOMBIE_SPRITES_RIGHT[animationFrame][styleIndex];
-            default -> ZOMBIE_SPRITES_DOWN[0][styleIndex];
-        };
+    // Obtenir le sprite actuel basé sur la direction et l'animation
+    private Image getCurrentSprite() {
+        Image[] directionSprites = SpriteManager.getInstance().getSprites(String.format("zombie%d", styleIndex), getLastDirection());
+        return directionSprites[getAnimationFrame()];
     }
 
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
         // Pour l'instant les zombies traque l'humain le plus proche s'il en voie un, sinon mouvement erratique
-        // Zombie est cheaté car il peut se déplacer en diag (monde favorable aux zombies, c'est les humaisn qui dovent fuir)
 
-        // On commence par lister les humains proches
-        List<EtreVivant> etreVivants = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1);
-        List<EtreVivant> humainsProches = new ArrayList<>();
+        // Récupérer les zombies dans le rayon de vision
+        List<EtreVivant> zombiesAProximite = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1)
+                .stream()
+                .filter(e -> e instanceof Zombie)
+                .toList();
+        if (zombiesAProximite.isEmpty()) {
+            // Erratique
+            Random random = new Random();
+            if (random.nextDouble() >= 0.5) {
+                return; // Pas de déplacement
+            }
+            int[] direction = mouvementErratique(mapVivants, grid, row, col);
 
-        for (EtreVivant vivant : etreVivants) {
-            if (vivant instanceof Humain) {
-                humainsProches.add(vivant);
+            // Mise à jour de l'animation si le déplacement a eu lieu
+            if (direction != null) {
+                updateAnimation(parseDirection(direction));
             }
         }
 
-        // On choisit le plus proche et on se déplace vers lui
-        if (!humainsProches.isEmpty()) {
-            EtreVivant humainCible = trouverHumainLePlusProche(humainsProches);
-
-            if (humainCible != null) {
-                int[] direction = {Integer.signum(humainCible.getRow() - getRow()), Integer.signum(humainCible.getCol() - getCol())};
-                int newRow = row + direction[0];
-                int newCol = col + direction[1];
-
-                if (deplacerVers(newRow, newCol, mapVivants, grid)) {
-                    lastDirection = getDirectionName(direction);
-                    animationFrame = (animationFrame + 1) % 3; // Passer au sprite suivant
-                    return; // Déplacement réussi
-                }
-            }
-
+        // Déplacer le loup en fonction du score
+        int[] direction = seDeplacerSelonScore(mapVivants, grid, (newRow, newCol) -> calculerScoreDeplacement(newRow, newCol, zombiesAProximite));
+        if (direction != null) {
+            updateAnimation(parseDirection(direction));
         }
-        // Sinon mouvement erratique
-        int[] direction = mouvementErratique(mapVivants, grid, row, col);
-        lastDirection = getDirectionName(direction);
-        animationFrame = (animationFrame + 1) % 3; // Passer au sprite suivant
 
+    }
+
+    // Calcule le score basé sur la proximité des lapins
+    private double calculerScoreDeplacement(int newRow, int newCol, List<EtreVivant> zombies) {
+        double score = 0;
+        for (EtreVivant zombie : zombies) {
+            double distance = Math.pow(newRow - zombie.getRow(), 2) + Math.pow(newCol - zombie.getCol(), 2);
+            score += 100 / (distance + 1); // Plus la distance est faible, plus le score est élevé
+        }
+        return score;
     }
 
     // Fonction pour que les zombies mangent l'humain pas loin (1 carré de lui)
@@ -126,21 +99,6 @@ public class Zombie extends EtreVivant {
                 }
             }
         }
-    }
-
-    // Méthode pour trouver l'humain le plus proche dans la liste
-    private EtreVivant trouverHumainLePlusProche(List<EtreVivant> humainsProches) {
-        EtreVivant humainPlusProche = null;
-        int distanceMin = Integer.MAX_VALUE;
-
-        for (EtreVivant humain : humainsProches) {
-            int distance = Math.abs(humain.getRow() - getRow()) + Math.abs(humain.getCol() - getCol());
-            if (distance < distanceMin) {
-                distanceMin = distance;
-                humainPlusProche = humain;
-            }
-        }
-        return humainPlusProche;
     }
 
 }

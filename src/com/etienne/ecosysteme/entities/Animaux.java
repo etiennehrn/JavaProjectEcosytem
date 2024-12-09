@@ -12,16 +12,6 @@ public abstract class Animaux extends EtreVivant {
 
     private final Type type;
 
-
-    // Directions possibles
-    public enum Direction {
-        UP, DOWN, LEFT, RIGHT
-    }
-    
-    // Pour l'animation
-    private int animationFrame = 0;
-    private Direction lastDirection = Direction.DOWN;
-
     // Constructeur
     public Animaux(int row, int col, int vitesse, int nourriture, int visionRange, Type type) {
         super(row, col, vitesse, nourriture, visionRange);
@@ -43,28 +33,26 @@ public abstract class Animaux extends EtreVivant {
 
     // Obtenir le sprite actuel basé sur la direction et l'animation
     private Image getCurrentSprite() {
-        Image[] directionSprites = AnimalSpriteManager.getInstance().getSprites(type, lastDirection);
-        return directionSprites[animationFrame];
-    }
-
-    // Mise à jour de l'animation et de la direction
-    protected void updateAnimation(Direction direction) {
-        this.lastDirection = direction;
-        this.animationFrame = (animationFrame + 1) % 3; // Boucle sur 3 images
-    }
-
-    // Méthode pour convertir une direction en chaîne
-    protected static Direction parseDirection(int[] movement) {
-        if (movement[0] == -1) return Direction.UP;
-        if (movement[0] == 1) return Direction.DOWN;
-        if (movement[1] == -1) return Direction.LEFT;
-        if (movement[1] == 1) return Direction.RIGHT;
-        return Direction.DOWN; // Par défaut
+        Image[] directionSprites = SpriteManager.getInstance().getSprites(typeToSring(getType()), getLastDirection());
+        return directionSprites[getAnimationFrame()];
     }
 
     // Getter
     public Type getType() {
         return type;
+    }
+
+    // Convertit le type en chaine de caractère
+    private String typeToSring(Animaux.Type type) {
+        return switch (type) {
+            case DEER -> "deer";
+            case BEAR -> "bear";
+            case PIG -> "pig";
+            case FOX -> "fox";
+            case WOLF -> "wolf";
+            case BUNNY -> "bunny";
+            default -> "";
+        };
     }
 
 }

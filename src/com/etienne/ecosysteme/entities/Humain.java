@@ -8,40 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.function.BiFunction;
 
 public class Humain extends EtreVivant {
     // Vitesse minimale et maximale des humains
     private static final int MIN_VITESSE = 1;
     private static final int MAX_VITESSE = 5;
 
-    // Nombre total de styles d'humains
+    // Nombre total de styles d'humains, attention, il faut que ça corresponde avec SpriteManager
     private static final int NUM_HUMAN_STYLES = 4;
 
-    // sprites humain pour chaque direction
-    private static final Image[][] HUMAN_SPRITES_UP = new Image[3][NUM_HUMAN_STYLES];
-    private static final Image[][] HUMAN_SPRITES_DOWN = new Image[3][NUM_HUMAN_STYLES];
-    private static final Image[][] HUMAN_SPRITES_LEFT = new Image[3][NUM_HUMAN_STYLES];
-    private static final Image[][] HUMAN_SPRITES_RIGHT = new Image[3][NUM_HUMAN_STYLES];
-
-    // Pour l'animation
+    // Pour le sprite
     private final int styleIndex;
-    private int animationFrame = 0;
-    private String lastDirection = "down";
-    // On charge les sprites qu'une seule fois avec static donc bien perfo
-    static {
-        try {
-            for (int style = 0; style < NUM_HUMAN_STYLES; style++) {
-                for (int i = 0; i < 3; i++) {
-                    HUMAN_SPRITES_UP[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/humans/human" + style +"/human" + style + "_up_" + i + ".png")));
-                    HUMAN_SPRITES_DOWN[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/humans/human" + style +"/human" + style + "_down_" + i + ".png")));
-                    HUMAN_SPRITES_LEFT[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/humans/human" + style +"/human" + style + "_left_" + i + ".png")));
-                    HUMAN_SPRITES_RIGHT[i][style] = new Image(Objects.requireNonNull(Humain.class.getResourceAsStream("/ressources/sprites/humans/human" + style +"/human" + style + "_right_" + i + ".png")));
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors du chargement des sprites des humains", e);
-        }
-    }
+
 
     // Constructeur
     public Humain(int row, int col) {
@@ -67,60 +46,52 @@ public class Humain extends EtreVivant {
         return imageView;
     }
 
-    // Obtenir le scripte actuelle
-    public Image getCurrentSprite() {
-        return switch (lastDirection) {
-            case "up" -> HUMAN_SPRITES_UP[animationFrame][styleIndex];
-            case "down" -> HUMAN_SPRITES_DOWN[animationFrame][styleIndex];
-            case "left" -> HUMAN_SPRITES_LEFT[animationFrame][styleIndex];
-            case "right" -> HUMAN_SPRITES_RIGHT[animationFrame][styleIndex];
-            default -> HUMAN_SPRITES_DOWN[0][styleIndex];
-        };
+    // Obtenir le sprite actuel basé sur la direction et l'animation
+    private Image getCurrentSprite() {
+        Image[] directionSprites = SpriteManager.getInstance().getSprites(String.format("human%d", styleIndex), getLastDirection());
+        return directionSprites[getAnimationFrame()];
     }
 
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
-        // Actuellement les humains ont peur des zombies et bougent dans la direction opposé
+        // Actuellement les humains ont peur des zombies et bougent dans la direction opposée
+        Random random = new Random();
 
-        // On récupère les êtres vivants autours puis on filtre pour garder les zombies
-        List<EtreVivant> etreVivants = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1);
-        List<EtreVivant> zombiesProches = new ArrayList<>();
+        // Récupérer tous les êtres vivants dans le rayon de vision
+        List<EtreVivant> vivantsProches = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1);
 
-        for (EtreVivant vivant : etreVivants) {
-            if (vivant instanceof Zombie) {
-                zombiesProches.add(vivant);
+        // On filtre pour ne garder que les menaces
+        List<EtreVivant> menaces = vivantsProches.stream().filter(vivant -> vivant instanceof Zombie).toList();
+        // Mouvement erratique si pas de menace, très faible proba de bouger
+        if (menaces.isEmpty()) {
+            if (random.nextDouble() >= 0.1) {
+                return; // Pas de déplacement
             }
+            int[] direction = mouvementErratique(mapVivants, grid, row, col);
+            if (direction != null) {
+                updateAnimation(parseDirection(direction));
+            }
+            return;
         }
 
-        int maxDistance = 0;
-        int[] bestDirection = null;
-
-        for (int[] direction : EtreVivant.DIRECTIONS) {
-            int newRow = row + direction[0];
-            int newCol = col + direction[1];
-
-            if (mapVivants.isWithinBounds(newRow, newCol) && !grid.getCell(newRow, newCol).isObstacle() && mapVivants.getEtreVivant(newRow, newCol) == null) {
-                // On calcule la distance totale par rapport à tous les zombies
-                int distanceTotale = 0;
-                for (EtreVivant zombie : zombiesProches) {
-                    distanceTotale += Math.abs(zombie.getRow() - newRow) + Math.abs(zombie.getCol() - newCol);
-                }
-
-                if (distanceTotale > maxDistance) {
-                    maxDistance = distanceTotale;
-                    bestDirection = direction;
-                }
-            }
+        // On calcule le déplacement en fonction des menaces
+        int[] direction = seDeplacerSelonScore(mapVivants, grid, calculerScoreHumain(menaces));
+        if (direction != null) {
+            updateAnimation(parseDirection(direction));
         }
+    }
 
-        // On se déplace selon la meilleure direction
-        if (bestDirection != null) {
-            if (deplacerVers(row + bestDirection[0], col + bestDirection[1], mapVivants, grid))
-            {
-                lastDirection = getDirectionName(bestDirection);
-                animationFrame = (animationFrame + 1) % 3; // Passer au sprite suivant
+    // On définit une biFunction pour calculer le score pour les déplacements, c'est ici qu'on pourra mettre des comportements spécifiques.
+    private BiFunction<Integer, Integer, Double> calculerScoreHumain(List<EtreVivant> menaces) {
+        return (newRow, newCol) -> {
+            double score = 0;
+
+            // On maximise la distance par rapport aux menaces
+            for (EtreVivant menace : menaces) {
+                double distance = Math.pow(newCol - menace.getCol(), 2) + Math.pow(newRow-menace.getRow(), 2);
+                score += distance;
             }
-
-        }
+            return score;
+        };
     }
 }
