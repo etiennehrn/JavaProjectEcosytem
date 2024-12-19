@@ -41,7 +41,7 @@ public class Bear extends Animaux {
         if (random.nextDouble() > 0.7) {
             verticalStep = Integer.signum(centralRow - getRow());
         }
-        if (random.nextDouble() > 0.7) {
+        else if (random.nextDouble() > 0.7) {
             horizontalStep = Integer.signum(centralCol - getCol());
         }
 

@@ -41,12 +41,12 @@ public class Zombie extends EtreVivant {
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
         // Pour l'instant les zombies traque l'humain le plus proche s'il en voie un, sinon mouvement erratique
 
-        // Récupérer les zombies dans le rayon de vision
-        List<EtreVivant> zombiesAProximite = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1)
+        // Récupérer les humains dans le rayon de vision
+        List<EtreVivant> humainsAProximite = getEtreVivantsDansRayon(mapVivants, grid, getVisionRange(), -1)
                 .stream()
-                .filter(e -> e instanceof Zombie)
+                .filter(e -> e instanceof Humain)
                 .toList();
-        if (zombiesAProximite.isEmpty()) {
+        if (humainsAProximite.isEmpty()) {
             // Erratique
             Random random = new Random();
             if (random.nextDouble() >= 0.5) {
@@ -61,7 +61,7 @@ public class Zombie extends EtreVivant {
         }
 
         // Déplacer le loup en fonction du score
-        int[] direction = seDeplacerSelonScore(mapVivants, grid, (newRow, newCol) -> calculerScoreDeplacement(newRow, newCol, zombiesAProximite));
+        int[] direction = seDeplacerSelonScore(mapVivants, grid, (newRow, newCol) -> calculerScoreDeplacement(newRow, newCol, humainsAProximite));
         if (direction != null) {
             updateAnimation(parseDirection(direction));
         }
@@ -69,10 +69,10 @@ public class Zombie extends EtreVivant {
     }
 
     // Calcule le score basé sur la proximité des lapins
-    private double calculerScoreDeplacement(int newRow, int newCol, List<EtreVivant> zombies) {
+    private double calculerScoreDeplacement(int newRow, int newCol, List<EtreVivant> humains) {
         double score = 0;
-        for (EtreVivant zombie : zombies) {
-            double distance = Math.pow(newRow - zombie.getRow(), 2) + Math.pow(newCol - zombie.getCol(), 2);
+        for (EtreVivant humain : humains) {
+            double distance = Math.pow(newRow - humain.getRow(), 2) + Math.pow(newCol - humain.getCol(), 2);
             score += 100 / (distance + 1); // Plus la distance est faible, plus le score est élevé
         }
         return score;

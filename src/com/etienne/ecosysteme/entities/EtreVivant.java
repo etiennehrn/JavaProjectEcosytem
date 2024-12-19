@@ -1,7 +1,6 @@
 package com.etienne.ecosysteme.entities;
 
 import com.etienne.ecosysteme.environment.MapEnvironnement;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
@@ -38,11 +37,13 @@ import java.util.function.BiFunction;
  *
  */
 
-public abstract class EtreVivant {
+public abstract class EtreVivant implements Deplacement {
     protected int row;
     protected int col;
-    private int vitesse; // Vitesse en nombre de cycle
-    private int compteurDeplacement = 0; // Pour compter les déplacements
+
+    private int vitesse; // Vitesse en nombre de cycles
+    private final CompteurDeplacement compteurDeplacement; // Pour compter les déplacements
+
     private int nourriture;
     private int visionRange;
 
@@ -96,6 +97,7 @@ public abstract class EtreVivant {
         this.vitesse = vitesse;
         this.nourriture = nourriture;
         this.visionRange = visionRange;
+        this.compteurDeplacement = new CompteurDeplacement(getVitesse());
     }
 
     // Getter
@@ -143,37 +145,6 @@ public abstract class EtreVivant {
     }
 
     /**
-     * Incrémente le compteur de déplacement de l'être vivant.
-     *
-     * <p>Cette méthode est utilisée pour suivre le nombre de cycles écoulés depuis
-     * le dernier déplacement. Lorsque le compteur atteint la vitesse définie,
-     * l'être vivant peut se déplacer.</p>
-     */
-    public void incrementerCompteur() {
-        compteurDeplacement++;
-    }
-
-    /**
-     * Réinitialise le compteur de déplacement de l'être vivant.
-     *
-     * <p>Cette méthode est appelée après qu'un déplacement a été effectué
-     * pour recommencer le suivi des cycles nécessaires avant le prochain déplacement.</p>
-     */
-    public void resetCompteur() {
-        compteurDeplacement = 0;
-    }
-
-    /**
-     * Vérifie si l'être vivant doit se déplacer.
-     *
-     * @return {@code true} si le compteur de déplacement est supérieur ou égal
-     *         à la vitesse définie, sinon {@code false}
-     */
-    public boolean doitSeDeplacer() {
-        return compteurDeplacement >= vitesse;
-    }
-
-    /**
      * Met à jour le déplacement de l'être vivant en fonction du cycle actuel.
      *
      * <p>Cette méthode gère l'incrémentation du compteur de déplacement et détermine
@@ -188,13 +159,12 @@ public abstract class EtreVivant {
      */
     public void updateDeplacement(MapVivant mapVivant, MapEnvironnement grid, int row, int col) {
         // On commence par incrémenter le compteur
-        incrementerCompteur();
-
+        this.compteurDeplacement.incrementer();
         // On dit si l'être vivant doit se déplacer
-        if (doitSeDeplacer()) {
+        if (this.compteurDeplacement.doitSeDeplacer()) {
             // On se déplace puis on réinitialise le compteur
             gen_deplacement(mapVivant, grid, row, col);
-            resetCompteur();
+            this.compteurDeplacement.reset();
         }
     }
 
@@ -231,14 +201,57 @@ public abstract class EtreVivant {
     }
 
     /**
-     * Calcule et effectue un déplacement basé sur un score attribué à chaque direction possible.
-     * ATTENTION ON MAXIMISE LE SCORE
+     * Vérifie si cet être vivant est une menace pour un autre être vivant.
      *
-     * @param mapVivants    la carte des êtres vivants
-     * @param grid          l'environnement de la simulation
-     * @param calculerScore une fonction qui calcule un score pour une position donnée
+     * @param autre l'autre être vivant à considérer
+     * @return {@code true} si cet être vivant est une menace, {@code false} sinon
      */
-    protected int[] seDeplacerSelonScore(MapVivant mapVivants, MapEnvironnement grid, BiFunction<Integer, Integer, Double> calculerScore) {
+    public boolean isMenace(EtreVivant autre) {
+        // Par défaut, un être vivant n'est pas une menace
+        return false;
+    }
+
+    // Implémentation de l'interface Déplacement
+    @Override
+    public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
+        // Comportement générique par défaut, peut être remplacé par les sous-classes
+        mouvementErratique(mapVivants, grid, row, col);
+    }
+
+    @Override
+    public boolean deplacerVers(int newRow, int newCol, MapVivant mapVivants, MapEnvironnement grid) {
+        // On vérifie si la position est valide
+        if (newRow >= 0 && newRow < grid.getRows() && newCol >= 0 && newCol < grid.getCols() && !grid.getCell(newRow, newCol).isObstacle() && mapVivants.getEtreVivant(newRow, newCol) == null) {
+            // Déplacer l'être vivant
+            mapVivants.setEtreVivant(row, col, null);
+            row = newRow;
+            col = newCol;
+            mapVivants.setEtreVivant(row, col, this);
+            return true; // Déplacement réussi
+        }
+        return false; // Déplacement impossible
+    }
+
+    @Override
+    public int[] mouvementErratique(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
+        // Mélanger les directions pour plus d'aléatoire
+        List<int[]> shuffledDirections = Arrays.asList(EtreVivant.DIRECTIONS);
+        Collections.shuffle(shuffledDirections);
+
+
+        for (int[] direction : shuffledDirections) {
+            int newRow = row + direction[0];
+            int newCol = col + direction[1];
+
+            if (deplacerVers(newRow, newCol, mapVivants, grid)) {
+                return direction; // Déplacement réussi
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public int[] seDeplacerSelonScore(MapVivant mapVivants, MapEnvironnement grid, BiFunction<Integer, Integer, Double> calculerScore) {
         int[] bestDirection = null;
         double bestScore = Double.NEGATIVE_INFINITY;
 
@@ -266,65 +279,7 @@ public abstract class EtreVivant {
         return null;
     }
 
-    // Méthode qui génére un mouvement érratique
-    protected int[] mouvementErratique(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
-        // Mélanger les directions pour plus d'aléatoire
-        List<int[]> shuffledDirections = Arrays.asList(EtreVivant.DIRECTIONS);
-        Collections.shuffle(shuffledDirections);
-
-
-        for (int[] direction : shuffledDirections) {
-            int newRow = row + direction[0];
-            int newCol = col + direction[1];
-
-            if (deplacerVers(newRow, newCol, mapVivants, grid)) {
-                return direction; // Déplacement réussi
-            }
-        }
-        return null;
-    }
-
-    // Méthode pour obtenir le nom d'une direction, utile dans l'affichage
-    protected String getDirectionName(int[] direction) {
-        if (direction == null) {
-            return "down";
-        }
-        if (direction[0] == -1 && direction[1] == 0) return "up";
-        if (direction[0] == 1 && direction[1] == 0) return "down";
-        if (direction[0] == 0 && direction[1] == -1) return "left";
-        if (direction[0] == 0 && direction[1] == 1) return "right";
-        return "down"; // Par défaut
-    }
-
     // Méthode abstraite pour obtenir le sprite
     public abstract ImageView getSprite(int tileSize);
-
-    // Méthode générique qui générer les déplacements
-    public abstract void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col);
-
-    // Méthode générique qui fait le déplacement et renvoie true s'il est valide (sinon ne fais rien et renvoie false)
-    public boolean deplacerVers(int newRow, int newCol, MapVivant mapVivants, MapEnvironnement grid) {
-        // On vérifie si la position est valide
-        if (newRow >= 0 && newRow < grid.getRows() && newCol >= 0 && newCol < grid.getCols() && !grid.getCell(newRow, newCol).isObstacle() && mapVivants.getEtreVivant(newRow, newCol) == null) {
-            // Déplacer l'être vivant
-            mapVivants.setEtreVivant(row, col, null);
-            row = newRow;
-            col = newCol;
-            mapVivants.setEtreVivant(row, col, this);
-            return true; // Déplacement réussi
-        }
-        return false; // Déplacement impossible
-    }
-
-    /**
-     * Vérifie si cet être vivant est une menace pour un autre être vivant.
-     *
-     * @param autre l'autre être vivant à considérer
-     * @return {@code true} si cet être vivant est une menace, {@code false} sinon
-     */
-    public boolean isMenace(EtreVivant autre) {
-        // Par défaut, un être vivant n'est pas une menace
-        return false;
-    }
 
 }

@@ -95,7 +95,7 @@ public class Main extends Application {
         Media media = new Media(musicFilePath);
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setVolume(0.001);
+        mediaPlayer.setVolume(0.1);
         mediaPlayer.play();
     }
 
