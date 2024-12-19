@@ -3,10 +3,7 @@ package com.etienne.ecosysteme.entities;
 import com.etienne.ecosysteme.environment.MapEnvironnement;
 import javafx.scene.image.ImageView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiFunction;
 
 
@@ -63,14 +60,13 @@ public abstract class EtreVivant implements Deplacement {
     // Pour l'animation
     private int animationFrame = 0;
     private Direction lastDirection = Direction.DOWN;
-
     // Mise à jour de l'animation et de la direction
     protected void updateAnimation(Direction direction) {
         this.lastDirection = direction;
         this.animationFrame = (animationFrame + 1) % 3; // Boucle sur 3 images
     }
 
-    // Méthode pour convertir une direction en chaîne
+    // Méthode pour convertir une direction en chaîne de caractère
     protected static Direction parseDirection(int[] movement) {
         if (movement[0] == -1) return Direction.UP;
         if (movement[0] == 1) return Direction.DOWN;
@@ -78,6 +74,7 @@ public abstract class EtreVivant implements Deplacement {
         if (movement[1] == 1) return Direction.RIGHT;
         return Direction.DOWN; // Par défaut
     }
+
 
     /**
      * Constructeur de la classe {@code EtreVivant}.
@@ -211,6 +208,9 @@ public abstract class EtreVivant implements Deplacement {
         return false;
     }
 
+    // Méthode abstraite pour obtenir le sprite
+    public abstract ImageView getSprite(int tileSize);
+
     // Implémentation de l'interface Déplacement
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
@@ -279,7 +279,46 @@ public abstract class EtreVivant implements Deplacement {
         return null;
     }
 
-    // Méthode abstraite pour obtenir le sprite
-    public abstract ImageView getSprite(int tileSize);
+    @Override
+    public int[] mouvementCirculaire(MapVivant mapVivants, MapEnvironnement grid, int centralRow, int centralCol) {
+        Random random = new Random();
+
+        int dRow = getRow() - centralRow;
+        int dCol = getCol() - centralCol;
+        int distance = dRow*dRow + dCol*dCol;
+
+        int maxR = 5*5; // Distance max d'éloignement
+        int minR = 2*2; // Pas trop proche du centre
+
+        int verticalStep = 0;
+        int horizontalStep = 0;
+
+        if (distance > maxR) {
+            // On revient vers le centre
+            if(Math.abs(dCol) > Math.abs(dRow)) {
+                horizontalStep = Integer.signum(centralCol - getCol());
+            }
+            else {
+                verticalStep = Integer.signum(centralRow - getRow());
+            }
+        }
+        else if (distance < minR || random.nextDouble() > 0.5) {
+            // Sinon soit on se rapproche, soit une chance sur 2 de se décaler aléatoirement
+            if (random.nextBoolean()) {
+                verticalStep = random.nextBoolean() ? 1 : -1;
+            } else {
+                horizontalStep = random.nextBoolean() ? 1 : -1;
+            }
+        }
+
+        int newRow = getRow() + verticalStep;
+        int newCol = getCol() + horizontalStep;
+
+        if (deplacerVers(newRow, newCol, mapVivants, grid)) {
+            return new int[]{newRow, newCol};
+        }
+        // Pas de déplacement
+        return null;
+    }
 
 }

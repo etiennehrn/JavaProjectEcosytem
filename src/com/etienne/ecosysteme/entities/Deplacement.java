@@ -24,4 +24,6 @@ public interface Deplacement {
      */
     int[] seDeplacerSelonScore(MapVivant mapVivants, MapEnvironnement grid, BiFunction<Integer, Integer, Double> calculerScore);
 
+    // Pour le mouvement circulaire érratique
+    int[] mouvementCirculaire(MapVivant mapVivants, MapEnvironnement grid, int centralRow, int centralCol);
 }

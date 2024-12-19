@@ -34,7 +34,7 @@ public class Game {
         mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
         player = new Player(46, 50, visionRange, mapEnvironnement);
 
-        mapVivant.populate(mapVivantFilePath, 100, 20, 0, mapEnvironnement);
+        mapVivant.populate(mapVivantFilePath, 0, 0, 0, mapEnvironnement);
 
         // Initialisation cycle jour.nuit de durée total 240
         dayNightCycle = new DayNightCycle(240);
