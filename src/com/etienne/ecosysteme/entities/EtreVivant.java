@@ -35,8 +35,14 @@ import java.util.function.BiFunction;
  */
 
 public abstract class EtreVivant implements Deplacement {
+    // Position
     protected int row;
     protected int col;
+
+    // Pour déplacement de recherche active
+    private int directionRow; // Ligne de la direction actuelle
+    private int directionCol; // Colonne de la direction actuelle
+    private int stepsCurrentDir;
 
     private int vitesse; // Vitesse en nombre de cycles
     private final CompteurDeplacement compteurDeplacement; // Pour compter les déplacements
@@ -95,6 +101,10 @@ public abstract class EtreVivant implements Deplacement {
         this.nourriture = nourriture;
         this.visionRange = visionRange;
         this.compteurDeplacement = new CompteurDeplacement(getVitesse());
+        setRandomDirection();
+        Random random = new Random();
+        this.stepsCurrentDir = random.nextInt(6) + 4; // Entre 4 et 8 pas initiaux
+
     }
 
     // Getter
@@ -139,6 +149,12 @@ public abstract class EtreVivant implements Deplacement {
     }
     public void setLastDirection(Direction lastDirection) {
         this.lastDirection = lastDirection;
+    }
+    protected void setRandomDirection() {
+        Random random = new Random();
+        int[] randomDirection = DIRECTIONS[random.nextInt(DIRECTIONS.length)];
+        this.directionRow = randomDirection[0];
+        this.directionCol = randomDirection[1];
     }
 
     /**
@@ -285,25 +301,30 @@ public abstract class EtreVivant implements Deplacement {
 
         int dRow = getRow() - centralRow;
         int dCol = getCol() - centralCol;
-        int distance = dRow*dRow + dCol*dCol;
+        int distance = dRow * dRow + dCol * dCol;
 
-        int maxR = 5*5; // Distance max d'éloignement
-        int minR = 2*2; // Pas trop proche du centre
+        int maxR = 4 * 4; // Distance max d'éloignement
+        int minR = 2 * 2; // Distance minimale proche du centre
 
         int verticalStep = 0;
         int horizontalStep = 0;
 
         if (distance > maxR) {
-            // On revient vers le centre
-            if(Math.abs(dCol) > Math.abs(dRow)) {
+            // Trop éloigné, forte chance de revenir vers le centre
+            if (Math.abs(dCol) > Math.abs(dRow)) {
                 horizontalStep = Integer.signum(centralCol - getCol());
-            }
-            else {
+            } else {
                 verticalStep = Integer.signum(centralRow - getRow());
             }
-        }
-        else if (distance < minR || random.nextDouble() > 0.5) {
-            // Sinon soit on se rapproche, soit une chance sur 2 de se décaler aléatoirement
+        } else if (distance < minR) {
+            // Trop proche, tendance à s'éloigner
+            if (Math.abs(dCol) > Math.abs(dRow)) {
+                horizontalStep = Integer.signum(getCol() - centralCol);
+            } else {
+                verticalStep = Integer.signum(getRow() - centralRow);
+            }
+        } else {
+            // Mouvement aléatoire dans une direction verticale ou horizontale
             if (random.nextBoolean()) {
                 verticalStep = random.nextBoolean() ? 1 : -1;
             } else {
@@ -311,14 +332,43 @@ public abstract class EtreVivant implements Deplacement {
             }
         }
 
+        // Calcul des nouvelles coordonnées
         int newRow = getRow() + verticalStep;
         int newCol = getCol() + horizontalStep;
 
+        // Vérifie si le déplacement est valide
         if (deplacerVers(newRow, newCol, mapVivants, grid)) {
-            return new int[]{newRow, newCol};
+            return new int[]{verticalStep, horizontalStep};
         }
-        // Pas de déplacement
+
+        // Pas de déplacement si impossible
         return null;
     }
 
+    @Override
+    public int[] rechercheActive(MapVivant mapVivants, MapEnvironnement grid) {
+        Random random = new Random();
+
+        // On vérifie si la direction actuelle doit être changée
+        if (this.stepsCurrentDir <= 0) {
+            setRandomDirection();
+            this.stepsCurrentDir = random.nextInt(6) + 4; // Entre 4 et 8 pas
+        }
+
+        int newRow = getRow() + directionRow;
+        int newCol = getCol() + directionCol;
+
+        // On vérifie si le déplacement est possible
+        if (deplacerVers(newRow, newCol, mapVivants, grid)) {
+            stepsCurrentDir--;
+            return new int[]{directionRow, directionCol};
+        }
+
+        // On change la direction, du moins on essaie
+        setRandomDirection();
+        this.stepsCurrentDir = random.nextInt(6) + 4;
+
+        // Pas de déplacement possible
+        return null;
+    }
 }

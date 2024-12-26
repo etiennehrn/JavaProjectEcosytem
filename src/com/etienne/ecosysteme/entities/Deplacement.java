@@ -26,4 +26,7 @@ public interface Deplacement {
 
     // Pour le mouvement circulaire érratique
     int[] mouvementCirculaire(MapVivant mapVivants, MapEnvironnement grid, int centralRow, int centralCol);
+
+    // Déplacement de recherche active sans vision
+    int[] rechercheActive(MapVivant mapVivants, MapEnvironnement grid);
 }

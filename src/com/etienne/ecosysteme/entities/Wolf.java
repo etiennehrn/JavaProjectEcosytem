@@ -12,7 +12,7 @@ public class Wolf extends Animaux {
 
     // Constructeur
     public Wolf(int row, int col) {
-        super(row, col, 4, 1, 12, Type.WOLF);
+        super(row, col, 1, 1, 12, Type.WOLF);
     }
 
     @Override
@@ -24,18 +24,27 @@ public class Wolf extends Animaux {
                 .toList();
 
         if (lapinsAProximite.isEmpty()) {
-            // Erratique
+            // D'abord recherche active
+            int[] directionRecherche = rechercheActive(mapVivants, grid);
+
+            if (directionRecherche != null) {
+                System.out.println(directionRecherche[0] + " " + directionRecherche[1]);
+                updateAnimation(parseDirection(directionRecherche));
+                return;
+            }
+            // Sinon érratique
             Random random = new Random();
             if (random.nextDouble() >= 0.5) {
                 return; // Pas de déplacement
             }
             int[] direction = mouvementErratique(mapVivants, grid, row, col);
-
             // Mise à jour de l'animation si le déplacement a eu lieu
             if (direction != null) {
                 updateAnimation(parseDirection(direction));
             }
+            return;
         }
+
         // Déplacer le loup en fonction du score
         int[] direction = seDeplacerSelonScore(mapVivants, grid, (newRow, newCol) -> calculerScoreDeplacement(newRow, newCol, lapinsAProximite));
         if (direction != null) {

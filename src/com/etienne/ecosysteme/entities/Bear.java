@@ -19,7 +19,7 @@ public class Bear extends Animaux {
     private final Random random = new Random();
 
     public Bear(int row, int col) {
-        super(row, col, 1, 1, 5, Type.BEAR);
+        super(row, col, 24, 1, 5, Type.BEAR);
         this.centralRow = row;
         this.centralCol = col;
     }
@@ -27,7 +27,6 @@ public class Bear extends Animaux {
     @Override
     public void gen_deplacement(MapVivant mapVivants, MapEnvironnement grid, int row, int col) {
         int[] directionCercle = mouvementCirculaire(mapVivants, grid, this.centralRow, this.centralCol);
-
         if (directionCercle != null) {
             updateAnimation(parseDirection(directionCercle));
         }
