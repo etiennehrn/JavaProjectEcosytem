@@ -55,7 +55,7 @@ public class MapGeneration extends PApplet {
             this.grid[row][col].setBaseType(new EauType(EauType.VariantWater.CENTRE)) ;
         }else if(v < 0.6){
             // Sable
-            this.grid[row][col].setBaseType(new SandType(SandType.VariantHerbeJaune.CENTRE)) ;
+            this.grid[row][col].setBaseType(new SableType(SableType.VariantSable.CENTRE)) ;
         }else if(v < 0.7){
             // Herbe
             this.grid[row][col].setBaseType(new HerbeType(VariantHerbe.CLAIR)) ;
@@ -123,294 +123,155 @@ public class MapGeneration extends PApplet {
                 Case currentCase = grid[i][j];
                 BaseType currentType = currentCase.getBaseType();
 
-                // Vérifiez uniquement si la case actuelle est de type "sable" ou "eau"
-                if (currentType instanceof SandType || currentType instanceof EauType) {
+                // Modifier si la case actuelle est de type "sable" ou "eau"
+                if (currentType instanceof SableType || currentType instanceof EauType) {
                     BaseType top = grid[i - 1][j].getBaseType();
                     BaseType bottom = grid[i + 1][j].getBaseType();
                     BaseType left = grid[i][j - 1].getBaseType();
                     BaseType right = grid[i][j + 1].getBaseType();
 
-                    // D'abord on s'occupe des bordures Sable / Herbe
-                    if (currentType instanceof SandType && right instanceof SandType && bottom instanceof SandType
-                            && top instanceof HerbeType && left instanceof HerbeType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HAUT_GAUCHE));
-                    } else if (currentType instanceof SandType && left instanceof SandType && bottom instanceof SandType
-                            && top instanceof HerbeType && right instanceof HerbeType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HAUT_DROITE));
-                    } else if (currentType instanceof SandType && left instanceof SandType && top instanceof SandType
-                            && bottom instanceof HerbeType && right instanceof HerbeType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.BAS_DROITE));
-                    } else if (currentType instanceof SandType && right instanceof SandType && top instanceof SandType
-                            && bottom instanceof HerbeType && left instanceof HerbeType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.BAS_GAUCHE));
-                    } else if (currentType instanceof SandType && right instanceof SandType && top instanceof HerbeType
-                            && bottom instanceof HerbeType && left instanceof HerbeType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HORIZONTAL_GAUCHE));
-                    } else if (currentType instanceof SandType && left instanceof SandType && top instanceof HerbeType
-                            && bottom instanceof HerbeType && right instanceof HerbeType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HORIZONTAL_DROITE));
-                    } else if (currentType instanceof SandType && left instanceof SandType && top instanceof HerbeType
-                            && bottom instanceof HerbeType && right instanceof SandType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HORIZONTAL_MILIEU));
-                    } else if (currentType instanceof SandType && bottom instanceof SandType && top instanceof HerbeType
-                            && left instanceof HerbeType && right instanceof HerbeType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.VERTICAL_HAUT));
-                    } else if (currentType instanceof SandType && top instanceof SandType && bottom instanceof HerbeType
-                            && left instanceof HerbeType && right instanceof HerbeType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.VERTICAL_BAS));
-                    } else if (currentType instanceof SandType && top instanceof SandType && bottom instanceof SandType
-                            && left instanceof HerbeType && right instanceof HerbeType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.VERTICAL_MILIEU));
-                    } else if (currentType instanceof SandType && top instanceof SandType && bottom instanceof SandType
-                            && left instanceof HerbeType && right instanceof SandType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.GAUCHE));
-                    } else if (currentType instanceof SandType && top instanceof SandType && bottom instanceof SandType
-                            && right instanceof HerbeType && left instanceof SandType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.DROIT));
-                    } else if (currentType instanceof SandType && left instanceof SandType && right instanceof SandType
-                            && bottom instanceof HerbeType && top instanceof SandType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.BAS));
-                    } else if (currentType instanceof SandType && left instanceof SandType && right instanceof SandType
-                            && top instanceof HerbeType && bottom instanceof SandType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HAUT));
-                    } else if (currentType instanceof SandType && top instanceof HerbeType && bottom instanceof HerbeType
-                            && left instanceof HerbeType && right instanceof HerbeType) {
-                        currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.UNIQUE));
+                    Class<? extends BaseType> oppositeType = null;
+                    if (currentType instanceof EauType) {
+                        oppositeType = SableType.class;
+                    } else if (currentType instanceof SableType) {
+                        oppositeType = HerbeType.class;
                     }
 
-                    // Puis on s'occupe des bordures Eau / Sable
+                    int mask = 0;
 
-                    else if (currentType instanceof EauType && top instanceof SandType && bottom instanceof SandType
-                            && left instanceof SandType && right instanceof SandType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.UNIQUE));
-                    } else if (currentType instanceof EauType && right instanceof SandType && bottom instanceof SandType
-                            && top instanceof EauType && left instanceof EauType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.BAS_DROITE));
-                    } else if (currentType instanceof EauType && left instanceof SandType && bottom instanceof SandType
-                            && top instanceof EauType && right instanceof EauType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.BAS_GAUCHE));
-                    } else if (currentType instanceof EauType && left instanceof SandType && top instanceof SandType
-                            && bottom instanceof EauType && right instanceof EauType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.HAUT_GAUCHE));
-                    } else if (currentType instanceof EauType && right instanceof SandType && top instanceof SandType
-                            && bottom instanceof EauType && left instanceof EauType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.HAUT_DROITE));
-                    } else if (currentType instanceof EauType && right instanceof SandType && top instanceof EauType
-                            && bottom instanceof EauType && left instanceof EauType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.DROIT));
-                    } else if (currentType instanceof EauType && left instanceof SandType && top instanceof EauType
-                            && bottom instanceof EauType && right instanceof EauType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.GAUCHE));
-                    } else if (currentType instanceof EauType && left instanceof SandType && top instanceof EauType
-                            && bottom instanceof EauType && right instanceof SandType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.VERTICAL_MILIEU));
-                    } else if (currentType instanceof EauType && bottom instanceof SandType && top instanceof EauType
-                            && left instanceof EauType && right instanceof EauType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.BAS));
-                    } else if (currentType instanceof EauType && top instanceof SandType && bottom instanceof EauType
-                            && left instanceof EauType && right instanceof EauType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.HAUT));
-                    } else if (currentType instanceof EauType && top instanceof SandType && bottom instanceof SandType
-                            && left instanceof EauType && right instanceof EauType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.HORIZONTAL_MILIEU));
-                    } else if (currentType instanceof EauType && top instanceof SandType && bottom instanceof SandType
-                            && left instanceof EauType && right instanceof SandType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.HORIZONTAL_DROITE));
-                    } else if (currentType instanceof EauType && top instanceof SandType && bottom instanceof SandType
-                            && right instanceof EauType && left instanceof SandType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.HORIZONTAL_GAUCHE));
-                    } else if (currentType instanceof EauType && left instanceof SandType && right instanceof SandType
-                            && bottom instanceof EauType && top instanceof SandType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.VERTICAL_HAUT));
-                    } else if (currentType instanceof EauType && left instanceof SandType && right instanceof SandType
-                            && top instanceof EauType && bottom instanceof SandType) {
-                        currentCase.setBaseType(new EauType(EauType.VariantWater.VERTICAL_BAS));
+                    if (top.getClass().equals(oppositeType)) {
+                        mask |= 0b0001;
                     }
+                    if (bottom.getClass().equals(oppositeType)) {
+                        mask |= 0b0010;
+                    }
+                    if (left.getClass().equals(oppositeType)) {
+                        mask |= 0b0100;
+                    }
+                    if (right.getClass().equals(oppositeType)) {
+                        mask |= 0b1000;
+                    }
+                    bitMasking(currentCase, mask);
                 }
             }
         }
+        updateBorderRow(0);
+        updateBorderRow(rows - 1);
+        updateBorderCol(0);
+        updateBorderCol(cols - 1);
 
-        // On s'occupe des bordures strictes (première colonne)
-        for (int row = 1; row < rows - 1; row ++){
-            Case currentCase = grid[row][0];
-            BaseType currentType = currentCase.getBaseType();
-            // Vérifiez uniquement si la case actuelle est de type "sable" ou "eau"
-            if (currentType instanceof SandType || currentType instanceof EauType) {
-                BaseType top = grid[row - 1][0].getBaseType();
-                BaseType bottom = grid[row + 1][0].getBaseType();
-                BaseType right = grid[row][1].getBaseType();
+    }
 
-                if(currentType instanceof EauType && top instanceof EauType && bottom instanceof SandType && right instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.BAS_DROITE));
-                }else if(currentType instanceof EauType && top instanceof SandType && bottom instanceof EauType && right instanceof SandType){
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.HAUT_DROITE));
-                }else if(currentType instanceof EauType && top instanceof EauType && bottom instanceof SandType && right instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.BAS));
-                }else if(currentType instanceof EauType && top instanceof EauType && bottom instanceof EauType && right instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.DROIT));
-                }else if(currentType instanceof EauType && top instanceof SandType && bottom instanceof EauType && right instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.HAUT));
-                }else if(currentType instanceof EauType && top instanceof SandType && bottom instanceof SandType && right instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.HORIZONTAL_MILIEU));
-                }else if(currentType instanceof EauType && top instanceof SandType && bottom instanceof SandType && right instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.HORIZONTAL_DROITE));
-                }
+    private void updateBorderRow(int row) {
 
-                // Conditions pour "Herbe" et "Sable"
-                else if (currentType instanceof SandType && top instanceof HerbeType && bottom instanceof SandType && right instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HAUT_DROITE));
-                } else if (currentType instanceof SandType && top instanceof SandType && bottom instanceof HerbeType && right instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.BAS_DROITE));
-                } else if (currentType instanceof SandType && top instanceof HerbeType && bottom instanceof HerbeType && right instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.DROIT));
-                } else if (currentType instanceof SandType && top instanceof SandType && bottom instanceof HerbeType && right instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.BAS));
-                } else if (currentType instanceof SandType && top instanceof HerbeType && bottom instanceof SandType && right instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HAUT));
-                } else if (currentType instanceof SandType && top instanceof HerbeType && bottom instanceof HerbeType && right instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HORIZONTAL_DROITE));
-                }
-            }
-        }
-
-        // On s'occupe des bordures strictes (première ligne)
         for (int col = 1; col < cols - 1; col++) {
-            Case currentCase = grid[0][col];
+            Case currentCase = grid[row][col];
             BaseType currentType = currentCase.getBaseType();
 
-            // Vérifiez uniquement si la case actuelle est de type "sable" ou "eau" ou "herbe"
-            if (currentType instanceof SandType || currentType instanceof EauType || currentType instanceof HerbeType) {
-                BaseType left = grid[0][col - 1].getBaseType();
-                BaseType right = grid[0][col + 1].getBaseType();
-                BaseType bottom = grid[1][col].getBaseType();
-
-                // Conditions pour "Eau"
-                if (currentType instanceof EauType && left instanceof EauType && bottom instanceof SandType && right instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.BAS_DROITE));
-                } else if (currentType instanceof EauType && left instanceof SandType && bottom instanceof EauType && right instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.VERTICAL_MILIEU));
-                } else if (currentType instanceof EauType && left instanceof EauType && bottom instanceof SandType && right instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.BAS));
-                } else if (currentType instanceof EauType && left instanceof EauType && bottom instanceof EauType && right instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.DROIT));
-                } else if (currentType instanceof EauType && left instanceof SandType && bottom instanceof EauType && right instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.GAUCHE));
-                } else if (currentType instanceof EauType && left instanceof SandType && bottom instanceof SandType && right instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.BAS_GAUCHE));
-                } else if (currentType instanceof EauType && left instanceof SandType && bottom instanceof SandType && right instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.VERTICAL_BAS));
-                }
-
-                // Conditions pour "Herbe" et "Sable"
-                else if (currentType instanceof SandType && left instanceof HerbeType && bottom instanceof SandType && right instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.VERTICAL_MILIEU));
-                } else if (currentType instanceof SandType && left instanceof SandType && bottom instanceof HerbeType && right instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.BAS_DROITE));
-                } else if (currentType instanceof SandType && left instanceof HerbeType && bottom instanceof HerbeType && right instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.BAS_GAUCHE));
-                } else if (currentType instanceof SandType && left instanceof SandType && bottom instanceof HerbeType && right instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.BAS));
-                } else if (currentType instanceof SandType && left instanceof HerbeType && bottom instanceof SandType && right instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.GAUCHE));
-                } else if (currentType instanceof SandType && left instanceof SandType && bottom instanceof SandType && right instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.DROIT));
-                } else if (currentType instanceof SandType && left instanceof HerbeType && bottom instanceof HerbeType && right instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.VERTICAL_BAS));
-                }
+            Class<? extends BaseType> oppositeType = null;
+            if (currentType instanceof EauType) {
+                oppositeType = SableType.class;
+            } else if (currentType instanceof SableType) {
+                oppositeType = HerbeType.class;
             }
-        }
 
-        // On s'occupe des bordures strictes (dernière colonne)
-        for (int row = 1; row < rows - 1; row ++){
-            Case currentCase = grid[row][cols-1];
-            BaseType currentType = currentCase.getBaseType();
-            // Vérifiez uniquement si la case actuelle est de type "sable" ou "eau"
-            if (currentType instanceof SandType || currentType instanceof EauType) {
-                BaseType top = grid[row - 1][cols - 1].getBaseType();
-                BaseType bottom = grid[row + 1][cols - 1].getBaseType();
-                BaseType left = grid[row][cols - 2].getBaseType();
+            BaseType left = grid[row][col - 1].getBaseType();
+            BaseType right = grid[row][col + 1].getBaseType();
 
-                if(currentType instanceof EauType && top instanceof EauType && bottom instanceof SandType && left instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.BAS_GAUCHE));
-                }else if(currentType instanceof EauType && top instanceof SandType && bottom instanceof EauType && left instanceof SandType){
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.HAUT_GAUCHE));
-                }else if(currentType instanceof EauType && top instanceof EauType && bottom instanceof SandType && left instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.BAS));
-                }else if(currentType instanceof EauType && top instanceof EauType && bottom instanceof EauType && left instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.GAUCHE));
-                }else if(currentType instanceof EauType && top instanceof SandType && bottom instanceof EauType && left instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.HAUT));
-                }else if(currentType instanceof EauType && top instanceof SandType && bottom instanceof SandType && left instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.HORIZONTAL_MILIEU));
-                }else if(currentType instanceof EauType && top instanceof SandType && bottom instanceof SandType && left instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.HORIZONTAL_GAUCHE));
-                }
+            int mask = 0;
 
-                // Conditions pour "Herbe" et "Sable"
-                else if (currentType instanceof SandType && top instanceof HerbeType && bottom instanceof SandType && left instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HAUT_GAUCHE));
-                } else if (currentType instanceof SandType && top instanceof SandType && bottom instanceof HerbeType && left instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.BAS_GAUCHE));
-                } else if (currentType instanceof SandType && top instanceof HerbeType && bottom instanceof HerbeType && left instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.GAUCHE));
-                } else if (currentType instanceof SandType && top instanceof SandType && bottom instanceof HerbeType && left instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.BAS));
-                } else if (currentType instanceof SandType && top instanceof HerbeType && bottom instanceof SandType && left instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HAUT));
-                } else if (currentType instanceof SandType && top instanceof HerbeType && bottom instanceof HerbeType && left instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HORIZONTAL_GAUCHE));
-                }
+            if(row == 0){
+                // On considère que le type de la case au dessus est le même que la case actuelle
+                BaseType bottom = grid[row + 1][col].getBaseType();
+                if (bottom.getClass().equals(oppositeType)) mask |= 0b0010;
+                if (left.getClass().equals(oppositeType)) mask |= 0b0100;
+                if (right.getClass().equals(oppositeType)) mask |= 0b1000;
+            } else if (row == rows - 1){
+                // On considère que le type de la case en dessous est le même que la case actuelle
+                BaseType top = grid[row - 1][col].getBaseType();
+                if (top.getClass().equals(oppositeType)) mask |= 0b0001;
+                if (left.getClass().equals(oppositeType)) mask |= 0b0100;
+                if (right.getClass().equals(oppositeType)) mask |= 0b1000;
             }
+            bitMasking(currentCase, mask);
         }
+    }
 
-        // On s'occupe des bordures strictes (dernière ligne)
-        for (int col = 1; col < cols - 1; col++) {
-            Case currentCase = grid[rows - 1][col];
+    private void updateBorderCol(int col) {
+        for (int row = 1; row < rows - 1; row++) {
+            Case currentCase = grid[row][col];
             BaseType currentType = currentCase.getBaseType();
 
-            // Vérifiez uniquement si la case actuelle est de type "sable" ou "eau" ou "herbe"
-            if (currentType instanceof SandType || currentType instanceof EauType || currentType instanceof HerbeType) {
-                BaseType left = grid[rows - 1][col - 1].getBaseType();
-                BaseType right = grid[rows - 1][col + 1].getBaseType();
-                BaseType top = grid[rows - 2][col].getBaseType();
-
-                // Conditions pour "Eau"
-                if (currentType instanceof EauType && left instanceof EauType && top instanceof SandType && right instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.HAUT_DROITE));
-                } else if (currentType instanceof EauType && left instanceof SandType && top instanceof EauType && right instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.VERTICAL_MILIEU));
-                } else if (currentType instanceof EauType && left instanceof EauType && top instanceof SandType && right instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.HAUT));
-                } else if (currentType instanceof EauType && left instanceof EauType && top instanceof EauType && right instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.DROIT));
-                } else if (currentType instanceof EauType && left instanceof SandType && top instanceof EauType && right instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.GAUCHE));
-                } else if (currentType instanceof EauType && left instanceof SandType && top instanceof SandType && right instanceof EauType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.HAUT_GAUCHE));
-                } else if (currentType instanceof EauType && left instanceof SandType && top instanceof SandType && right instanceof SandType) {
-                    currentCase.setBaseType(new EauType(EauType.VariantWater.VERTICAL_HAUT));
-                }
-
-                // Conditions pour "Herbe" et "Sable"
-                else if (currentType instanceof SandType && left instanceof HerbeType && top instanceof SandType && right instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.VERTICAL_MILIEU));
-                } else if (currentType instanceof SandType && left instanceof SandType && top instanceof HerbeType && right instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HAUT_DROITE));
-                } else if (currentType instanceof SandType && left instanceof HerbeType && top instanceof HerbeType && right instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HAUT_GAUCHE));
-                } else if (currentType instanceof SandType && left instanceof SandType && top instanceof HerbeType && right instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.HAUT));
-                } else if (currentType instanceof SandType && left instanceof HerbeType && top instanceof SandType && right instanceof SandType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.GAUCHE));
-                } else if (currentType instanceof SandType && left instanceof SandType && top instanceof SandType && right instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.DROIT));
-                } else if (currentType instanceof SandType && left instanceof HerbeType && top instanceof HerbeType && right instanceof HerbeType) {
-                    currentCase.setBaseType(new SandType(SandType.VariantHerbeJaune.VERTICAL_HAUT));
-                }
+            Class<? extends BaseType> oppositeType = null;
+            if (currentType instanceof EauType) {
+                oppositeType = SableType.class;
+            } else if (currentType instanceof SableType) {
+                oppositeType = HerbeType.class;
             }
+
+            BaseType top = grid[row - 1][col].getBaseType();
+            BaseType bottom = grid[row + 1][col].getBaseType();
+
+            int mask = 0;
+
+            if(col == 0){
+                // On considère que le type de la case au dessus est le même que la case actuelle
+                BaseType right = grid[row][col + 1].getBaseType();
+                if (top.getClass().equals(oppositeType)) mask |= 0b0001;
+                if (bottom.getClass().equals(oppositeType)) mask |= 0b0010;
+                if (right.getClass().equals(oppositeType)) mask |= 0b1000;
+            }else if(col == cols - 1){
+                // On considère que le type de la case au dessus est le même que la case actuelle
+                BaseType left = grid[row][col - 1].getBaseType();
+                if (top.getClass().equals(oppositeType)) mask |= 0b0001;
+                if (bottom.getClass().equals(oppositeType)) mask |= 0b0010;
+                if (left.getClass().equals(oppositeType)) mask |= 0b0100;
+            }
+            bitMasking(currentCase, mask);
         }
-
-
+    }
+    public void bitMasking(Case currentCase, int neigbhors) {
+        if (currentCase.getBaseType() instanceof EauType) {
+            EauType.VariantWater variant = switch (neigbhors) {
+                case 0b1111 -> EauType.VariantWater.UNIQUE;
+                case 0b0001 -> EauType.VariantWater.HAUT;
+                case 0b0010 -> EauType.VariantWater.BAS;
+                case 0b0100 -> EauType.VariantWater.GAUCHE;
+                case 0b1000 -> EauType.VariantWater.DROITE;
+                case 0b0011 -> EauType.VariantWater.HORIZONTAL_MILIEU;
+                case 0b0111 -> EauType.VariantWater.HORIZONTAL_GAUCHE;
+                case 0b1011 -> EauType.VariantWater.HORIZONTAL_DROITE;
+                case 0b1100 -> EauType.VariantWater.VERTICAL_MILIEU;
+                case 0b1110 -> EauType.VariantWater.VERTICAL_BAS;
+                case 0b1101 -> EauType.VariantWater.VERTICAL_HAUT;
+                case 0b0110 -> EauType.VariantWater.BAS_GAUCHE;
+                case 0b1010 -> EauType.VariantWater.BAS_DROITE;
+                case 0b0101 -> EauType.VariantWater.HAUT_GAUCHE;
+                case 0b1001 -> EauType.VariantWater.HAUT_DROITE;
+                default -> EauType.VariantWater.CENTRE;
+            };
+            currentCase.setBaseType(new EauType(variant));
+        } else if (currentCase.getBaseType() instanceof SableType) {
+            SableType.VariantSable variant = switch (neigbhors) {
+                case 0b1111 -> SableType.VariantSable.UNIQUE;
+                case 0b0001 -> SableType.VariantSable.HAUT;
+                case 0b0010 -> SableType.VariantSable.BAS;
+                case 0b0100 -> SableType.VariantSable.GAUCHE;
+                case 0b1000 -> SableType.VariantSable.DROITE;
+                case 0b0011 -> SableType.VariantSable.HORIZONTAL_MILIEU;
+                case 0b0111 -> SableType.VariantSable.HORIZONTAL_GAUCHE;
+                case 0b1011 -> SableType.VariantSable.HORIZONTAL_DROITE;
+                case 0b1100 -> SableType.VariantSable.VERTICAL_MILIEU;
+                case 0b1110 -> SableType.VariantSable.VERTICAL_BAS;
+                case 0b1101 -> SableType.VariantSable.VERTICAL_HAUT;
+                case 0b0110 -> SableType.VariantSable.BAS_GAUCHE;
+                case 0b1010 -> SableType.VariantSable.BAS_DROITE;
+                case 0b0101 -> SableType.VariantSable.HAUT_GAUCHE;
+                case 0b1001 -> SableType.VariantSable.HAUT_DROITE;
+                default -> SableType.VariantSable.CENTRE;
+            };
+            currentCase.setBaseType(new SableType(variant));
+        }
     }
 
 

@@ -9,7 +9,7 @@ import java.util.Objects;
 public class EauType extends BaseType {
     // Variant possible pour l'eau
     public enum VariantWater {
-        CENTRE, GAUCHE, DROIT, HAUT, BAS, HAUT_GAUCHE, HAUT_DROITE, BAS_GAUCHE, BAS_DROITE,
+        CENTRE, GAUCHE, DROITE, HAUT, BAS, HAUT_GAUCHE, HAUT_DROITE, BAS_GAUCHE, BAS_DROITE,
         VERTICAL_HAUT, VERTICAL_BAS, VERTICAL_MILIEU, HORIZONTAL_GAUCHE, HORIZONTAL_DROITE,
         HORIZONTAL_MILIEU, UNIQUE
     }
@@ -24,20 +24,20 @@ public class EauType extends BaseType {
     static {
         textureMap.put(VariantWater.CENTRE, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_centre.png"))));
         textureMap.put(VariantWater.GAUCHE, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_gauche.png"))));
-        textureMap.put(VariantWater.DROIT, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_droite.png"))));
+        textureMap.put(VariantWater.DROITE, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_droite.png"))));
         textureMap.put(VariantWater.HAUT, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_haut.png"))));
         textureMap.put(VariantWater.BAS, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_bas.png"))));
         textureMap.put(VariantWater.HAUT_GAUCHE, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_haut_gauche.png"))));
         textureMap.put(VariantWater.HAUT_DROITE, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_haut_droite.png"))));
         textureMap.put(VariantWater.BAS_GAUCHE, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_bas_gauche.png"))));
         textureMap.put(VariantWater.BAS_DROITE, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_bas_droite.png"))));
-        textureMap.put(VariantWater.VERTICAL_HAUT, new Image(Objects.requireNonNull(SandType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_vertical_haut_unique.png"))));
-        textureMap.put(VariantWater.VERTICAL_BAS, new Image(Objects.requireNonNull(SandType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_vertical_bas_unique.png"))));
-        textureMap.put(VariantWater.VERTICAL_MILIEU, new Image(Objects.requireNonNull(SandType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_vertical_milieu_unique.png"))));
-        textureMap.put(VariantWater.HORIZONTAL_GAUCHE, new Image(Objects.requireNonNull(SandType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_horizontal_gauche_unique.png"))));
-        textureMap.put(VariantWater.HORIZONTAL_DROITE, new Image(Objects.requireNonNull(SandType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_horizontal_droite_unique.png"))));
-        textureMap.put(VariantWater.HORIZONTAL_MILIEU, new Image(Objects.requireNonNull(SandType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_horizontal_milieu_unique.png"))));
-        textureMap.put(VariantWater.UNIQUE, new Image(Objects.requireNonNull(SandType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_unique.png"))));
+        textureMap.put(VariantWater.VERTICAL_HAUT, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_vertical_haut_unique.png"))));
+        textureMap.put(VariantWater.VERTICAL_BAS, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_vertical_bas_unique.png"))));
+        textureMap.put(VariantWater.VERTICAL_MILIEU, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_vertical_milieu_unique.png"))));
+        textureMap.put(VariantWater.HORIZONTAL_GAUCHE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_horizontal_gauche_unique.png"))));
+        textureMap.put(VariantWater.HORIZONTAL_DROITE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_horizontal_droite_unique.png"))));
+        textureMap.put(VariantWater.HORIZONTAL_MILIEU, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_horizontal_milieu_unique.png"))));
+        textureMap.put(VariantWater.UNIQUE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_unique.png"))));
 
     }
 
@@ -52,7 +52,7 @@ public class EauType extends BaseType {
             // ICI LE CODE DES TYPES DE BASES
             case CENTRE -> "02" ;
             case GAUCHE -> "03" ;
-            case DROIT -> "04" ;
+            case DROITE -> "04" ;
             case HAUT -> "05" ;
             case BAS -> "06" ;
             case HAUT_GAUCHE -> "07" ;

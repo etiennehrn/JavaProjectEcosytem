@@ -32,7 +32,7 @@ public class Selectionneur {
     // Dictionnaires des variants
     private final Map<MenuItem, EauType.VariantWater> menuItemWaterMap = new HashMap<>();
     private final Map<MenuItem, HerbeType.VariantHerbe> menuItemHerbeMap = new HashMap<>();
-    private final Map<MenuItem, SandType.VariantHerbeJaune> menuItemHerbeJauneMap = new HashMap<>();
+    private final Map<MenuItem, SableType.VariantSable> menuItemHerbeJauneMap = new HashMap<>();
     private final Map<MenuItem, ArbreElement.VariantArbre> menuItemArbreMap = new HashMap<>();
     private final Map<MenuItem, CaillouxElement.VariantCailloux> menuItemCaillouxMap = new HashMap<>();
 
@@ -62,7 +62,7 @@ public class Selectionneur {
         // Initialisation des ressources
         initMenu(BaseTypeWater, EauType.VariantWater.values(), EauType.getTextureMap(), menuItemWaterMap);
         initMenu(BaseTypeGrass, HerbeType.VariantHerbe.values(), HerbeType.getTextureMap(), menuItemHerbeMap);
-        initMenu(BaseTypeYellowGrass, SandType.VariantHerbeJaune.values(), SandType.getTextureMap(), menuItemHerbeJauneMap);
+        initMenu(BaseTypeYellowGrass, SableType.VariantSable.values(), SableType.getTextureMap(), menuItemHerbeJauneMap);
         initMenu(ElementArbre, ArbreElement.VariantArbre.values(), ArbreElement.getTextureMap(), menuItemArbreMap);
         initMenu(ElementCailloux, CaillouxElement.VariantCailloux.values(), CaillouxElement.getTextureMap(), menuItemCaillouxMap);
         }
@@ -95,9 +95,9 @@ public class Selectionneur {
                 } else if (variant instanceof HerbeType.VariantHerbe) {
                     this.ElementSelected = null;
                     this.BaseTypeSelected = new HerbeType((HerbeType.VariantHerbe) variant);
-                }else if (variant instanceof SandType.VariantHerbeJaune) {
+                }else if (variant instanceof SableType.VariantSable) {
                     this.ElementSelected = null;
-                    this.BaseTypeSelected = new SandType((SandType.VariantHerbeJaune) variant);
+                    this.BaseTypeSelected = new SableType((SableType.VariantSable) variant);
                 } else if (variant instanceof ArbreElement.VariantArbre) {
                     this.ElementSelected = new ArbreElement((ArbreElement.VariantArbre) variant);
                     this.BaseTypeSelected = null;
