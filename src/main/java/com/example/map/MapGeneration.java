@@ -18,7 +18,6 @@ public class MapGeneration extends PApplet {
     private Case[][] grid;
     private int rows;
     private int cols;
-    private Float[][] mat;
     public float scl;
     public final VBox root;
 
@@ -29,7 +28,6 @@ public class MapGeneration extends PApplet {
         this.rows = 800; //à modifier plus tard
         this.cols = 800; // à modifier plus tard
         this.grid = new Case[rows][cols];
-        this.mat = new Float[rows][cols];
         this.scl = 0.07f;
         this.root = new VBox();
         root.getChildren().addAll(gridPane);
@@ -51,16 +49,16 @@ public class MapGeneration extends PApplet {
     public void setCase(int row, int col, float noiseValue) {
         if(noiseValue<0.4){
             // Eau
-            this.grid[row][col] = CaseFactory.createCase("02");
+            this.grid[row][col] = CaseFactory.createCase("02"); //Eau centrée
         }else if(noiseValue < 0.6){
             // Sable
-            this.grid[row][col] = CaseFactory.createCase("18");
+            this.grid[row][col] = CaseFactory.createCase("18"); //Sable centrée
         }else if(noiseValue < 0.7){
             // Herbe
-            this.grid[row][col] = CaseFactory.createCase("00");
+            this.grid[row][col] = CaseFactory.createCase("00"); //Herbe centrée
         }else{
             // Foret
-            this.grid[row][col] = CaseFactory.createCase("00_A");
+            this.grid[row][col] = CaseFactory.createCase("00_A"); //Arbre sur herbe centrée
         }
 
     }
@@ -70,15 +68,16 @@ public class MapGeneration extends PApplet {
     public void displayMap(int titleSize, Player player) {
         gridPane.getChildren().clear();
 
+        // Limites Affichages
         int startCol = Math.max(player.getX() - player.getVisionRange(), 0);
         int startRow = Math.max(player.getY() - player.getVisionRange(), 0);
         int endCol = Math.min(player.getX() + player.getVisionRange(), cols);
         int endRow = Math.min(player.getY() + player.getVisionRange(), rows);
 
-        // Limites Affichages
+
         for (int row = startRow; row < endRow; row++) {
             for (int col = startCol; col < endCol; col++) {
-                // Créer un conteneur pour empiler les types de bases et les éléments
+                // Créer un conteneur pour empiler les basetypes et les elements
                 StackPane cellPane = new StackPane();
 
                 // Fond (case de la grille) avec texture

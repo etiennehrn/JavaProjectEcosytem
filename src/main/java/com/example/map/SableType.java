@@ -22,22 +22,22 @@ public class SableType extends BaseType {
 
     // Chargement des textures
     static {
-        textureMap.put(VariantSable.CENTRE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_centre.png"))));
-        textureMap.put(VariantSable.GAUCHE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_gauche.png"))));
-        textureMap.put(VariantSable.DROITE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_droite.png"))));
-        textureMap.put(VariantSable.HAUT, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_haut.png"))));
-        textureMap.put(VariantSable.BAS, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_bas.png"))));
-        textureMap.put(VariantSable.HAUT_GAUCHE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_haut_gauche.png"))));
-        textureMap.put(VariantSable.HAUT_DROITE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_haut_droite.png"))));
-        textureMap.put(VariantSable.BAS_GAUCHE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_bas_gauche.png"))));
-        textureMap.put(VariantSable.BAS_DROITE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_bas_droite.png"))));
-        textureMap.put(VariantSable.VERTICAL_HAUT, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_vertical_haut_unique.png"))));
-        textureMap.put(VariantSable.VERTICAL_BAS, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_vertical_bas_unique.png"))));
-        textureMap.put(VariantSable.VERTICAL_MILIEU, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_vertical_milieu_unique.png"))));
-        textureMap.put(VariantSable.HORIZONTAL_GAUCHE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_horizontal_gauche_unique.png"))));
-        textureMap.put(VariantSable.HORIZONTAL_DROITE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_horizontal_droite_unique.png"))));
-        textureMap.put(VariantSable.HORIZONTAL_MILIEU, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_horizontal_milieu_unique.png"))));
-        textureMap.put(VariantSable.UNIQUE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/yellow_grass/yellow_grass_centre_unique.png"))));
+        textureMap.put(VariantSable.CENTRE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_centre.png"))));
+        textureMap.put(VariantSable.GAUCHE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_gauche.png"))));
+        textureMap.put(VariantSable.DROITE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_droite.png"))));
+        textureMap.put(VariantSable.HAUT, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_haut.png"))));
+        textureMap.put(VariantSable.BAS, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_bas.png"))));
+        textureMap.put(VariantSable.HAUT_GAUCHE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_haut_gauche.png"))));
+        textureMap.put(VariantSable.HAUT_DROITE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_haut_droite.png"))));
+        textureMap.put(VariantSable.BAS_GAUCHE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_bas_gauche.png"))));
+        textureMap.put(VariantSable.BAS_DROITE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_bas_droite.png"))));
+        textureMap.put(VariantSable.VERTICAL_HAUT, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_vertical_haut_unique.png"))));
+        textureMap.put(VariantSable.VERTICAL_BAS, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_vertical_bas_unique.png"))));
+        textureMap.put(VariantSable.VERTICAL_MILIEU, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_vertical_milieu_unique.png"))));
+        textureMap.put(VariantSable.HORIZONTAL_GAUCHE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_horizontal_gauche_unique.png"))));
+        textureMap.put(VariantSable.HORIZONTAL_DROITE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_horizontal_droite_unique.png"))));
+        textureMap.put(VariantSable.HORIZONTAL_MILIEU, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_horizontal_milieu_unique.png"))));
+        textureMap.put(VariantSable.UNIQUE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_centre_unique.png"))));
     }
 
     // Type de variant

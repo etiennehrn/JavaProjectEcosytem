@@ -1,6 +1,7 @@
 module com.example.map {
     requires javafx.controls;
     requires javafx.fxml;
+    requires junit;
     requires core;
 
 
