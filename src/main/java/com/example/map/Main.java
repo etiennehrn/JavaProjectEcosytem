@@ -10,15 +10,24 @@ import javafx.scene.input.MouseEvent;
 
 import java.util.Scanner;
 
+/**
+ * La classe <code>Main</code> permet de générer aléatoirement une map et de pouvoir s'y déplacer.
+ */
 
 public class Main extends javafx.application.Application {
-    // Définition de la taille des cases
+    /** Définition de la taille des cases */
     private static final int TILE_SIZE = 20;
 
-    // Le jeu
+    /** Définition de la map */
     private MapGeneration mapGen;
 
-
+    /**
+     * Point d'entrée pour l'application JavaFX. Initialisation et affichage de la fenêtre principale du jeu.
+     * Cette méthode initialise le joueur, génère la carte, définit la taille de la scène, et configure
+     * les événements clavier pour déplacer le joueur.
+     *
+     * @param primaryStage La fenêtre principale (Stage) où l'application sera affichée.
+     */
     public void start(Stage primaryStage) {
         Player player = new Player();
         Scanner scanner = new Scanner(System.in);
@@ -67,7 +76,12 @@ public class Main extends javafx.application.Application {
     }
 
 
-
+    /**
+     * Point d'entrée principal de l'application.
+     * Cette méthode lance l'application JavaFX.
+     *
+     * @param args Les arguments de ligne de commande passés au démarrage de l'application.
+     */
     public static void main(String[] args) {
         launch(args);
     }

@@ -6,18 +6,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Classe représentant un type de sable dans la map.
+ * Chaque type de sable peut avoir plusieurs variantes qui diffèrent par leur apparence.
+ */
 public class SableType extends BaseType {
-    // Variant possible pour l'eau
+    /**
+     * Enum représentant les variantes possibles pour le sable.
+     */
     public enum VariantSable {
         CENTRE, GAUCHE, DROITE, HAUT, BAS, HAUT_GAUCHE, HAUT_DROITE, BAS_GAUCHE, BAS_DROITE,
         VERTICAL_HAUT, VERTICAL_BAS, VERTICAL_MILIEU, HORIZONTAL_GAUCHE, HORIZONTAL_DROITE,
         HORIZONTAL_MILIEU, UNIQUE
     }
 
-    // Code
+    /** Code correspondant à la variante */
     private String code;
 
-    // Map des textures possibles
+    /** Map contenant les textures associées à chaque variante de sable */
     private static final Map<VariantSable, Image> textureMap = new HashMap<>();
 
     // Chargement des textures
@@ -40,10 +46,16 @@ public class SableType extends BaseType {
         textureMap.put(VariantSable.UNIQUE, new Image(Objects.requireNonNull(SableType.class.getResourceAsStream("/ressources/textures/baseType/sable/sable_centre_unique.png"))));
     }
 
-    // Type de variant
+    /** Type de variant */
     private VariantSable variant;
 
-    // Constructeur
+    /**
+     * Constructeur de la classe SableType.
+     * Initialise le type de sable en fonction de la variante spécifiée.
+     * Charge la texture et définit un code unique pour chaque variante de sable.
+     *
+     * @param variant La variante de sable à associer à cet objet.
+     */
     public SableType(VariantSable variant) {
         super(textureMap.get(variant));
         this.variant = variant;
@@ -69,16 +81,38 @@ public class SableType extends BaseType {
 
         };
     }
-    // Getter
+    /**
+     * Retourne la variante de sable associée à cet objet.
+     *
+     * @return La variante de sable.
+     */
     public VariantSable getVariant() {
         return variant;
     }
-    public String getCode() { return code; }
+
+    /**
+     * Retourne le code associé à cette variante de sable.
+     *
+     * @return Le code sous forme de chaîne de caractères.
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * Retourne la map contenant toutes les textures des variantes de sable.
+     *
+     * @return La map associant chaque variante à une texture.
+     */
     public static Map<VariantSable, Image> getTextureMap() {
         return textureMap;
     }
 
-
+    /**
+     * Vérifie si cet objet est un obstacle.
+     *
+     * @return Retourne toujours `true`, car le sable est un obstacle.
+     */
     @Override
     public boolean isObstacle() {
         return true;

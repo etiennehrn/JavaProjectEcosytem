@@ -3,12 +3,22 @@ package com.example.map;
 import java.util.HashMap;
 import java.util.Map;
 
-// Fabrique les cases différentes
+/**
+ * La classe `CaseFactory` est responsable de la création des cases dans le jeu.
+ * Elle utilise un cache pour éviter de recréer les mêmes cases plusieurs fois et optimise ainsi la gestion de la mémoire.
+ */
 public class CaseFactory {
-    // Cache pour les cases
+    /**
+     * Cache pour stocker les cases créées afin de réutiliser celles qui ont déjà été créées.
+     */
     private static final Map<String, Case> caseCache = new HashMap<>();
 
-    // Créer la case si elle n'existe pas, sinon utilise le cache
+    /**
+     * Crée une case en fonction de son code. Si la case a déjà été créée, elle est récupérée depuis le cache.
+     *
+     * @param code Le code de la case, sous forme de chaîne de caractères (par exemple "00_A").
+     * @return La case correspondant au code spécifié.
+     */
     public static Case createCase(String code) {
         // On vérifie si la case est dans le cache
         if (!caseCache.containsKey(code)) {
@@ -19,7 +29,15 @@ public class CaseFactory {
         return caseCache.get(code);
     }
 
-    // Donne la case en fonction du code de la forme Numéro_Lettre (Numéro (2 chiffres) -> typeBase, Lettre(en maj) -> Element)
+    /**
+     * Génère une case à partir de son code.
+     * Le code se compose d'un numéro de type de base suivi d'un élément optionnel (séparés par un underscore).
+     * Par exemple, "00_A" pour une case de type herbe avec un arbre.
+     *
+     * @param code Le code de la case à générer.
+     * @return La case générée correspondant au code spécifié.
+     * @throws IllegalArgumentException Si le format du code est invalide ou si le type de base ou l'élément est inconnu.
+     */
     static Case generateCaseFromCode(String code) {
         // On sépare le code selon le caractère _
         String[] parts = code.split("_");

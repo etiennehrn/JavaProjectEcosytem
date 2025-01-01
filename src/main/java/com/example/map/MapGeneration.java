@@ -12,17 +12,35 @@ import java.io.IOException;
 
 import static com.example.map.HerbeType.VariantHerbe;
 
+/**
+ * La classe <code>MapGeneration</code> représente une carte générée de manière procédurale.
+ * Elle permet de créer, d'afficher et de sauvegarder une carte aléatoire composée de différents types de terrains.
+ * Elle utilise la bibliothèque Processing pour le rendu graphique et JavaFX pour l'interface utilisateur.
+ */
+
 public class MapGeneration extends PApplet {
-    //Paramètre de la map
+    /** Le conteneur principal de la carte, un GridPane de JavaFX */
     public GridPane gridPane;
+
+    /** La grille représentant les cases de la carte */
     private Case[][] grid;
+
+    /** Le nombre de lignes dans la carte */
     private int rows;
+
+    /** Le nombre de colonnes dans la carte */
     private int cols;
+
+    /** Le facteur d'échelle utilisé pour afficher les cases */
     public float scl;
+
+    /** Le conteneur principal pour l'affichage, un VBox JavaFX */
     public final VBox root;
 
-
-
+    /**
+     * Constructeur de la classe <code>MapGeneration</code>.
+     * Initialise les paramètres de la carte, y compris la taille de la grille, l'échelle, et crée le conteneur principal.
+     */
     public MapGeneration(){
         this.gridPane = new GridPane();
         this.rows = 800; //à modifier plus tard
@@ -34,7 +52,12 @@ public class MapGeneration extends PApplet {
 
     }
 
-    // Fonction pour créer la carte aléatoire
+    /**
+     * Crée une carte aléatoire en remplissant chaque case de la grille avec des types de terrains
+     * générés à partir de bruit de Perlin.
+     *
+     * @param tileSize La taille des tuiles dans la carte.
+     */
     public void CreateRandomMap(int tileSize) {
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.cols; j++) {
@@ -46,6 +69,13 @@ public class MapGeneration extends PApplet {
         }
     }
 
+    /**
+     * Définit le type de terrain pour une case donnée en fonction de la valeur du bruit de Perlin.
+     *
+     * @param row L'indice de la ligne de la case.
+     * @param col L'indice de la colonne de la case.
+     * @param noiseValue La valeur du bruit de Perlin utilisée pour déterminer le type de terrain.
+     */
     public void setCase(int row, int col, float noiseValue) {
         if(noiseValue<0.4){
             // Eau
@@ -63,8 +93,12 @@ public class MapGeneration extends PApplet {
 
     }
 
-
-    // Méthode pour afficher la vision de la map dans un GridPane
+    /**
+     * Affiche la carte en utilisant JavaFX, affichant uniquement la portion visible en fonction de la position du joueur.
+     *
+     * @param titleSize La taille des tuiles à afficher.
+     * @param player L'objet représentant le joueur qui détermine la portion visible de la carte.
+     */
     public void displayMap(int titleSize, Player player) {
         gridPane.getChildren().clear();
 
@@ -100,6 +134,10 @@ public class MapGeneration extends PApplet {
         }
     }
 
+    /**
+     * Sauvegarde la carte dans un fichier texte sous forme de codes de terrain.
+     * Chaque case de la carte est enregistrée avec son code correspondant.
+     */
     public void Save() {
         String filePath = "random_map.txt";
 
@@ -115,6 +153,11 @@ public class MapGeneration extends PApplet {
         }
     }
 
+    /**
+     * Met à jour les bordures de certaines cases (e.g., eau ou sable) en fonction de leurs voisins.
+     *
+     * @param tileSize La taille des tuiles.
+     */
     public void updateBorders(int tileSize) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -158,6 +201,13 @@ public class MapGeneration extends PApplet {
 
     }
 
+    /**
+     * Obtient le voisin d'une case à une position donnée dans la grille.
+     *
+     * @param row La ligne de la case dont on veut obtenir le voisin.
+     * @param col La colonne de la case dont on veut obtenir le voisin.
+     * @return Le type de la case voisine, ou null si la case est hors des limites de la grille.
+     */
     private BaseType getNeighbor(int row, int col) {
         if (row >= 0 && row < rows && col >= 0 && col < cols) {
             return grid[row][col].getBaseType();
@@ -165,6 +215,18 @@ public class MapGeneration extends PApplet {
         return null; // Retourne null si la position est hors limites
     }
 
+    /**
+     * Applique un masque de bits pour déterminer le type de case en fonction de ses voisins.
+     * Utilise des codes spécifiques pour chaque type de terrain (eau, sable) et les relations
+     * avec les cases voisines pour ajuster l'apparence des cases.
+     *
+     * @param i L'index de la ligne de la case à modifier.
+     * @param j L'index de la colonne de la case à modifier.
+     * @param neigbhors Un entier représentant un masque de bits des voisins (haut, bas, gauche, droite).
+     *                  Chaque bit indique si un voisin possède un type de terrain opposé.
+     *                  Par exemple : pour une case d'eau, son type de terrain opposé est le sable ; pour une case de sable, son type de terrain opposé est l'herbe.
+     *                  Exemple : pour une case de type "eau", si son masque de voisins est 0b1111, alors cette case d'eau est entourée par quatre terrains de type sable..
+     */
     public void bitMasking(int i, int j, int neigbhors) {
         Case currentCase = grid[i][j];
         Element element = currentCase.getElement();
@@ -214,17 +276,39 @@ public class MapGeneration extends PApplet {
     }
 
 
-
-
     //Getters
+    /**
+     * Retourne la grille actuelle qui contient toutes les cases générées dans la carte.
+     *
+     * @return Un tableau 2D représentant la grille de cases.
+     */
     public Case[][] getGrid() {
         return grid;
     }
+
+    /**
+     * Retourne le conteneur principal de l'interface utilisateur pour la carte.
+     * Ce conteneur contient la grille et est utilisé pour l'affichage de la carte.
+     *
+     * @return Le conteneur VBox qui contient la grille de la carte.
+     */
     public VBox getRoot() {
         return root;
     }
+
+    /**
+     * Retourne le nombre de lignes de la carte.
+     *
+     * @return Le nombre de lignes de la carte (rows).
+     */
     public int getRows() {return rows;
     }
+
+    /**
+     * Retourne le nombre de colonnes de la carte.
+     *
+     * @return Le nombre de colonnes de la carte (cols).
+     */
     public int getCols() {
         return cols;
     }
