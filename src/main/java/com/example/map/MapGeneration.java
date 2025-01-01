@@ -41,27 +41,26 @@ public class MapGeneration extends PApplet {
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.cols; j++) {
                 // Utilisation du bruit de Perlin pour générer des valeurs
-                this.mat[i][j] = noise(i * scl, j * scl); // Multiplie pour avoir des valeurs entre 0 et 255
+                float noiseValue = noise(i * scl, j * scl); // Multiplie pour avoir des valeurs entre 0 et 255
                 this.grid[i][j] = new Case(new HerbeType(VariantHerbe.CLAIR), null);
-                this.setCase(i, j);
+                this.setCase(i, j, noiseValue);
             }
         }
     }
 
-    public void setCase(int row, int col) {
-        float v = this.mat[row][col];
-        if(v<0.4){
+    public void setCase(int row, int col, float noiseValue) {
+        if(noiseValue<0.4){
             // Eau
-            this.grid[row][col].setBaseType(new EauType(EauType.VariantWater.CENTRE)) ;
-        }else if(v < 0.6){
+            this.grid[row][col] = CaseFactory.createCase("02");
+        }else if(noiseValue < 0.6){
             // Sable
-            this.grid[row][col].setBaseType(new SableType(SableType.VariantSable.CENTRE)) ;
-        }else if(v < 0.7){
+            this.grid[row][col] = CaseFactory.createCase("18");
+        }else if(noiseValue < 0.7){
             // Herbe
-            this.grid[row][col].setBaseType(new HerbeType(VariantHerbe.CLAIR)) ;
+            this.grid[row][col] = CaseFactory.createCase("00");
         }else{
             // Foret
-            this.grid[row][col].setElement(new ArbreElement(ArbreElement.VariantArbre.CLAIR)) ;
+            this.grid[row][col] = CaseFactory.createCase("00_A");
         }
 
     }
@@ -118,17 +117,19 @@ public class MapGeneration extends PApplet {
     }
 
     public void updateBorders(int tileSize) {
-        for (int i = 1; i < rows - 1; i++) {
-            for (int j = 1; j < cols - 1; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 Case currentCase = grid[i][j];
                 BaseType currentType = currentCase.getBaseType();
 
                 // Modifier si la case actuelle est de type "sable" ou "eau"
                 if (currentType instanceof SableType || currentType instanceof EauType) {
-                    BaseType top = grid[i - 1][j].getBaseType();
-                    BaseType bottom = grid[i + 1][j].getBaseType();
-                    BaseType left = grid[i][j - 1].getBaseType();
-                    BaseType right = grid[i][j + 1].getBaseType();
+
+                    // Récupérer les voisins en tenant compte des bordures
+                    BaseType top = getNeighbor(i - 1, j); // Voisin du dessus
+                    BaseType bottom = getNeighbor(i + 1, j); // Voisin du dessous
+                    BaseType left = getNeighbor(i, j - 1); // Voisin de gauche
+                    BaseType right = getNeighbor(i, j + 1); // Voisin de droite
 
                     Class<? extends BaseType> oppositeType = null;
                     if (currentType instanceof EauType) {
@@ -139,138 +140,77 @@ public class MapGeneration extends PApplet {
 
                     int mask = 0;
 
-                    if (top.getClass().equals(oppositeType)) {
+                    if (top != null && top.getClass().equals(oppositeType)) {
                         mask |= 0b0001;
                     }
-                    if (bottom.getClass().equals(oppositeType)) {
+                    if (bottom != null && bottom.getClass().equals(oppositeType)) {
                         mask |= 0b0010;
                     }
-                    if (left.getClass().equals(oppositeType)) {
+                    if (left != null && left.getClass().equals(oppositeType)) {
                         mask |= 0b0100;
                     }
-                    if (right.getClass().equals(oppositeType)) {
+                    if (right != null && right.getClass().equals(oppositeType)) {
                         mask |= 0b1000;
                     }
-                    bitMasking(currentCase, mask);
+                    bitMasking(i, j, mask);
                 }
             }
         }
-        updateBorderRow(0);
-        updateBorderRow(rows - 1);
-        updateBorderCol(0);
-        updateBorderCol(cols - 1);
 
     }
 
-    private void updateBorderRow(int row) {
-
-        for (int col = 1; col < cols - 1; col++) {
-            Case currentCase = grid[row][col];
-            BaseType currentType = currentCase.getBaseType();
-
-            Class<? extends BaseType> oppositeType = null;
-            if (currentType instanceof EauType) {
-                oppositeType = SableType.class;
-            } else if (currentType instanceof SableType) {
-                oppositeType = HerbeType.class;
-            }
-
-            BaseType left = grid[row][col - 1].getBaseType();
-            BaseType right = grid[row][col + 1].getBaseType();
-
-            int mask = 0;
-
-            if(row == 0){
-                // On considère que le type de la case au dessus est le même que la case actuelle
-                BaseType bottom = grid[row + 1][col].getBaseType();
-                if (bottom.getClass().equals(oppositeType)) mask |= 0b0010;
-                if (left.getClass().equals(oppositeType)) mask |= 0b0100;
-                if (right.getClass().equals(oppositeType)) mask |= 0b1000;
-            } else if (row == rows - 1){
-                // On considère que le type de la case en dessous est le même que la case actuelle
-                BaseType top = grid[row - 1][col].getBaseType();
-                if (top.getClass().equals(oppositeType)) mask |= 0b0001;
-                if (left.getClass().equals(oppositeType)) mask |= 0b0100;
-                if (right.getClass().equals(oppositeType)) mask |= 0b1000;
-            }
-            bitMasking(currentCase, mask);
+    private BaseType getNeighbor(int row, int col) {
+        if (row >= 0 && row < rows && col >= 0 && col < cols) {
+            return grid[row][col].getBaseType();
         }
+        return null; // Retourne null si la position est hors limites
     }
 
-    private void updateBorderCol(int col) {
-        for (int row = 1; row < rows - 1; row++) {
-            Case currentCase = grid[row][col];
-            BaseType currentType = currentCase.getBaseType();
-
-            Class<? extends BaseType> oppositeType = null;
-            if (currentType instanceof EauType) {
-                oppositeType = SableType.class;
-            } else if (currentType instanceof SableType) {
-                oppositeType = HerbeType.class;
-            }
-
-            BaseType top = grid[row - 1][col].getBaseType();
-            BaseType bottom = grid[row + 1][col].getBaseType();
-
-            int mask = 0;
-
-            if(col == 0){
-                // On considère que le type de la case au dessus est le même que la case actuelle
-                BaseType right = grid[row][col + 1].getBaseType();
-                if (top.getClass().equals(oppositeType)) mask |= 0b0001;
-                if (bottom.getClass().equals(oppositeType)) mask |= 0b0010;
-                if (right.getClass().equals(oppositeType)) mask |= 0b1000;
-            }else if(col == cols - 1){
-                // On considère que le type de la case au dessus est le même que la case actuelle
-                BaseType left = grid[row][col - 1].getBaseType();
-                if (top.getClass().equals(oppositeType)) mask |= 0b0001;
-                if (bottom.getClass().equals(oppositeType)) mask |= 0b0010;
-                if (left.getClass().equals(oppositeType)) mask |= 0b0100;
-            }
-            bitMasking(currentCase, mask);
-        }
-    }
-    public void bitMasking(Case currentCase, int neigbhors) {
+    public void bitMasking(int i, int j, int neigbhors) {
+        Case currentCase = grid[i][j];
+        Element element = currentCase.getElement();
         if (currentCase.getBaseType() instanceof EauType) {
-            EauType.VariantWater variant = switch (neigbhors) {
-                case 0b1111 -> EauType.VariantWater.UNIQUE;
-                case 0b0001 -> EauType.VariantWater.HAUT;
-                case 0b0010 -> EauType.VariantWater.BAS;
-                case 0b0100 -> EauType.VariantWater.GAUCHE;
-                case 0b1000 -> EauType.VariantWater.DROITE;
-                case 0b0011 -> EauType.VariantWater.HORIZONTAL_MILIEU;
-                case 0b0111 -> EauType.VariantWater.HORIZONTAL_GAUCHE;
-                case 0b1011 -> EauType.VariantWater.HORIZONTAL_DROITE;
-                case 0b1100 -> EauType.VariantWater.VERTICAL_MILIEU;
-                case 0b1110 -> EauType.VariantWater.VERTICAL_BAS;
-                case 0b1101 -> EauType.VariantWater.VERTICAL_HAUT;
-                case 0b0110 -> EauType.VariantWater.BAS_GAUCHE;
-                case 0b1010 -> EauType.VariantWater.BAS_DROITE;
-                case 0b0101 -> EauType.VariantWater.HAUT_GAUCHE;
-                case 0b1001 -> EauType.VariantWater.HAUT_DROITE;
-                default -> EauType.VariantWater.CENTRE;
+            String code = switch (neigbhors) {
+                case 0b1111 -> "17"; //UNIQUE
+                case 0b0001 -> "05"; // HAUT
+                case 0b0010 -> "06"; // BAS
+                case 0b0100 -> "03"; // GAUCHE
+                case 0b1000 -> "04"; // DROITE
+                case 0b0011 -> "16"; //HORIZONTAL_MILIEU
+                case 0b0111 -> "14"; // HORIZONTAL_GAUCHE
+                case 0b1011 -> "15"; // HORIZONTAL_DROITE
+                case 0b1100 -> "13"; // VERTICAL_MILIEU
+                case 0b1110 -> "12"; // VERTICAL_BAS
+                case 0b1101 -> "11"; // VERTICAL_HAUT
+                case 0b0110 -> "09"; // BAS_GAUCHE
+                case 0b1010 -> "10"; // BAS_DROITE
+                case 0b0101 -> "07"; // HAUT_GAUCHE
+                case 0b1001 -> "08"; // HAUT_DROITE
+                default -> "02";// CENTRE
             };
-            currentCase.setBaseType(new EauType(variant));
+            if(element != null) grid[i][j] = CaseFactory.createCase(code + "_" + element.getCode());
+            else grid[i][j] = CaseFactory.createCase(code);
         } else if (currentCase.getBaseType() instanceof SableType) {
-            SableType.VariantSable variant = switch (neigbhors) {
-                case 0b1111 -> SableType.VariantSable.UNIQUE;
-                case 0b0001 -> SableType.VariantSable.HAUT;
-                case 0b0010 -> SableType.VariantSable.BAS;
-                case 0b0100 -> SableType.VariantSable.GAUCHE;
-                case 0b1000 -> SableType.VariantSable.DROITE;
-                case 0b0011 -> SableType.VariantSable.HORIZONTAL_MILIEU;
-                case 0b0111 -> SableType.VariantSable.HORIZONTAL_GAUCHE;
-                case 0b1011 -> SableType.VariantSable.HORIZONTAL_DROITE;
-                case 0b1100 -> SableType.VariantSable.VERTICAL_MILIEU;
-                case 0b1110 -> SableType.VariantSable.VERTICAL_BAS;
-                case 0b1101 -> SableType.VariantSable.VERTICAL_HAUT;
-                case 0b0110 -> SableType.VariantSable.BAS_GAUCHE;
-                case 0b1010 -> SableType.VariantSable.BAS_DROITE;
-                case 0b0101 -> SableType.VariantSable.HAUT_GAUCHE;
-                case 0b1001 -> SableType.VariantSable.HAUT_DROITE;
-                default -> SableType.VariantSable.CENTRE;
+            String code = switch (neigbhors) {
+                case 0b1111 -> "33"; // UNIQUE
+                case 0b0001 -> "21"; // HAUT
+                case 0b0010 -> "22"; // BAS
+                case 0b0100 -> "19"; // GAUCHE
+                case 0b1000 -> "20"; // DROITE
+                case 0b0011 -> "32"; // HORIZONTAL_MILIEU
+                case 0b0111 -> "30"; // HORIZONTAL_GAUCHE
+                case 0b1011 -> "31"; // HORIZONTAL_DROITE
+                case 0b1100 -> "29"; // VERTICAL_MILIEU
+                case 0b1110 -> "28"; // VERTICAL_BAS
+                case 0b1101 -> "27"; // VERTICAL_HAUT
+                case 0b0110 -> "25"; // BAS_GAUCHE
+                case 0b1010 -> "26"; // BAS_DROITE
+                case 0b0101 -> "23"; // HAUT_GAUCHE
+                case 0b1001 -> "24"; // HAUT_DROITE
+                default -> "18"; // CENTRE
             };
-            currentCase.setBaseType(new SableType(variant));
+            if(element != null) grid[i][j] = CaseFactory.createCase(code + "_" + element.getCode());
+            else grid[i][j] = CaseFactory.createCase(code);
         }
     }
 
