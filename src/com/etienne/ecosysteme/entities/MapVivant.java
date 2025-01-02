@@ -4,7 +4,7 @@ import com.etienne.ecosysteme.environment.MapEnvironnement;
 
 import java.io.IOException;
 
-public class MapVivant {
+public class MapVivant implements IMapVivant{
     private EtreVivant[][] mapVivants;
     private int rows;
     private int cols;
@@ -16,14 +16,13 @@ public class MapVivant {
         mapVivants = new EtreVivant[rows][cols];
     }
 
-    // On met des humains et des zombies et des animaux sur la carte et on charge la map_vivant de base
+    @Override
     public void populate(String filePath, int nbHumains, int nbZombies, int nbAnimaux, MapEnvironnement map) throws IOException {
-        // Groupe de bitches pour étudier en haut à droite
         PopulateUtil.loadFromFile(filePath, map, this);
         PopulateUtil.populateRandomly(this, map, nbHumains, nbZombies, nbAnimaux);
     }
 
-    // On fait la mise à jour des déplacements
+    @Override
     public void update(MapEnvironnement grid) {
 
         // Copier temporairement la carte pour éviter les conflits lors d'un cycle
@@ -59,27 +58,37 @@ public class MapVivant {
         }
     }
 
-    // Pour savoir si l'etre vivant à row et bound est bien sur la carte
+    @Override
     public boolean isWithinBounds(int row, int col) {
         return row >= 0 && row < this.rows && col >= 0 && col < this.cols;
     }
 
-    // Getter et setter
+    @Override
     public EtreVivant getEtreVivant(int row, int col) {
         return mapVivants[row][col];
     }
+
+    @Override
     public void setEtreVivant(int row, int col, EtreVivant etre) {
         mapVivants[row][col] = etre;
     }
+
+    @Override
     public int getRows() {
         return rows;
     }
+
+    @Override
     public void setRows(int rows) {
         this.rows = rows;
     }
+
+    @Override
     public int getCols() {
         return cols;
     }
+
+    @Override
     public void setCols(int cols) {
         this.cols = cols;
     }

@@ -34,7 +34,7 @@ import java.util.function.BiFunction;
  *
  */
 
-public abstract class EtreVivant implements Deplacement {
+public abstract class EtreVivant implements IDeplacement {
     // Position
     protected int row;
     protected int col;

@@ -4,7 +4,7 @@ import com.etienne.ecosysteme.environment.MapEnvironnement;
 
 import java.util.function.BiFunction;
 
-public interface Deplacement {
+public interface IDeplacement {
     // Méthode générique qui générer les déplacements
     void gen_deplacement(MapVivant mapVivant, MapEnvironnement grid, int row, int col);
 
