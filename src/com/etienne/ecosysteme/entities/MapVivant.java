@@ -1,5 +1,6 @@
 package com.etienne.ecosysteme.entities;
 
+import com.etienne.ecosysteme.core.DayNightCycleImpl;
 import com.etienne.ecosysteme.environment.MapEnvironnement;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class MapVivant implements IMapVivant{
     }
 
     @Override
-    public void update(MapEnvironnement grid) {
+    public void update(MapEnvironnement grid, DayNightCycleImpl dayNightCycle) {
 
         // Copier temporairement la carte pour éviter les conflits lors d'un cycle
         EtreVivant[][] tempMap = new EtreVivant[grid.getRows()][grid.getCols()];
@@ -41,7 +42,7 @@ public class MapVivant implements IMapVivant{
                 }
 
                 // Déplacement de chaque être vivant (la prise en compte réelle est dans le cylce)
-                vivant.updateDeplacement(this, grid, row, col);
+                vivant.updateDeplacement(this, grid, row, col, dayNightCycle);
 
                 // Actions spécifiques
 

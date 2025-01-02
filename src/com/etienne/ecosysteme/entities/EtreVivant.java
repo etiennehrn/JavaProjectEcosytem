@@ -1,5 +1,6 @@
 package com.etienne.ecosysteme.entities;
 
+import com.etienne.ecosysteme.core.DayNightCycleImpl;
 import com.etienne.ecosysteme.environment.MapEnvironnement;
 import javafx.scene.image.ImageView;
 
@@ -168,7 +169,8 @@ public abstract class EtreVivant implements IDeplacement {
      * @param row         la ligne cible pour le déplacement
      * @param col         la colonne cible pour le déplacement
      */
-    public void updateDeplacement(MapVivant mapVivant, MapEnvironnement grid, int row, int col) {
+    public void updateDeplacement(MapVivant mapVivant, MapEnvironnement grid, int row, int col, DayNightCycleImpl dayNightCycle) {
+        adjustVitesse(dayNightCycle.getCurrentCycle());
         // On commence par incrémenter le compteur
         this.compteurDeplacement.incrementer();
         // On dit si l'être vivant doit se déplacer
@@ -177,6 +179,24 @@ public abstract class EtreVivant implements IDeplacement {
             gen_deplacement(mapVivant, grid, row, col);
             this.compteurDeplacement.reset();
         }
+    }
+
+    // Méthode pour ajuster la vitesse en fonction du jour/nuit
+    public void adjustVitesse(DayNightCycleImpl.Cycle cycle) {
+        switch (cycle) {
+            case JOUR -> compteurDeplacement.setVitesse((int) (getVitesse() * getFacteurVitesseJour()));  // Dynamique Jour
+            case CREPUSCULE, AURORE -> compteurDeplacement.setVitesse((getVitesse()));  // Pas de changement
+            case NUIT -> compteurDeplacement.setVitesse((int) (getVitesse() * getFacteurVitesseNuit()));  // Dynamique la nuit
+            default -> throw new IllegalStateException("Unexpected value: " + cycle);
+        }
+    }
+
+    protected double getFacteurVitesseNuit() {
+        return 2; // Par défaut, aucun changement
+    }
+
+    protected double getFacteurVitesseJour() {
+        return 1; // Par défaut, aucun changement
     }
 
     /**

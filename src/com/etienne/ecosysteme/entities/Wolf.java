@@ -12,7 +12,7 @@ public class Wolf extends Animaux {
 
     // Constructeur
     public Wolf(int row, int col) {
-        super(row, col, 1, 1, 12, Type.WOLF);
+        super(row, col, 5, 1, 12, Type.WOLF);
     }
 
     @Override

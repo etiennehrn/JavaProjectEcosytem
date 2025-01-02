@@ -12,8 +12,8 @@ import java.util.function.BiFunction;
 
 public class Humain extends EtreVivant {
     // Vitesse minimale et maximale des humains
-    private static final int MIN_VITESSE = 1;
-    private static final int MAX_VITESSE = 5;
+    private static final int MIN_VITESSE = 3;
+    private static final int MAX_VITESSE = 8;
 
     // Nombre total de styles d'humains, attention, il faut que ça corresponde avec SpriteManager
     private static final int NUM_HUMAN_STYLES = 4;
@@ -93,5 +93,17 @@ public class Humain extends EtreVivant {
             }
             return score;
         };
+    }
+
+    // Lent la nuit
+    @Override
+    public double getFacteurVitesseNuit() {
+        return 1.5;
+    }
+
+    // Normal le jour
+    @Override
+    public double getFacteurVitesseJour() {
+        return 1;
     }
 }

@@ -15,7 +15,7 @@ public class Zombie extends EtreVivant {
 
     // Constructeur
     public Zombie(int row, int col) {
-        super(row, col, 1, 1, 30); // Vitesse 6
+        super(row, col, 6, 1, 30); // Vitesse 6
         // Choisir un style aléatoire pour ce zombie
         Random random = new Random();
         this.styleIndex = random.nextInt(NUM_ZOMBIE_STYLES);
@@ -99,6 +99,18 @@ public class Zombie extends EtreVivant {
                 }
             }
         }
+    }
+
+    // Rapide la nuit
+    @Override
+    public double getFacteurVitesseNuit() {
+        return 0.8;
+    }
+
+    // Plus lent le jour
+    @Override
+    public double getFacteurVitesseJour() {
+        return 2;
     }
 
 }

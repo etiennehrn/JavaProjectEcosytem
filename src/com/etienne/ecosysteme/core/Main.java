@@ -62,7 +62,7 @@ public class Main extends Application {
         playBackgroundMusic();
 
         // Mise à jour des déplacements 200 ms
-        Timeline gameLoop = new Timeline(new KeyFrame(Duration.millis(200), event -> {
+        Timeline gameLoop = new Timeline(new KeyFrame(Duration.millis(50), event -> {
             game.update();
             grid.getChildren().clear();
             game.displayMap(grid, TILE_SIZE);

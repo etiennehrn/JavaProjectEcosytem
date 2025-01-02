@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
 public class Bunny extends Animaux {
 
     public Bunny(int row, int col) {
-        super(row, col, 1, 1, 5, Type.BUNNY); // Vitesse 2 pour les lapins, ils sont rapide les fous
+        super(row, col, 10, 1, 5, Type.BUNNY); // Vitesse 2 pour les lapins, ils sont rapide les fous
     }
 
     @Override

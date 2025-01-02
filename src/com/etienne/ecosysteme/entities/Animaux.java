@@ -55,4 +55,16 @@ public abstract class Animaux extends EtreVivant {
         };
     }
 
+    // Lent la nuit
+    @Override
+    public double getFacteurVitesseNuit() {
+        return 3;
+    }
+
+    // Normal le jour
+    @Override
+    public double getFacteurVitesseJour() {
+        return 1;
+    }
+
 }

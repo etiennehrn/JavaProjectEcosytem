@@ -1,5 +1,6 @@
 package com.etienne.ecosysteme.entities;
 
+import com.etienne.ecosysteme.core.DayNightCycleImpl;
 import com.etienne.ecosysteme.environment.MapEnvironnement;
 import java.io.IOException;
 
@@ -20,9 +21,10 @@ public interface IMapVivant {
     /**
      * Met à jour les déplacements et interactions des entités sur la carte.
      *
-     * @param grid Carte de l'environnement.
+     * @param grid          Carte de l'environnement.
+     * @param dayNightCycle Cycle jour/nuit.
      */
-    void update(MapEnvironnement grid);
+    void update(MapEnvironnement grid, DayNightCycleImpl dayNightCycle);
 
     /**
      * Vérifie si une position (row, col) est dans les limites de la carte.

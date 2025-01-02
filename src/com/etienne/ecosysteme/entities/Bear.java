@@ -19,7 +19,7 @@ public class Bear extends Animaux {
     private final Random random = new Random();
 
     public Bear(int row, int col) {
-        super(row, col, 24, 1, 10, Type.BEAR);
+        super(row, col, 40, 1, 10, Type.BEAR);
         this.centralRow = row;
         this.centralCol = col;
     }
