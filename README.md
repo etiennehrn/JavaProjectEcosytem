@@ -245,6 +245,20 @@ Faire en sorte de modéliser un mouvement de recherche, par exemple pour les lou
 - Pour l'instant recherche puis si possible implémentation en faisant en sorte d'avoir un programme fluide.
 
 ---
+✅ **Terminé** le 22/12/2024.
+
+# Jalon 8 : Finalisation du projet
+
+## Description
+Ce jalon a pour but de finir le projet
+---
+
+## Nouvelles Fonctionnalités Implémentées
+
+### 1. 
+
+---
+
 ## Installation et Configuration
 
 ### Prérequis :
