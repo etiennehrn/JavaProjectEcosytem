@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class SpriteManager {
+public class SpriteManager implements ISpriteManager{
     // Nombre de styles (pour zombies et humains), attention, il faut que ça corresponde avec ceux définit dans Humain et Zombie et Player
     private static final int NUM_HUMAN_STYLES = 4;
     private static final int NUM_ZOMBIE_STYLES = 1;
@@ -27,8 +27,8 @@ public class SpriteManager {
         return INSTANCE;
     }
 
-    // On charge tous les sprites
-    private void loadAllSprites() {
+    @Override
+    public void loadAllSprites() {
         // Charger les animaux
         for (Animaux.Type type : Animaux.Type.values()) {
             String category = "animals";
@@ -93,6 +93,7 @@ public class SpriteManager {
     }
 
     // Récupérer les sprites pour un type d'animal et une direction
+    @Override
     public Image[] getSprites(String type, Animaux.Direction direction) {
         return spriteCache.get(type).get(direction);
     }
