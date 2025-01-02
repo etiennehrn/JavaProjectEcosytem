@@ -255,7 +255,28 @@ Ce jalon a pour but de finir le projet
 
 ## Nouvelles Fonctionnalités Implémentées
 
-### 1. 
+### 1. Simulation de la pluie
+- Ajout d'une gestion de la pluie avec intensité variable (plus ou moins forte).
+- Effets visuels : gouttes de pluie générées aléatoirement et visibles dans chaque cellule.
+- Impact sur les entités : modification des vitesses en fonction de l'intensité de la pluie.
+
+### 2. Gestion des cycles jour/nuit
+- Création d'une interface `DayNightCycleInterface` pour modulariser le cycle jour/nuit.
+- Les vitesses des entités s'adaptent dynamiquement au cycle (plus rapides le jour, plus lentes la nuit).
+
+### 3. Gestion des sprites
+- Introduction d'une interface `SpriteManager` pour centraliser et améliorer la gestion des sprites.
+
+### 4. Gestion de la carte et interactions
+- Implémentation de l'interface `MapVivant` pour structurer les interactions avec la carte.
+- Contrat clair pour gérer les entités et leurs déplacements.
+
+### 5. Nourriture et comportement des zombies
+- Ajout de la gestion de la nourriture pour les zombies (consommation, pénalité de vitesse, mort).
+- Affichage d'une barre visuelle indiquant l'état de la nourriture pour chaque zombie.
+
+### 6. Fusion et collaboration
+- Intégration partielle avec le code de Yannis, unifiant certains comportements et améliorant la cohérence globale. 
 
 ---
 
