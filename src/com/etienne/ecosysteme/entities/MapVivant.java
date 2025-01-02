@@ -18,7 +18,7 @@ public class MapVivant implements IMapVivant{
 
     @Override
     public void populate(String filePath, int nbHumains, int nbZombies, int nbAnimaux, MapEnvironnement map) throws IOException {
-        PopulateUtil.loadFromFile(filePath, map, this);
+        // PopulateUtil.loadFromFile(filePath, map, this);
         PopulateUtil.populateRandomly(this, map, nbHumains, nbZombies, nbAnimaux);
     }
 

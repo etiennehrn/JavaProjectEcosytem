@@ -28,7 +28,6 @@ public class Wolf extends Animaux {
             int[] directionRecherche = rechercheActive(mapVivants, grid);
 
             if (directionRecherche != null) {
-                System.out.println(directionRecherche[0] + " " + directionRecherche[1]);
                 updateAnimation(parseDirection(directionRecherche));
                 return;
             }

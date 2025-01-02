@@ -6,7 +6,6 @@ import javafx.scene.image.ImageView;
 import java.util.*;
 import java.util.function.BiFunction;
 
-
 /**
  * Classe abstraite représentant un être vivant dans la simulation d'écosystème.
  *
@@ -80,7 +79,6 @@ public abstract class EtreVivant implements IDeplacement {
         if (movement[1] == 1) return Direction.RIGHT;
         return Direction.DOWN; // Par défaut
     }
-
 
     /**
      * Constructeur de la classe {@code EtreVivant}.

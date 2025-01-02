@@ -43,13 +43,13 @@ public class DayNightCycleImpl implements DayNightCycleInterface{
     public Cycle getCurrentCycle() {
         double normalizedTime = getNormalizedTime();
 
-        if (normalizedTime < 0.25) { // 6h à 11h
+        if (0.25 <= normalizedTime && normalizedTime <= 0.45) { // 6h à 11h
             return Cycle.AURORE;
         }
-        if (normalizedTime < 0.5) { // 11h à 18h
+        if (0.4 <= normalizedTime && normalizedTime <= 0.75) { // 11h à 18h
             return Cycle.JOUR;
         }
-        if (normalizedTime < 0.75) { // 18h à 00h
+        if (0.75 <= normalizedTime && normalizedTime <= 0.9) { // 18h à 00h
             return Cycle.CREPUSCULE;
         }
         return Cycle.NUIT; // 00h à 6h
