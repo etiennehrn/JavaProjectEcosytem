@@ -6,16 +6,20 @@ import javafx.scene.image.ImageView;
 
 import java.util.*;
 
-public class Zombie extends EtreVivant {
+public class Zombie extends EtreVivant implements IGestionNourriture {
     // Nombre total de styles de zombies, attention, il faut que ça corresponde avec SpriteManager
     private static final int NUM_ZOMBIE_STYLES = 1;
+
+    // Nourriture min et max
+    private static final int NOURRITURE_MAX = 800;
+    private static final int NOURRITURE_MIN = 0;
 
     // Pour le sprite
     private final int styleIndex;
 
     // Constructeur
     public Zombie(int row, int col) {
-        super(row, col, 6, 1, 30); // Vitesse 6
+        super(row, col, 4, 300, 30); // Vitesse 6
         // Choisir un style aléatoire pour ce zombie
         Random random = new Random();
         this.styleIndex = random.nextInt(NUM_ZOMBIE_STYLES);
@@ -47,6 +51,15 @@ public class Zombie extends EtreVivant {
                 .filter(e -> e instanceof Humain)
                 .toList();
         if (humainsAProximite.isEmpty()) {
+            // D'abord recherche active
+            int[] directionRecherche = rechercheActive(mapVivants, grid);
+
+            if (directionRecherche != null) {
+                updateAnimation(parseDirection(directionRecherche));
+                consommerNourriture(1, mapVivants);
+                return;
+            }
+
             // Erratique
             Random random = new Random();
             if (random.nextDouble() >= 0.5) {
@@ -56,13 +69,15 @@ public class Zombie extends EtreVivant {
 
             // Mise à jour de l'animation si le déplacement a eu lieu
             if (direction != null) {
+                consommerNourriture(1, mapVivants);
                 updateAnimation(parseDirection(direction));
             }
+            return;
         }
 
-        // Déplacer le loup en fonction du score
         int[] direction = seDeplacerSelonScore(mapVivants, grid, (newRow, newCol) -> calculerScoreDeplacement(newRow, newCol, humainsAProximite));
         if (direction != null) {
+            consommerNourriture(1, mapVivants);
             updateAnimation(parseDirection(direction));
         }
 
@@ -96,6 +111,7 @@ public class Zombie extends EtreVivant {
                 if (target instanceof Humain) {
                     // On transforme l'humain en zombie
                     mapVivants.setEtreVivant(newRow, newCol, new Zombie(newRow, newCol));
+                    manger(200);
                 }
             }
         }
@@ -112,5 +128,35 @@ public class Zombie extends EtreVivant {
     public double getFacteurVitesseJour() {
         return 2;
     }
+
+    // Implémentatation de IGestionNourriture
+    @Override
+    public void consommerNourriture(int quantite, MapVivant mapVivants) {
+        this.setNourriture(Math.max(NOURRITURE_MIN, this.getNourriture() - quantite));
+        verifierEtatNourriture(mapVivants);
+    }
+
+    @Override
+    public void manger(int gain) {
+        this.setNourriture(Math.min(NOURRITURE_MAX, this.getNourriture() + gain));
+    }
+
+    @Override
+    public void verifierEtatNourriture(MapVivant mapVivants) {
+        if (this.getNourriture() <= 0) {
+            // Si la nourriture est épuisée, le zombie meurt
+            mourir(mapVivants);
+        } else if (this.getNourriture() <= 15) {
+            // Si la nourriture est faible, diminuer la vitesse
+            setVitesse(Math.max(1, getVitesse()+1)); // Vitesse minimale de 1
+        }
+    }
+
+    private void mourir(MapVivant mapVivants) {
+        mapVivants.setEtreVivant(this.getRow(), this.getCol(), null);
+    }
+
+
+
 
 }

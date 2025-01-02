@@ -17,7 +17,7 @@ public class Game {
     private final int visionRange = 15;
 
     // Pour limiter déplacement du joueuer
-    private static final long MOVE_DELAY_MS = 100;
+    private static final long MOVE_DELAY_MS = 80;
     private long lastMoveTime = 0; // Time du dernier déplacement
 
     // La map
@@ -34,10 +34,10 @@ public class Game {
         mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
         player = new Player(46, 50, visionRange, mapEnvironnement);
 
-        mapVivant.populate(mapVivantFilePath, 1000, 1000, 0, mapEnvironnement);
+        mapVivant.populate(mapVivantFilePath, 0, 0, 0, mapEnvironnement);
 
         // Initialisation cycle jour.nuit de durée total 240
-        dayNightCycleImpl = new DayNightCycleImpl(24);
+        dayNightCycleImpl = new DayNightCycleImpl(240);
     }
 
     // Update position des etres vivants

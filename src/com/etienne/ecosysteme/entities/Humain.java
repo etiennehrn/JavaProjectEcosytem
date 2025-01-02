@@ -12,7 +12,7 @@ import java.util.function.BiFunction;
 
 public class Humain extends EtreVivant {
     // Vitesse minimale et maximale des humains
-    private static final int MIN_VITESSE = 3;
+    private static final int MIN_VITESSE = 2;
     private static final int MAX_VITESSE = 8;
 
     // Nombre total de styles d'humains, attention, il faut que ça corresponde avec SpriteManager

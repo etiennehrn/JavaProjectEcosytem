@@ -37,6 +37,7 @@ public class Wolf extends Animaux {
                 return; // Pas de déplacement
             }
             int[] direction = mouvementErratique(mapVivants, grid, row, col);
+
             // Mise à jour de l'animation si le déplacement a eu lieu
             if (direction != null) {
                 updateAnimation(parseDirection(direction));

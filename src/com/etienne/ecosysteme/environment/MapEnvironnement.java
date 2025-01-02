@@ -175,6 +175,7 @@ public class MapEnvironnement {
         }
         return true;
     }
+
     // Getter et Setter
     public Case getCell(int row, int col) {
         return grid[row][col];
