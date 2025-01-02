@@ -178,7 +178,6 @@ public abstract class EtreVivant implements IDeplacement {
         if (this.compteurDeplacement.doitSeDeplacer()) {
             // On se déplace puis on réinitialise le compteur
             gen_deplacement(mapVivant, grid, row, col);
-            System.out.println(getNourriture());
 
             this.compteurDeplacement.reset();
         }

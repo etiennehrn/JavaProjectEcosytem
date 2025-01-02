@@ -9,12 +9,14 @@ import java.util.List;
 import com.etienne.ecosysteme.entities.EtreVivant;
 import com.etienne.ecosysteme.entities.MapVivant;
 import com.etienne.ecosysteme.entities.Player;
+import com.etienne.ecosysteme.entities.Zombie;
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-
 
 public class MapEnvironnement {
     // Map pour l'environnement (case)
@@ -86,6 +88,18 @@ public class MapEnvironnement {
                 EtreVivant vivant = mapVivant.getEtreVivant(row, col);
                 if (vivant != null) {
                     cellPane.getChildren().add(vivant.getSprite(titleSize));
+
+                    // Ajout barre pour le zombie
+                    if (vivant instanceof Zombie zombie) {
+                        double barWidth = (((double)zombie.getNourriture()) / ((double)Zombie.NOURRITURE_MAX)) * titleSize;
+                        Rectangle foodBar = new Rectangle(barWidth, 5); // Hauteur de la jauge fixe à 5
+                        foodBar.setFill(Color.GREEN);
+                        // Ajouter la jauge en haut de l'entité
+                        StackPane.setAlignment(foodBar, Pos.TOP_CENTER);
+                        cellPane.getChildren().add(foodBar);
+
+                    }
+
                 }
 
                 // Vérifier si c'est la position du joueur

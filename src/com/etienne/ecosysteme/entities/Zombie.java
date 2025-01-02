@@ -11,8 +11,8 @@ public class Zombie extends EtreVivant implements IGestionNourriture {
     private static final int NUM_ZOMBIE_STYLES = 1;
 
     // Nourriture min et max
-    private static final int NOURRITURE_MAX = 800;
-    private static final int NOURRITURE_MIN = 0;
+    public static final int NOURRITURE_MAX = 500;
+    public static final int NOURRITURE_MIN = 0;
 
     // Pour le sprite
     private final int styleIndex;
