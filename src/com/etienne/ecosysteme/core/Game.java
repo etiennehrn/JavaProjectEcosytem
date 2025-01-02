@@ -4,11 +4,14 @@ import com.etienne.ecosysteme.entities.Player;
 import com.etienne.ecosysteme.environment.MapEnvironnement;
 import com.etienne.ecosysteme.entities.MapVivant;
 
+import com.etienne.ecosysteme.environment.Pluie;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import java.util.Random;
+
 
 import java.io.IOException;
 
@@ -28,6 +31,13 @@ public class Game {
     // Cycle Jour/Nuit
     private final DayNightCycleImpl dayNightCycleImpl;
 
+    // Pour la pluie
+    private final Pluie pluie;
+    private final Random random = new Random();
+    private static final double PROBABILITE_DEBUT_PLUIE = 0.003; // chances de commencer
+    private static final double PROBABILITE_FIN_PLUIE = 0.01;  // chances de s'arrêter
+
+
     // Constructeur
     public Game(String mapFilePath, String mapVivantFilePath) throws IOException {
         mapEnvironnement = new MapEnvironnement(mapFilePath);
@@ -38,16 +48,29 @@ public class Game {
 
         // Initialisation cycle jour.nuit de durée total 240
         dayNightCycleImpl = new DayNightCycleImpl(240);
+        pluie = new Pluie();
+
     }
 
     // Update position des etres vivants
     public void update() {
         mapVivant.update(mapEnvironnement, dayNightCycleImpl);
+        // Vérifier si la pluie doit commencer
+        if (!pluie.isActive() && random.nextDouble() < PROBABILITE_DEBUT_PLUIE) {
+            pluie.demarrer();
+            System.out.println("Pluie");
+            pluie.appliquerEffets(mapVivant);
+        }
+        // Vérifier si la pluie doit s'arrêter
+        if (pluie.isActive() && random.nextDouble() < PROBABILITE_FIN_PLUIE) {
+            pluie.arreter();
+            pluie.stopperEffets(mapVivant);
+        }
     }
 
     // Affiche la carte et le temps
     public void displayMap(GridPane gridPane, int titleSize) {
-        mapEnvironnement.displayMap(gridPane, titleSize, player, mapVivant, dayNightCycleImpl.getLightingColor());
+        mapEnvironnement.displayMap(gridPane, titleSize, player, mapVivant, dayNightCycleImpl.getLightingColor(), pluie);
         displayTime(gridPane);
     }
 

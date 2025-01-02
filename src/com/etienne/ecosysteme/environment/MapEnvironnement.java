@@ -5,17 +5,22 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 import com.etienne.ecosysteme.entities.EtreVivant;
 import com.etienne.ecosysteme.entities.MapVivant;
 import com.etienne.ecosysteme.entities.Player;
 import com.etienne.ecosysteme.entities.Zombie;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 public class MapEnvironnement {
@@ -53,7 +58,7 @@ public class MapEnvironnement {
     }
 
     // Méthode pour afficher la vision de la map du joueur dans un GridPane
-    public void displayMap(GridPane gridPane, int titleSize, Player player, MapVivant mapVivant, Paint lightingColor) {
+    public void displayMap(GridPane gridPane, int titleSize, Player player, MapVivant mapVivant, Paint lightingColor, Pluie pluie) {
         int visionRange = player.getVisionRange();
         int playerRow = player.getRow();
         int playerCol = player.getCol();
@@ -99,6 +104,31 @@ public class MapEnvironnement {
                         cellPane.getChildren().add(foodBar);
 
                     }
+
+                }
+
+                if (pluie.isActive()) {
+
+                    // Créer un rectangle translucide pour le fond
+                    Rectangle rainOverlay = new Rectangle(titleSize, titleSize);
+                    rainOverlay.setFill(Color.LIGHTBLUE);
+                    rainOverlay.setOpacity(0.2); // Ajustez la transparence selon vos besoins
+
+                    Random rand = new Random();
+                    cellPane.getChildren().add(rainOverlay);
+
+                    Group rainGroup = new Group();
+                    for (int i = 1; i < pluie.getGouttePluie(); i++) {
+                        double startX = rand.nextDouble() * titleSize/1.3;
+                        double startY = rand.nextDouble() * titleSize / 3;
+                        double endX = startX + rand.nextDouble() * titleSize / 10;
+                        double endY = startY + rand.nextDouble() * titleSize / 2;
+                        Line line = new Line(startX, startY, endX, endY);
+                        line.setStroke(Color.LIGHTBLUE);
+                        line.setStrokeWidth(1);
+                        rainGroup.getChildren().add(line);
+                    }
+                    cellPane.getChildren().add(rainGroup);
 
                 }
 
