@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 
-public class DayNightCycle {
+public class DayNightCycleImpl implements DayNightCycleInterface{
     // Enumération pour les différents cycles possibles
     public enum Cycle {
         JOUR, CREPUSCULE, NUIT, AURORE
@@ -17,14 +17,15 @@ public class DayNightCycle {
     private Timeline cycleTimeline;       // Variable pour le temps
 
     // Constructeur qui lance les cycles
-    public DayNightCycle(int totalCycleDuration) {
+    public DayNightCycleImpl(int totalCycleDuration) {
         this.totalCycleDuration = totalCycleDuration;
         this.timeCounter = 0;
         startCycle();
     }
 
     // Le démarrage
-    private void startCycle() {
+    @Override
+    public void startCycle() {
         this.timeCounter = (int) (0.5 * totalCycleDuration);
         cycleTimeline = new Timeline(new KeyFrame(Duration.seconds(1), _ -> timeCounter = (timeCounter + 1) % totalCycleDuration));
         cycleTimeline.setCycleCount(Timeline.INDEFINITE);
@@ -32,11 +33,13 @@ public class DayNightCycle {
     }
 
     // On récupe l'heure
+    @Override
     public double getNormalizedTime() {
         return (double) timeCounter / totalCycleDuration;
     }
 
     // On récupère le cycle
+    @Override
     public Cycle getCurrentCycle() {
         double normalizedTime = getNormalizedTime();
 
@@ -53,6 +56,7 @@ public class DayNightCycle {
     }
 
     // Obtenir la couleur du filtre en fonction de l'heure ATTENTION PEUT PRENDRE DU TEMPS A OPTI
+    @Override
     public Color getLightingColor() {
         double normalizedTime = getNormalizedTime();
 
@@ -104,6 +108,7 @@ public class DayNightCycle {
     }
 
     // Obtenir l'heure sous la forme 00:OO
+    @Override
     public String getFormattedTime() {
         int totalMin = (int) (getNormalizedTime()*24*60);
         int adjustedMinutes = (totalMin) % (24 * 60); // Ajout de 12h en minutes et modulo pour éviter dépassement de 24h

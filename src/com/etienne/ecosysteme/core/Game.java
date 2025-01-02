@@ -26,7 +26,7 @@ public class Game {
     private final Player player;
 
     // Cycle Jour/Nuit
-    private final DayNightCycle dayNightCycle;
+    private final DayNightCycleImpl dayNightCycleImpl;
 
     // Constructeur
     public Game(String mapFilePath, String mapVivantFilePath) throws IOException {
@@ -37,7 +37,7 @@ public class Game {
         mapVivant.populate(mapVivantFilePath, 0, 0, 0, mapEnvironnement);
 
         // Initialisation cycle jour.nuit de durée total 240
-        dayNightCycle = new DayNightCycle(240);
+        dayNightCycleImpl = new DayNightCycleImpl(240);
     }
 
     // Update position des etres vivants
@@ -47,7 +47,7 @@ public class Game {
 
     // Affiche la carte et le temps
     public void displayMap(GridPane gridPane, int titleSize) {
-        mapEnvironnement.displayMap(gridPane, titleSize, player, mapVivant, dayNightCycle.getLightingColor());
+        mapEnvironnement.displayMap(gridPane, titleSize, player, mapVivant, dayNightCycleImpl.getLightingColor());
         displayTime(gridPane);
     }
 
@@ -73,7 +73,7 @@ public class Game {
 
     // Affiche l'horloge
     public void displayTime(GridPane gridPane) {
-        Text timeDisplay = new Text(dayNightCycle.getFormattedTime());
+        Text timeDisplay = new Text(dayNightCycleImpl.getFormattedTime());
         timeDisplay.setFill(Color.WHITESMOKE);
         timeDisplay.setStyle(
                 "-fx-font-size: 8px;" +          // Taille de la police légèrement augmentée
