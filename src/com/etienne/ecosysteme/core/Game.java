@@ -32,7 +32,7 @@ public class Game {
     public Game(String mapFilePath, String mapVivantFilePath) throws IOException {
         mapEnvironnement = new MapEnvironnement(mapFilePath);
         mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
-        player = new Player(46, 50, visionRange, mapEnvironnement);
+        player = new Player(11, 6, visionRange, mapEnvironnement);
 
         mapVivant.populate(mapVivantFilePath, 1000, 1000, 0, mapEnvironnement);
 

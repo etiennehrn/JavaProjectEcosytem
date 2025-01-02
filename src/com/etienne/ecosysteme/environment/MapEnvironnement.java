@@ -15,19 +15,33 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * La classe <code>MapEnvironnement</code> représente une carte générée à partir d'un fichier .txt.
+ * Elle permet d'afficher une carte aléatoire composée de différents types de terrains, produite de manière
+ * procédurale par la classe MapGeneration.
+ */
 
 public class MapEnvironnement {
-    // Map pour l'environnement (case)
+    /** Map pour l'environnement (case) */
     private Case[][] grid;
+
+    /** Ligne de la map */
     private int rows;
+
+    /** Colonne de la map */
     private int cols;
 
-    // Constructeur
+    /**
+     * Constructeur de la classe MapEnvironnement.
+     * Charge la map à partir du chemin d'un fichier map.txt grâce à la méthode loadMapFromFile.
+     *
+     * @param filePath Le chemin associé à cette map.
+     */
     public MapEnvironnement(String filePath) {
         loadMapFromFile(filePath);
     }
 
-    // Méthode qui charge la map du fichier à filePath
+    /** Méthode qui charge la map du fichier à filePath */
     private void loadMapFromFile(String filePath) {
         System.out.println("Loading Map from file: " + filePath);
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -50,7 +64,7 @@ public class MapEnvironnement {
         }
     }
 
-    // Méthode pour afficher la vision de la map du joueur dans un GridPane
+    /** Méthode pour afficher la vision de la map du joueur dans un GridPane */
     public void displayMap(GridPane gridPane, int titleSize, Player player, MapVivant mapVivant, Paint lightingColor) {
         int visionRange = player.getVisionRange();
         int playerRow = player.getRow();
@@ -175,16 +189,32 @@ public class MapEnvironnement {
         }
         return true;
     }
-    // Getter et Setter
+
+    // Getters
+
+    /**
+     * Retourne la case associée à une position (ligne, colonne).
+     *
+     * @return la case de la classe Case.
+     */
     public Case getCell(int row, int col) {
         return grid[row][col];
     }
-    public void setCell(int row, int col, Case value) {
-        grid[row][col] = value;
-    }
+
+    /**
+     * Retourne le nombre de ligne total de la map.
+     *
+     * @return rows.
+     */
     public int getRows() {
         return rows;
     }
+
+    /**
+     * Retourne le nombre de colonne total de la map.
+     *
+     * @return cols.
+     */
     public int getCols() {
         return cols;
     }
