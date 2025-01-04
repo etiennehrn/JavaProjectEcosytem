@@ -3,7 +3,6 @@ package com.etienne.ecosysteme.core;
 import com.etienne.ecosysteme.entities.Player;
 import com.etienne.ecosysteme.environment.MapEnvironnement;
 import com.etienne.ecosysteme.entities.MapVivant;
-
 import com.etienne.ecosysteme.environment.Pluie;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -11,56 +10,71 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import java.util.Random;
-
-
 import java.io.IOException;
 
 public class Game {
-    // Vision du joueur
+
+    // Portée de vision du joueur
     private final int visionRange = 15;
 
-    // Pour limiter déplacement du joueuer
+    // Délai minimum entre deux déplacements du joueur (en millisecondes)
     private static final long MOVE_DELAY_MS = 80;
-    private long lastMoveTime = 0; // Time du dernier déplacement
+    private long lastMoveTime = 0; // Temps du dernier déplacement
 
-    // La map
+    // Carte de l'environnement et des entités
     private final MapEnvironnement mapEnvironnement;
     private final MapVivant mapVivant;
+
+    // Joueur contrôlé par l'utilisateur
     private final Player player;
 
-    // Cycle Jour/Nuit
+    // Gestion des cycles jour/nuit
     private final DayNightCycleImpl dayNightCycleImpl;
 
-    // Pour la pluie
+    // Gestion des précipitations (pluie)
     private final Pluie pluie;
+
+    // Générateur aléatoire pour gérer les événements comme la pluie
     private final Random random = new Random();
-    private static final double PROBABILITE_DEBUT_PLUIE = 0.003; // chances de commencer
-    private static final double PROBABILITE_FIN_PLUIE = 0.01;  // chances de s'arrêter
+    private static final double PROBABILITE_DEBUT_PLUIE = 0.001; // Probabilité de démarrage de la pluie
+    private static final double PROBABILITE_FIN_PLUIE = 0.001;  // Probabilité d'arrêt de la pluie
 
-
-    // Constructeur
+    /**
+     * Constructeur de la classe Game.
+     * Initialise les cartes, le joueur, et les cycles naturels.
+     *
+     * @param mapFilePath Chemin du fichier de la carte environnementale.
+     * @param mapVivantFilePath Chemin du fichier des entités vivantes.
+     * @throws IOException En cas d'erreur de lecture des fichiers.
+     */
     public Game(String mapFilePath, String mapVivantFilePath) throws IOException {
         mapEnvironnement = new MapEnvironnement(mapFilePath);
         mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
         player = new Player(46, 50, visionRange, mapEnvironnement);
 
+        // Chargement des entités sur la carte
         mapVivant.populate(mapVivantFilePath, 0, 0, 0, mapEnvironnement);
 
-        // Initialisation cycle jour.nuit de durée total 240
+        // Initialisation du cycle jour/nuit avec une durée totale de 240 unités
         dayNightCycleImpl = new DayNightCycleImpl(240);
-        pluie = new Pluie();
 
+        // Initialisation des précipitations
+        pluie = new Pluie();
     }
 
-    // Update position des etres vivants
+    /**
+     * Met à jour la position des entités vivantes et gère les événements environnementaux.
+     */
     public void update() {
         mapVivant.update(mapEnvironnement, dayNightCycleImpl);
+
         // Vérifier si la pluie doit commencer
         if (!pluie.isActive() && random.nextDouble() < PROBABILITE_DEBUT_PLUIE) {
             pluie.demarrer();
             System.out.println("Pluie");
             pluie.appliquerEffets(mapVivant);
         }
+
         // Vérifier si la pluie doit s'arrêter
         if (pluie.isActive() && random.nextDouble() < PROBABILITE_FIN_PLUIE) {
             pluie.arreter();
@@ -68,40 +82,52 @@ public class Game {
         }
     }
 
-    // Affiche la carte et le temps
+    /**
+     * Affiche la carte et le temps dans une interface graphique.
+     *
+     * @param gridPane Le conteneur graphique pour afficher la carte.
+     * @param titleSize Taille des cellules affichées.
+     */
     public void displayMap(GridPane gridPane, int titleSize) {
         mapEnvironnement.displayMap(gridPane, titleSize, player, mapVivant, dayNightCycleImpl.getLightingColor(), pluie);
         displayTime(gridPane);
     }
 
-    // déplacement Joueur
+    /**
+     * Gère le déplacement du joueur en respectant un délai minimum entre les mouvements.
+     *
+     * @param direction Direction du déplacement ("up", "down", "left", "right").
+     */
     public void movePlayer(String direction) {
         long currentTime = System.currentTimeMillis(); // Temps actuel en millisecondes
 
         // Vérifie si le joueur peut se déplacer (respecte le délai minimal)
         if (currentTime - lastMoveTime >= MOVE_DELAY_MS) {
-            // Met à jour le temps du dernier déplacement
-            lastMoveTime = currentTime;
+            lastMoveTime = currentTime; // Mise à jour du dernier déplacement
 
-            // Déplacement du joueur
+            // Déplacement du joueur dans la direction spécifiée
             boolean moved = switch (direction.toLowerCase()) {
                 case "up" -> player.moveUp();
                 case "down" -> player.moveDown();
                 case "left" -> player.moveLeft();
                 case "right" -> player.moveRight();
                 default -> false;
-                };
+            };
         }
     }
 
-    // Affiche l'horloge
+    /**
+     * Affiche l'heure actuelle dans l'interface graphique.
+     *
+     * @param gridPane Le conteneur graphique pour afficher l'horloge.
+     */
     public void displayTime(GridPane gridPane) {
         Text timeDisplay = new Text(dayNightCycleImpl.getFormattedTime());
         timeDisplay.setFill(Color.WHITESMOKE);
         timeDisplay.setStyle(
-                "-fx-font-size: 8px;" +          // Taille de la police légèrement augmentée
-                        "-fx-font-family: 'Monospaced';" + // Police intégrée qui rappelle le pixel art
-                        "-fx-fill: #FFD700;"               // Couleur or pour un effet rétro
+                "-fx-font-size: 8px;" +
+                        "-fx-font-family: 'Monospaced';" +
+                        "-fx-fill: #FFD700;"
         );
 
         // Créer le rectangle de fond
@@ -113,7 +139,7 @@ public class Game {
         background.setFill(Color.BLACK);
         background.setOpacity(0.6);
 
-        // On empile rectange et texte
+        // Empile rectangle et texte dans un StackPane
         StackPane timePane = new StackPane();
         timePane.getChildren().addAll(background, timeDisplay);
 
@@ -123,18 +149,35 @@ public class Game {
         GridPane.setRowSpan(timePane, 1);
     }
 
-    // Getter et Setter
+    /**
+     * Retourne le nombre de lignes de la carte.
+     * @return Nombre de lignes.
+     */
     public int getRows() {
         return mapEnvironnement.getRows();
     }
+
+    /**
+     * Retourne le nombre de colonnes de la carte.
+     * @return Nombre de colonnes.
+     */
     public int getCols() {
         return mapEnvironnement.getCols();
     }
+
+    /**
+     * Retourne l'objet représentant la carte environnementale.
+     * @return Carte environnementale.
+     */
     public MapEnvironnement getMap() {
         return mapEnvironnement;
     }
+
+    /**
+     * Retourne le joueur.
+     * @return Joueur.
+     */
     public Player getPlayer() {
         return player;
     }
 }
-

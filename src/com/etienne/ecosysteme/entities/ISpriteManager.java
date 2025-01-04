@@ -9,7 +9,7 @@ public interface ISpriteManager {
     void loadAllSprites();
 
     /**
-     * Récupère les sprites pour un type et une direction donnée.
+     * Récupère-les sprites pour un type et une direction donnée.
      *
      * @param type      Le type d'entité (par exemple, "human", "zombie").
      * @param direction La direction de l'entité.

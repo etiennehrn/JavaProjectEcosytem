@@ -132,6 +132,7 @@ public class MapEnvironnement {
 
                 }
 
+
                 // Vérifier si c'est la position du joueur
                 if (row == player.getRow() && col == player.getCol()) {
                     ImageView playerTexture = new ImageView(player.getSprite());

@@ -6,18 +6,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Classe représentant le type de terrain "Eau" dans l'écosystème.
+ * Chaque instance de EauType est associée à un variant spécifique,
+ * correspondant à une texture particulière (par exemple, centre, bord, coin, etc.).
+ */
 public class EauType extends BaseType {
-    // Variant possible pour l'eau
+
+    /**
+     * Enumération des différents variants de l'eau.
+     * Chaque variant correspond à une texture distincte représentant une disposition de l'eau.
+     */
     public enum Variant {
-        CENTRE, GAUCHE, DROITE, HAUT, BAS, HAUT_GAUCHE, HAUT_DROITE, BAS_GAUCHE, BAS_DROITE,
-        VERTICAL_HAUT, VERTICAL_BAS, VERTICAL_MILIEU, HORIZONTAL_GAUCHE, HORIZONTAL_DROITE,
-        HORIZONTAL_MILIEU, UNIQUE
+        CENTRE, GAUCHE, DROITE, HAUT, BAS,
+        HAUT_GAUCHE, HAUT_DROITE, BAS_GAUCHE, BAS_DROITE,
+        VERTICAL_HAUT, VERTICAL_BAS, VERTICAL_MILIEU,
+        HORIZONTAL_GAUCHE, HORIZONTAL_DROITE, HORIZONTAL_MILIEU,
+        UNIQUE
     }
 
-    // Map des textures possibles
+    // Carte statique associant chaque variant à sa texture (chargée une seule fois)
     private static final Map<Variant, Image> textureMap = new HashMap<>();
 
-    // Chargement des textures
+    // Chargement des textures au démarrage
     static {
         textureMap.put(Variant.CENTRE, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_centre.png"))));
         textureMap.put(Variant.GAUCHE, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_gauche.png"))));
@@ -37,20 +48,35 @@ public class EauType extends BaseType {
         textureMap.put(Variant.UNIQUE, new Image(Objects.requireNonNull(EauType.class.getResourceAsStream("/ressources/textures/baseType/eau/eau_unique.png"))));
     }
 
-    // Type de variant
+    // Variant spécifique pour chaque instance de EauType
     private final Variant variant;
 
-    // Constructeur
+    /**
+     * Constructeur de la classe EauType.
+     * Associe un variant à une texture spécifique.
+     *
+     * @param variant Le variant spécifique de l'eau (par exemple, CENTRE, GAUCHE, UNIQUE).
+     */
     public EauType(Variant variant) {
-        super(textureMap.get(variant));
+        super(textureMap.get(variant)); // Appel au constructeur de BaseType avec la texture correspondante
         this.variant = variant;
     }
 
-    // Getter
+    /**
+     * Retourne le variant de cette instance de EauType.
+     *
+     * @return Le variant associé (CENTRE, GAUCHE, UNIQUE, etc.).
+     */
     public Variant getVariant() {
         return variant;
     }
 
+    /**
+     * Indique si ce type de terrain constitue un obstacle.
+     * Pour l'eau, retourne toujours {@code true}.
+     *
+     * @return {@code true}, car l'eau est un obstacle.
+     */
     @Override
     public boolean isObstacle() {
         return true;
