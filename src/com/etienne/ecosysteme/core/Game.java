@@ -50,7 +50,7 @@ public class Game {
     public Game(String mapFilePath, String mapVivantFilePath) throws IOException {
         mapEnvironnement = new MapEnvironnement(mapFilePath);
         mapVivant = new MapVivant(mapEnvironnement.getRows(), mapEnvironnement.getCols());
-        player = new Player(46, 50, visionRange, mapEnvironnement);
+        player = new Player(60, 15, visionRange, mapEnvironnement);
 
         // Chargement des entités sur la carte
         mapVivant.populate(mapVivantFilePath, 0, 0, 0, mapEnvironnement);

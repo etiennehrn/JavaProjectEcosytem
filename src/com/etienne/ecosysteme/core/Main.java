@@ -27,10 +27,10 @@ public class Main extends Application {
     private Game game;
 
     // Chemins des fichiers de ressources
-    private final String mapFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/map_case/nnew_map1_test.txt")).getPath();
+    private final String mapFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/map_case/maplef.txt")).getPath();
     private final String musicFilePath = Objects.requireNonNull(getClass().getResource("/ressources/audio/background_music.mp3")).toExternalForm();
     private final String iconFilePath = Objects.requireNonNull(getClass().getResource("/ressources/icons/icone1.jpg")).toExternalForm();
-    private final String mapVivantFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/map_vivant/map_vivant.txt")).getPath();
+    private final String mapVivantFilePath = Objects.requireNonNull(getClass().getResource("/ressources/map/map_vivant/maplef_viv.txt")).getPath();
 
     // Lecteur média pour la musique d'ambiance
     private MediaPlayer mediaPlayer;

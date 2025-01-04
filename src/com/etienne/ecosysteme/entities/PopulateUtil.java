@@ -19,6 +19,7 @@ public class PopulateUtil {
      * @param mapVivant  La carte des entités vivantes.
      * @throws IOException Si une erreur survient lors de la lecture du fichier.
      */
+
     public static void loadFromFile(String filePath, MapEnvironnement map, MapVivant mapVivant) throws IOException {
         System.out.println("Loading Map from file: " + filePath);
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
