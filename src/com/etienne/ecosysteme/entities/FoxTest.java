@@ -16,7 +16,7 @@ class FoxTest {
     @Test
     void gen_deplacement_noPrey() {
         Fox fox = new Fox(5, 5);
-        MapVivant mapVivants = new MapVivant(10, 10);
+        MapVivant mapVivants = new MapVivant(100, 100);
         MapEnvironnement grid = new MapEnvironnement("src/ressources/map/map_case/nnew_map1_test.txt");
 
         int row = fox.getRow();

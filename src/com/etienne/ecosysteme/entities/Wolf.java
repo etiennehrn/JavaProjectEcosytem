@@ -25,7 +25,7 @@ public class Wolf extends Animaux {
         // Appelle le constructeur parent avec les attributs spécifiques au loup.
         // Paramètres : position (row, col), points de vie (5), vitesse (1),
         // vision (12), et le type d'animal (WOLF).
-        super(row, col, 5, 1, 12, Type.WOLF);
+        super(row, col, 15, 1, 12, Type.WOLF);
     }
 
     /**
